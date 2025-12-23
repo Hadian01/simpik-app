@@ -91,7 +91,7 @@
             <h5 class="p-4 mb-3">Menu</h5>
             <ul class="list-unstyled px-4">
                 <li class="mb-2">
-                    <a href="/" class="text-dark font-weight-medium">Dashboard</a>
+                    <a href="/" class="text-dark font-weight-medium">Dashboarddddgitgi</a>
                 </li>
                 <li class="mb-2">
                     <a href="/report" class="text-dark font-weight-medium">Report</a>
@@ -119,3 +119,4 @@
 
 </body>
 </html>
+git commit -m "first commit"
