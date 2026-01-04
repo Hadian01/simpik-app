@@ -2,15 +2,15 @@
      style="background-color:#CFC7FF;">
 
     {{-- KIRI --}}
-    <div class="d-flex align-items-center gap-3">
+    <div class="d-flex align-items-center gap-4">
         <button id="btnSidebar" type="button" class="btn btn-link p-0 text-dark" style="line-height:1">
             <i class="bi bi-list" style="font-size:22px;"></i>
         </button>
-        <strong>SIMPIK</strong>
+        <strong class="ms-3">SIMPIK</strong>
     </div>
 
     {{-- KANAN --}}
-    <div class="d-flex align-items-center gap-3">
+    <div class="d-flex align-items-center gap-4">
         {{-- Notifikasi --}}
         <div class="dropdown">
             <button type="button" class="btn btn-link p-0 text-dark" data-toggle="dropdown">

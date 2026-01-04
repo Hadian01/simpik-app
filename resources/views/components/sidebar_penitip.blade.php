@@ -6,7 +6,7 @@
     <h5 class="p-4 mb-3 border-bottom">Menu Penitip</h5>
     <ul class="list-unstyled px-4">
         <li class="mb-3">
-            <a href="#" class="sidebar-link" style="display: block; padding: 12px 20px; color: #333; text-decoration: none; font-weight: 500;">Daftar Toko</a>
+            <a href="{{ route('penitip.daftar_toko') }}" class="sidebar-link" style="display: block; padding: 12px 20px; color: #333; text-decoration: none; font-weight: 500;">Daftar Toko</a>
         </li>
         <li class="mb-3">
             <a href="#" class="sidebar-link" style="display: block; padding: 12px 20px; color: #333; text-decoration: none; font-weight: 500;">Produk Saya</a>

@@ -16,3 +16,13 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+// Route Daftar Toko
+Route::get('/penitip/daftar_toko', function () {
+    return view('penitip.daftar_toko');
+})->name('penitip.daftar_toko');
+
+// Route Detail Toko
+Route::get('/penitip/detail_toko', function () {
+    return view('penitip.detail_toko');
+})->name('penitip.detail_toko');
