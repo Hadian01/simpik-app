@@ -26,3 +26,13 @@ Route::get('/penitip/daftar_toko', function () {
 Route::get('/penitip/detail_toko', function () {
     return view('penitip.detail_toko');
 })->name('penitip.detail_toko');
+
+// Route Produk Saya
+Route::get('/penitip/produk', function () {
+    return view('penitip.produk');
+})->name('penitip.produk');
+
+// Route Detail Produk
+Route::get('/penitip/detail_produk', function () {
+    return view('penitip.detail_produk');
+})->name('penitip.detail_produk');
