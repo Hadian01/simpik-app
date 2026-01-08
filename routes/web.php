@@ -22,9 +22,14 @@ Route::get('/penitip/daftar_toko', function () {
     return view('penitip.daftar_toko');
 })->name('penitip.daftar_toko');
 
-// Route Detail Toko
-Route::get('/penitip/detail_toko', function () {
-    return view('penitip.detail_toko');
+// Route Toko Saya (dengan parameter ID)
+Route::get('/penitip/toko_saya/{id}', function ($id) {
+    return view('penitip.toko_saya', ['toko_id' => $id]);
+})->name('penitip.toko_saya');
+
+// Route Detail Toko (dengan parameter ID)
+Route::get('/penitip/detail_toko/{id}', function ($id) {
+    return view('penitip.detail_toko', ['toko_id' => $id]);
 })->name('penitip.detail_toko');
 
 // Route Produk Saya

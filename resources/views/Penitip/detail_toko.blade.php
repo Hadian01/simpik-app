@@ -4,188 +4,79 @@
 
 <div class="container-fluid">
 
-    {{-- Header dengan Tombol Join --}}
+    {{-- DATA DUMMY TOKO --}}
+    @php
+    $toko = [
+        'id' => 1,
+        'nama_toko' => 'Toko Kue Maju',
+        'pemilik' => 'Hadian Nelvi',
+        'alamat' => 'Marina, Kota Batam',
+        'no_hp' => '082145687458',
+        'email' => 'hadianelvi82@gmai.com',
+        'start_operasional' => '2020-09-15',
+        'jam_operasional' => 'Every Day, 05.00 - 12.00',
+        'deskripsi' => 'Toko dian ini toko pertama saya di masa pandemi untuk membangkitkan perekonomian',
+        'banner' => null, // atau 'images/banner-toko1.jpg'
+    ];
+
+    $produk_toko = [
+        ['id' => 1, 'nama' => 'Kue Lapis', 'gambar' => null],
+        ['id' => 2, 'nama' => 'Brownies', 'gambar' => null],
+        ['id' => 3, 'nama' => 'Roti Tawar', 'gambar' => null],
+        ['id' => 4, 'nama' => 'Donat', 'gambar' => null],
+        ['id' => 5, 'nama' => 'Kue Bolu', 'gambar' => null],
+        ['id' => 6, 'nama' => 'Kue Cubit', 'gambar' => null]
+    ];
+    @endphp
+
+     {{-- Header dengan Tombol Join --}}
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2>Toko Hadian Nelvi</h2>
-        <button type="button" class="btn" style="background-color: #9B8CFF; color: white; padding: 8px 20px; border-radius: 8px;" data-toggle="modal" data-target="#modalJoin">
-            <strong>+</strong> Join sebagai penitip
-        </button>
+        <h2>{{ $toko['nama_toko'] }}</h2>
+
+        {{-- COMPONENT: Join Button --}}
+        @include('components.button', [
+            'text' => 'Join Sebagai Penitip',
+            'icon' => '+',
+            'dataToggle' => 'modal',
+            'dataTarget' => '#modalJoin'
+        ])
     </div>
 
-    {{-- Banner Toko (DARI DATABASE) --}}
-    <div class="mb-4" style="border: 1px solid #ddd; border-radius: 8px; overflow: hidden; height: 250px; background: #f0f0f0;">
-        <img src="{{ asset('images/banner-default.jpg') }}" alt="Banner Toko" style="width: 100%; height: 100%; object-fit: cover;">
-    </div>
+    {{-- COMPONENT: Banner Toko --}}
+    @include('components.penitip.banner_toko', [
+        'banner' => $toko['banner'],
+        'nama_toko' => $toko['nama_toko']
+    ])
 
     <div class="row">
 
         {{-- KIRI: Info Toko --}}
         <div class="col-md-6 mb-4">
-            <div class="card" style="border: 1px solid #ddd; border-radius: 8px; padding: 20px;">
-
-                <div class="mb-3">
-                    <label class="small mb-1">Nama Toko</label>
-                    <input type="text" class="form-control" value="Toko Kue Hadian Nelvi" readonly style="background: #f5f5f5;">
-                </div>
-
-                <div class="row mb-3">
-                    <div class="col-6">
-                        <label class="small mb-1">Pemilik Toko</label>
-                        <input type="text" class="form-control" value="Hadian Nelvi" readonly style="background: #f5f5f5;">
-                    </div>
-                    <div class="col-6">
-                        <label class="small mb-1">Alamat Toko</label>
-                        <input type="text" class="form-control" value="Marina, Kota Batam" readonly style="background: #f5f5f5;">
-                    </div>
-                </div>
-
-                <div class="row mb-3">
-                    <div class="col-6">
-                        <label class="small mb-1">No HP Toko</label>
-                        <input type="text" class="form-control" value="082145687458" readonly style="background: #f5f5f5;">
-                    </div>
-                    <div class="col-6">
-                        <label class="small mb-1">Email Toko</label>
-                        <input type="text" class="form-control" value="hadianelvi82@gmai.com" readonly style="background: #f5f5f5;">
-                    </div>
-                </div>
-
-                <div class="row mb-3">
-                    <div class="col-6">
-                        <label class="small mb-1">Start Operasional</label>
-                        <input type="text" class="form-control" value="2020-09-15" readonly style="background: #f5f5f5;">
-                    </div>
-                    <div class="col-6">
-                        <label class="small mb-1">Jam Operasional</label>
-                        <input type="text" class="form-control" value="Every Day, 05.00 - 12.00" readonly style="background: #f5f5f5;">
-                    </div>
-                </div>
-
-                <div>
-                    <label class="small mb-1">Deskripsi Toko</label>
-                    <textarea class="form-control" rows="3" readonly style="background: #f5f5f5;">Toko dian ini toko pertama saya di masa pandemi untuk membangkitkan perekonomian</textarea>
-                </div>
-
-            </div>
+            @include('components.penitip.detail_toko', [
+                'nama_toko' => $toko['nama_toko'],
+                'pemilik' => $toko['pemilik'],
+                'alamat' => $toko['alamat'],
+                'no_hp' => $toko['no_hp'],
+                'email' => $toko['email'],
+                'start_operasional' => $toko['start_operasional'],
+                'jam_operasional' => $toko['jam_operasional'],
+                'deskripsi' => $toko['deskripsi']
+            ])
         </div>
 
         {{-- KANAN: Produk Toko --}}
         <div class="col-md-6">
             <div class="card" style="border: 1px solid #ddd; border-radius: 8px; padding: 20px;">
-                <h5 class="mb-3">Produk Toko Hadian</h5>
+                <h5 class="mb-3">Produk {{ $toko['nama_toko'] }}</h5>
 
                 <div class="row">
-
-                    <div class="col-4 mb-3">
-                        <div class="card" style="border: 1px solid #ddd; border-radius: 8px; overflow: hidden;">
-                            <div style="width: 100%; height: 100px; background: #f0f0f0; display: flex; align-items: center; justify-content: center;">
-                                <i class="bi bi-image" style="font-size: 32px; color: #999;"></i>
-                            </div>
-                            <div class="p-2 text-center">
-                                <small class="font-weight-bold">Kue Lapis</small>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-4 mb-3">
-                        <div class="card" style="border: 1px solid #ddd; border-radius: 8px; overflow: hidden;">
-                            <div style="width: 100%; height: 100px; background: #f0f0f0; display: flex; align-items: center; justify-content: center;">
-                                <i class="bi bi-image" style="font-size: 32px; color: #999;"></i>
-                            </div>
-                            <div class="p-2 text-center">
-                                <small class="font-weight-bold">Brownies</small>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-4 mb-3">
-                        <div class="card" style="border: 1px solid #ddd; border-radius: 8px; overflow: hidden;">
-                            <div style="width: 100%; height: 100px; background: #f0f0f0; display: flex; align-items: center; justify-content: center;">
-                                <i class="bi bi-image" style="font-size: 32px; color: #999;"></i>
-                            </div>
-                            <div class="p-2 text-center">
-                                <small class="font-weight-bold">Roti Tawar</small>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-4 mb-3">
-                        <div class="card" style="border: 1px solid #ddd; border-radius: 8px; overflow: hidden;">
-                            <div style="width: 100%; height: 100px; background: #f0f0f0; display: flex; align-items: center; justify-content: center;">
-                                <i class="bi bi-image" style="font-size: 32px; color: #999;"></i>
-                            </div>
-                            <div class="p-2 text-center">
-                                <small class="font-weight-bold">Donat</small>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-4 mb-3">
-                        <div class="card" style="border: 1px solid #ddd; border-radius: 8px; overflow: hidden;">
-                            <div style="width: 100%; height: 100px; background: #f0f0f0; display: flex; align-items: center; justify-content: center;">
-                                <i class="bi bi-image" style="font-size: 32px; color: #999;"></i>
-                            </div>
-                            <div class="p-2 text-center">
-                                <small class="font-weight-bold">Kue Bolu</small>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-4 mb-3">
-                        <div class="card" style="border: 1px solid #ddd; border-radius: 8px; overflow: hidden;">
-                            <div style="width: 100%; height: 100px; background: #f0f0f0; display: flex; align-items: center; justify-content: center;">
-                                <i class="bi bi-image" style="font-size: 32px; color: #999;"></i>
-                            </div>
-                            <div class="p-2 text-center">
-                                <small class="font-weight-bold">Kue Cubit</small>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-4 mb-3">
-                        <div class="card" style="border: 1px solid #ddd; border-radius: 8px; overflow: hidden;">
-                            <div style="width: 100%; height: 100px; background: #f0f0f0; display: flex; align-items: center; justify-content: center;">
-                                <i class="bi bi-image" style="font-size: 32px; color: #999;"></i>
-                            </div>
-                            <div class="p-2 text-center">
-                                <small class="font-weight-bold">Kue Nastar</small>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-4 mb-3">
-                        <div class="card" style="border: 1px solid #ddd; border-radius: 8px; overflow: hidden;">
-                            <div style="width: 100%; height: 100px; background: #f0f0f0; display: flex; align-items: center; justify-content: center;">
-                                <i class="bi bi-image" style="font-size: 32px; color: #999;"></i>
-                            </div>
-                            <div class="p-2 text-center">
-                                <small class="font-weight-bold">Kue Putri Salju</small>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-4 mb-3">
-                        <div class="card" style="border: 1px solid #ddd; border-radius: 8px; overflow: hidden;">
-                            <div style="width: 100%; height: 100px; background: #f0f0f0; display: flex; align-items: center; justify-content: center;">
-                                <i class="bi bi-image" style="font-size: 32px; color: #999;"></i>
-                            </div>
-                            <div class="p-2 text-center">
-                                <small class="font-weight-bold">Kue Pancong</small>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-4 mb-3">
-                        <div class="card" style="border: 1px solid #ddd; border-radius: 8px; overflow: hidden;">
-                            <div style="width: 100%; height: 100px; background: #f0f0f0; display: flex; align-items: center; justify-content: center;">
-                                <i class="bi bi-image" style="font-size: 32px; color: #999;"></i>
-                            </div>
-                            <div class="p-2 text-center">
-                                <small class="font-weight-bold">Kue Lumpur</small>
-                            </div>
-                        </div>
-                    </div>
-
+                    {{-- Loop Card Produk --}}
+                    @foreach($produk_toko as $produk)
+                        @include('components.penitip.list_produk', [
+                            'nama' => $produk['nama'],
+                            'gambar' => $produk['gambar']
+                        ])
+                    @endforeach
                 </div>
             </div>
         </div>

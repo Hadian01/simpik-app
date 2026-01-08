@@ -3,149 +3,94 @@
 @section('content')
 
 <div class="container-fluid">
+
+    {{-- SECTION 1: Daftar Toko (Approved) --}}
     <h2 class="mb-4">Daftar Toko</h2>
+
+    <div class="row mb-5">
+
+        @php
+        // DATA DUMMY - Toko yang sudah approved
+        $toko_approved = [
+            [
+                'id' => 1,
+                'nama' => 'Dian Toko',
+                'alamat' => 'Bengkong Indonesia',
+                'jam_operasional' => '07.00 - 11.00',
+                'gambar' => null, // atau 'images/toko1.jpg'
+                'is_approved' => true
+            ],
+            [
+                'id' => 2,
+                'nama' => 'Toko Kue Manis',
+                'alamat' => 'Batam Center',
+                'jam_operasional' => '08.00 - 17.00',
+                'gambar' => null,
+                'is_approved' => true
+            ],
+        ];
+        @endphp
+
+        {{-- Loop Toko Approved --}}
+        @foreach($toko_approved as $toko)
+            @include('components.penitip.card_toko', [
+                'id' => $toko['id'],
+                'nama' => $toko['nama'],
+                'alamat' => $toko['alamat'],
+                'jam_operasional' => $toko['jam_operasional'],
+                'gambar' => $toko['gambar'],
+                'is_approved' => $toko['is_approved']
+            ])
+        @endforeach
+
+    </div>
+
+    {{-- SECTION 2: Daftar Toko Lainnya (Pending) --}}
+    <h2 class="mb-4">Daftar Toko Lainnya</h2>
 
     <div class="row">
 
-        {{-- Card 1 --}}
-        <div class="col-md-3 mb-4">
-            <div class="card" style="border: 1px solid #ddd; border-radius: 8px;">
-                <div style="width: 100%; height: 180px; background: #f0f0f0; display: flex; align-items: center; justify-content: center; border-bottom: 1px solid #ddd;">
-                    <strong style="color: #999;">Gambar</strong>
-                </div>
-                <div class="card-body">
-                    <table class="w-100 small">
-                        <tr>
-                            <td style="width: 40%;">Nama Toko</td>
-                            <td>Dian Toko</td>
-                        </tr>
-                        <tr>
-                            <td>Alamat Toko</td>
-                            <td>Bengkong Indonesia</td>
-                        </tr>
-                        <tr>
-                            <td>Jam Operasional</td>
-                            <td>07.00 - 11.00</td>
-                        </tr>
-                    </table>
-                    <a href="{{ route('penitip.detail_toko') }}" class="btn btn-sm btn-block mt-3" style="background-color: #9B8CFF; color: white; border: none; padding: 8px; border-radius: 5px; text-decoration: none;">
-                        Kunjungi Toko
-                    </a>
-                </div>
-            </div>
-        </div>
+        @php
+        // DATA DUMMY - Toko yang belum approved
+        $toko_pending = [
+            [
+                'id' => 3,
+                'nama' => 'Toko Roti Segar',
+                'alamat' => 'Nagoya',
+                'jam_operasional' => '06.00 - 12.00',
+                'gambar' => null,
+                'is_approved' => false
+            ],
+            [
+                'id' => 4,
+                'nama' => 'Kue Tradisional',
+                'alamat' => 'Sei Panas',
+                'jam_operasional' => '09.00 - 16.00',
+                'gambar' => null,
+                'is_approved' => false
+            ],
+            [
+                'id' => 5,
+                'nama' => 'Bakery Corner',
+                'alamat' => 'Muka Kuning',
+                'jam_operasional' => '07.00 - 18.00',
+                'gambar' => null,
+                'is_approved' => false
+            ],
+        ];
+        @endphp
 
-        {{-- Card 2 --}}
-        <div class="col-md-3 mb-4">
-            <div class="card" style="border: 1px solid #ddd; border-radius: 8px;">
-                <div style="width: 100%; height: 180px; background: #f0f0f0; display: flex; align-items: center; justify-content: center; border-bottom: 1px solid #ddd;">
-                    <strong style="color: #999;">Gambar</strong>
-                </div>
-                <div class="card-body">
-                    <table class="w-100 small">
-                        <tr>
-                            <td style="width: 40%;">Nama Toko</td>
-                            <td>Dian Toko</td>
-                        </tr>
-                        <tr>
-                            <td>Alamat Toko</td>
-                            <td>Bengkong Indonesia</td>
-                        </tr>
-                        <tr>
-                            <td>Jam Operasional</td>
-                            <td>07.00 - 11.00</td>
-                        </tr>
-                    </table>
-                    <a href="{{ route('penitip.detail_toko') }}" class="btn btn-sm btn-block mt-3" style="background-color: #9B8CFF; color: white; border: none; padding: 8px; border-radius: 5px; text-decoration: none;">
-                        Kunjungi Toko
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        {{-- Card 3 --}}
-        <div class="col-md-3 mb-4">
-            <div class="card" style="border: 1px solid #ddd; border-radius: 8px;">
-                <div style="width: 100%; height: 180px; background: #f0f0f0; display: flex; align-items: center; justify-content: center; border-bottom: 1px solid #ddd;">
-                    <strong style="color: #999;">Gambar</strong>
-                </div>
-                <div class="card-body">
-                    <table class="w-100 small">
-                        <tr>
-                            <td style="width: 40%;">Nama Toko</td>
-                            <td>Dian Toko</td>
-                        </tr>
-                        <tr>
-                            <td>Alamat Toko</td>
-                            <td>Bengkong Indonesia</td>
-                        </tr>
-                        <tr>
-                            <td>Jam Operasional</td>
-                            <td>07.00 - 11.00</td>
-                        </tr>
-                    </table>
-                    <a href="{{ route('penitip.detail_toko') }}" class="btn btn-sm btn-block mt-3" style="background-color: #9B8CFF; color: white; border: none; padding: 8px; border-radius: 5px; text-decoration: none;">
-                        Kunjungi Toko
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        {{-- Card 4 --}}
-        <div class="col-md-3 mb-4">
-            <div class="card" style="border: 1px solid #ddd; border-radius: 8px;">
-                <div style="width: 100%; height: 180px; background: #f0f0f0; display: flex; align-items: center; justify-content: center; border-bottom: 1px solid #ddd;">
-                    <strong style="color: #999;">Gambar</strong>
-                </div>
-                <div class="card-body">
-                    <table class="w-100 small">
-                        <tr>
-                            <td style="width: 40%;">Nama Toko</td>
-                            <td>Dian Toko</td>
-                        </tr>
-                        <tr>
-                            <td>Alamat Toko</td>
-                            <td>Bengkong Indonesia</td>
-                        </tr>
-                        <tr>
-                            <td>Jam Operasional</td>
-                            <td>07.00 - 11.00</td>
-                        </tr>
-                    </table>
-                    <a href="{{ route('penitip.detail_toko') }}" class="btn btn-sm btn-block mt-3" style="background-color: #9B8CFF; color: white; border: none; padding: 8px; border-radius: 5px; text-decoration: none;">
-                        Kunjungi Toko
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        {{-- Card 5 --}}
-        <div class="col-md-3 mb-4">
-            <div class="card" style="border: 1px solid #ddd; border-radius: 8px;">
-                <div style="width: 100%; height: 180px; background: #f0f0f0; display: flex; align-items: center; justify-content: center; border-bottom: 1px solid #ddd;">
-                    <strong style="color: #999;">Gambar</strong>
-                </div>
-                <div class="card-body">
-                    <table class="w-100 small">
-                        <tr>
-                            <td style="width: 40%;">Nama Toko</td>
-                            <td>Dian Toko</td>
-                        </tr>
-                        <tr>
-                            <td>Alamat Toko</td>
-                            <td>Bengkong Indonesia</td>
-                        </tr>
-                        <tr>
-                            <td>Jam Operasional</td>
-                            <td>07.00 - 11.00</td>
-                        </tr>
-                    </table>
-                    <a href="{{ route('penitip.detail_toko') }}" class="btn btn-sm btn-block mt-3" style="background-color: #9B8CFF; color: white; border: none; padding: 8px; border-radius: 5px; text-decoration: none;">
-                        Kunjungi Toko
-                    </a>
-                </div>
-            </div>
-        </div>
+        {{-- Loop Toko Pending --}}
+        @foreach($toko_pending as $toko)
+            @include('components.penitip.card_toko', [
+                'id' => $toko['id'],
+                'nama' => $toko['nama'],
+                'alamat' => $toko['alamat'],
+                'jam_operasional' => $toko['jam_operasional'],
+                'gambar' => $toko['gambar'],
+                'is_approved' => $toko['is_approved']
+            ])
+        @endforeach
 
     </div>
 </div>
