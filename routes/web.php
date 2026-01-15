@@ -41,3 +41,8 @@ Route::get('/penitip/produk', function () {
 Route::get('/penitip/detail_produk', function () {
     return view('penitip.detail_produk');
 })->name('penitip.detail_produk');
+
+// Route Dashboard Penjualan
+Route::get('/penitip/dashboard', function () {
+    return view('penitip.dashboard');
+})->name('penitip.dashboard');

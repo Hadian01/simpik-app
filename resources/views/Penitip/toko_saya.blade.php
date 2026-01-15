@@ -4,8 +4,71 @@
 
 <div class="container-fluid">
 
+    {{-- DATA DUMMY TOKO --}}
+    @php
+    $toko = [
+        'id' => 1,
+        'nama_toko' => 'Toko Hadian Nelvi',
+        'pemilik' => 'Hadian Nelvi',
+        'alamat' => 'Marina, Kota Batam',
+        'no_hp' => '082145687458',
+        'email' => 'hadianelvi82@gmai.com',
+        'start_operasional' => '2020-09-15',
+        'jam_operasional' => 'Every Day, 05.00 - 12.00',
+        'deskripsi' => 'Toko dian ini toko pertama saya di masa pandemi untuk membangkitkan perekonomian',
+        'banner' => null,
+        'is_active' => true,
+    ];
+
+    // Variabel $id untuk component yang membutuhkan
+    $id = $toko['id'];
+    $is_active = $toko['is_active'];
+
+    $produk_toko = [
+        ['id' => 1, 'nama' => 'Kue Lapis', 'gambar' => null, 'is_active' => true, 'harga' => 10000],
+        ['id' => 2, 'nama' => 'Brownies', 'gambar' => null, 'is_active' => true, 'harga' => 15000],
+        ['id' => 3, 'nama' => 'Roti Tawar', 'gambar' => null, 'is_active' => true, 'harga' => 10000],
+    ];
+
+    // DATA DUMMY DASHBOARD
+    $dashboard = [
+        'total_penjualan' => 2500000,
+        'produk_terjual' => 150,
+        'komisi' => 250000,
+        'pendapatan_bersih' => 2250000,
+        'bulan' => 'Januari 2025'
+    ];
+
+    // DATA DUMMY STATISTIK (untuk dashboard)
+    $statistik = [
+        ['title' => 'Total Terjual', 'value' => '500', 'bg_color' => '#CFC7FF'],
+        ['title' => 'Total Dititip', 'value' => '600', 'bg_color' => '#CFC7FF'],
+        ['title' => 'Total Pendapatan', 'value' => 'Rp 2.000.000', 'bg_color' => '#CFC7FF'],
+    ];
+
+    // DATA DUMMY RIWAYAT (untuk dashboard)
+    $riwayat_list = [
+        ['no' => 1, 'submission_date' => '01-09-2025', 'name' => 'RISOL', 'nama_toko' => 'TOKO MAJU', 'stock' => 35, 'stock_terjual' => 30, 'cogs' => 'RP 1.800', 'pendapatan' => 'RP 40.000'],
+        ['no' => 2, 'submission_date' => '01-09-2025', 'name' => 'TAHU', 'nama_toko' => 'TOKO MAJU', 'stock' => 35, 'stock_terjual' => 26, 'cogs' => 'RP 1.800', 'pendapatan' => 'RP 39.00'],
+        ['no' => 3, 'submission_date' => '01-09-2025', 'name' => 'TAHU', 'nama_toko' => 'TOKO SEDERHANA', 'stock' => 35, 'stock_terjual' => 26, 'cogs' => 'RP 1.800', 'pendapatan' => 'RP 39.00'],
+        ['no' => 4, 'submission_date' => '01-09-2025', 'name' => 'TAHU', 'nama_toko' => 'TOKO SEDERHANA', 'stock' => 35, 'stock_terjual' => 26, 'cogs' => 'RP 1.800', 'pendapatan' => 'RP 39.00'],
+    ];
+
+    // DATA DUMMY RIWAYAT PENJUALAN (untuk tab riwayat)
+    $riwayat_penjualan = [
+        ['no' => 1, 'tanggal' => '2025-01-05', 'produk' => 'Kue Lapis', 'jumlah' => 10, 'total' => 100000],
+        ['no' => 2, 'tanggal' => '2025-01-05', 'produk' => 'Brownies', 'jumlah' => 5, 'total' => 75000],
+        ['no' => 3, 'tanggal' => '2025-01-04', 'produk' => 'Roti Tawar', 'jumlah' => 8, 'total' => 80000],
+    ];
+
+    // Untuk pagination dummy
+    $total_data = 20;
+    $per_page = 10;
+    $current_page = 1;
+    @endphp
+
     {{-- Header --}}
-    <h2 class="mb-4">Toko Hadian Nelvi</h2>
+    <h2 class="mb-4">{{ $toko['nama_toko'] }}</h2>
 
     {{-- TAB Navigation --}}
     <ul class="nav nav-tabs mb-4" id="tokoTab" role="tablist" style="border-bottom: 2px solid #ddd;">
@@ -33,100 +96,46 @@
         <div class="tab-pane fade show active" id="detail" role="tabpanel">
 
             {{-- Banner Toko --}}
-            <div class="mb-4" style="border: 1px solid #ddd; border-radius: 8px; overflow: hidden; height: 250px; background: #f0f0f0;">
-                <img src="{{ asset('images/banner-default.jpg') }}" alt="Banner Toko" style="width: 100%; height: 100%; object-fit: cover;">
-            </div>
+            @include('components.penitip.banner_toko', [
+                'id' => $toko['id'],
+                'banner' => $toko['banner'],
+                'nama_toko' => $toko['nama_toko'],
+                'is_active' => $toko['is_active']
+            ])
 
             <div class="row">
 
                 {{-- KIRI: Info Toko --}}
                 <div class="col-md-6 mb-4">
-                    <div class="card" style="border: 1px solid #ddd; border-radius: 8px; padding: 20px;">
-
-                        <div class="mb-3">
-                            <label class="small mb-1">Nama Toko</label>
-                            <input type="text" class="form-control" value="Toko Kue Hadian Nelvi" readonly style="background: #f5f5f5;">
-                        </div>
-
-                        <div class="row mb-3">
-                            <div class="col-6">
-                                <label class="small mb-1">Pemilik Toko</label>
-                                <input type="text" class="form-control" value="Hadian Nelvi" readonly style="background: #f5f5f5;">
-                            </div>
-                            <div class="col-6">
-                                <label class="small mb-1">Alamat Toko</label>
-                                <input type="text" class="form-control" value="Marina, Kota Batam" readonly style="background: #f5f5f5;">
-                            </div>
-                        </div>
-
-                        <div class="row mb-3">
-                            <div class="col-6">
-                                <label class="small mb-1">No HP Toko</label>
-                                <input type="text" class="form-control" value="082145687458" readonly style="background: #f5f5f5;">
-                            </div>
-                            <div class="col-6">
-                                <label class="small mb-1">Email Toko</label>
-                                <input type="text" class="form-control" value="hadianelvi82@gmai.com" readonly style="background: #f5f5f5;">
-                            </div>
-                        </div>
-
-                        <div class="row mb-3">
-                            <div class="col-6">
-                                <label class="small mb-1">Start Operasional</label>
-                                <input type="text" class="form-control" value="2020-09-15" readonly style="background: #f5f5f5;">
-                            </div>
-                            <div class="col-6">
-                                <label class="small mb-1">Jam Operasional</label>
-                                <input type="text" class="form-control" value="Every Day, 05.00 - 12.00" readonly style="background: #f5f5f5;">
-                            </div>
-                        </div>
-
-                        <div>
-                            <label class="small mb-1">Deskripsi Toko</label>
-                            <textarea class="form-control" rows="3" readonly style="background: #f5f5f5;">Toko dian ini toko pertama saya di masa pandemi untuk membangkitkan perekonomian</textarea>
-                        </div>
-
-                    </div>
+                    @include('components.penitip.detail_toko', [
+                        'id' => $toko['id'],
+                        'nama_toko' => $toko['nama_toko'],
+                        'pemilik' => $toko['pemilik'],
+                        'alamat' => $toko['alamat'],
+                        'no_hp' => $toko['no_hp'],
+                        'email' => $toko['email'],
+                        'start_operasional' => $toko['start_operasional'],
+                        'jam_operasional' => $toko['jam_operasional'],
+                        'deskripsi' => $toko['deskripsi'],
+                        'is_active' => $toko['is_active']
+                    ])
                 </div>
 
                 {{-- KANAN: Produk Toko --}}
                 <div class="col-md-6">
                     <div class="card" style="border: 1px solid #ddd; border-radius: 8px; padding: 20px;">
-                        <h5 class="mb-3">Produk Toko Hadian</h5>
+                        <h5 class="mb-3">Produk {{ $toko['nama_toko'] }}</h5>
 
                         <div class="row">
-                            <div class="col-4 mb-3">
-                                <div class="card" style="border: 1px solid #ddd; border-radius: 8px; overflow: hidden;">
-                                    <div style="width: 100%; height: 100px; background: #f0f0f0; display: flex; align-items: center; justify-content: center;">
-                                        <i class="bi bi-image" style="font-size: 32px; color: #999;"></i>
-                                    </div>
-                                    <div class="p-2 text-center">
-                                        <small class="font-weight-bold">Kue Lapis</small>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-4 mb-3">
-                                <div class="card" style="border: 1px solid #ddd; border-radius: 8px; overflow: hidden;">
-                                    <div style="width: 100%; height: 100px; background: #f0f0f0; display: flex; align-items: center; justify-content: center;">
-                                        <i class="bi bi-image" style="font-size: 32px; color: #999;"></i>
-                                    </div>
-                                    <div class="p-2 text-center">
-                                        <small class="font-weight-bold">Brownies</small>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-4 mb-3">
-                                <div class="card" style="border: 1px solid #ddd; border-radius: 8px; overflow: hidden;">
-                                    <div style="width: 100%; height: 100px; background: #f0f0f0; display: flex; align-items: center; justify-content: center;">
-                                        <i class="bi bi-image" style="font-size: 32px; color: #999;"></i>
-                                    </div>
-                                    <div class="p-2 text-center">
-                                        <small class="font-weight-bold">Roti Tawar</small>
-                                    </div>
-                                </div>
-                            </div>
+                            @foreach($produk_toko as $produk)
+                                @include('components.penitip.card_produk', [
+                                    'id' => $produk['id'],
+                                    'nama' => $produk['nama'],
+                                    'gambar' => $produk['gambar'],
+                                    'is_active' => $produk['is_active'],
+                                    'harga' => $produk['harga']
+                                ])
+                            @endforeach
                         </div>
                     </div>
                 </div>
@@ -136,84 +145,230 @@
 
         {{-- TAB 2: Dashboard Pendapatan --}}
         <div class="tab-pane fade" id="dashboard" role="tabpanel">
-            <div class="card" style="border: 1px solid #ddd; border-radius: 8px; padding: 30px;">
-                <h4 class="mb-4">Dashboard Pendapatan</h4>
 
-                <div class="row">
-                    <div class="col-md-3 mb-3">
-                        <div class="card text-center" style="background: #E3DFFF; border: none; padding: 20px;">
-                            <h5>Total Penjualan</h5>
-                            <h2>Rp 2.500.000</h2>
-                        </div>
-                    </div>
-                    <div class="col-md-3 mb-3">
-                        <div class="card text-center" style="background: #E3DFFF; border: none; padding: 20px;">
-                            <h5>Produk Terjual</h5>
-                            <h2>150</h2>
-                        </div>
-                    </div>
-                    <div class="col-md-3 mb-3">
-                        <div class="card text-center" style="background: #E3DFFF; border: none; padding: 20px;">
-                            <h5>Komisi</h5>
-                            <h2>Rp 250.000</h2>
-                        </div>
-                    </div>
-                    <div class="col-md-3 mb-3">
-                        <div class="card text-center" style="background: #E3DFFF; border: none; padding: 20px;">
-                            <h5>Pendapatan Bersih</h5>
-                            <h2>Rp 2.250.000</h2>
-                        </div>
-                    </div>
+            {{-- Header Dashboard --}}
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h4>Dashboard Pendapatan</h4>
+                <small class="text-muted">Periode: {{ $dashboard['bulan'] }}</small>
+            </div>
+
+            {{-- Search & Filter --}}
+            @include('components.penitip.search_filter')
+
+            {{-- Card Statistik Dashboard --}}
+            <div class="row mb-4">
+                @foreach($statistik as $stat)
+                    @include('components.penitip.card_dashboard', $stat)
+                @endforeach
+            </div>
+
+            {{-- Tabel Riwayat Detail --}}
+            <div class="card" style="border: 1px solid #ddd; border-radius: 8px; overflow: hidden;">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0" id="tableRiwayat">
+                        <thead style="background: #CFC7FF;">
+                            <tr>
+                                <th style="width: 50px;">NO</th>
+                                <th>SUBMISSION DATE</th>
+                                <th>NAME</th>
+                                <th>NAMA TOKO</th>
+                                <th>STOCK</th>
+                                <th>STOCK TERJUAL</th>
+                                <th>COGS</th>
+                                <th>PENDAPATAN</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($riwayat_list as $item)
+                            <tr>
+                                <td>{{ $item['no'] }}</td>
+                                <td>{{ $item['submission_date'] }}</td>
+                                <td>{{ $item['name'] }}</td>
+                                <td>{{ $item['nama_toko'] }}</td>
+                                <td>{{ $item['stock'] }}</td>
+                                <td>{{ $item['stock_terjual'] }}</td>
+                                <td>{{ $item['cogs'] }}</td>
+                                <td>{{ $item['pendapatan'] }}</td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
                 </div>
 
-                <p class="text-muted mt-3">Dashboard pendapatan untuk bulan ini</p>
+                {{-- Pagination --}}
+                <div class="card-footer" style="background: white; border-top: 1px solid #ddd;">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <small class="text-muted">Showing 1 to {{ count($riwayat_list) }} of {{ $total_data }} entries</small>
+
+                        <nav>
+                            <ul class="pagination mb-0">
+                                <li class="page-item"><a class="page-link" href="#" style="background: #9B8CFF; color: white; border: none;">1</a></li>
+                                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                <li class="page-item"><a class="page-link" href="#">4</a></li>
+                                <li class="page-item disabled"><a class="page-link" href="#">...</a></li>
+                                <li class="page-item"><a class="page-link" href="#">10</a></li>
+                                <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
             </div>
+
         </div>
 
         {{-- TAB 3: Riwayat Penjualan --}}
-        <div class="tab-pane fade" id="riwayat" role="tabpanel">
-            <div class="card" style="border: 1px solid #ddd; border-radius: 8px; padding: 30px;">
-                <h4 class="mb-4">Riwayat Penjualan</h4>
+<div class="tab-pane fade" id="riwayat" role="tabpanel">
 
-                <table class="table table-bordered">
-                    <thead style="background: #E3DFFF;">
-                        <tr>
-                            <th>No</th>
-                            <th>Tanggal</th>
-                            <th>Produk</th>
-                            <th>Jumlah</th>
-                            <th>Total</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>2025-01-05</td>
-                            <td>Kue Lapis</td>
-                            <td>10</td>
-                            <td>Rp 100.000</td>
-                        </tr>
-                        <tr>
-                            <td>2</td>
-                            <td>2025-01-05</td>
-                            <td>Brownies</td>
-                            <td>5</td>
-                            <td>Rp 75.000</td>
-                        </tr>
-                        <tr>
-                            <td>3</td>
-                            <td>2025-01-04</td>
-                            <td>Roti Tawar</td>
-                            <td>8</td>
-                            <td>Rp 80.000</td>
-                        </tr>
-                    </tbody>
-                </table>
+    {{-- Header dengan Search, Filter & Add Button --}}
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h4>Riwayat Pengajuan {{ $toko['nama_toko'] }}</h4>
+
+        <div class="d-flex align-items-center gap-2">
+            {{-- Search --}}
+            <div class="input-group" style="width: 250px;">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" style="background: white; border-right: none;">
+                        <i class="bi bi-search"></i>
+                    </span>
+                </div>
+                <input type="text" id="searchRiwayat" class="form-control" placeholder="Search" style="border-left: none;">
+            </div>
+
+            {{-- Filter Button --}}
+            <button type="button" class="btn btn-outline-secondary" data-toggle="modal" data-target="#modalFilterRiwayat">
+                <i class="bi bi-funnel"></i> Filter
+            </button>
+
+            {{-- Add Button --}}
+            <button type="button" class="btn" style="background-color: #9B8CFF; color: white;" data-toggle="modal" data-target="#modalAddJumlahProduk">
+                <i class="bi bi-plus-lg"></i> Add
+            </button>
+        </div>
+    </div>
+
+    {{-- DATA DUMMY RIWAYAT PENGAJUAN --}}
+    @php
+    $riwayat_pengajuan = [
+        [
+            'no' => 1,
+            'submission_date' => '01-09-2025',
+            'name_produk' => 'RISOL',
+            'harga_jual' => 2000,
+            'cogs' => 1800,
+            'sistem' => 38,
+            'validasi_stock' => 36,
+            'sisa_stock' => 2,
+            'pendapatan' => 10000
+        ],
+        [
+            'no' => 2,
+            'submission_date' => '02-09-2025',
+            'name_produk' => 'TAHU ISI',
+            'harga_jual' => 2000,
+            'cogs' => 1800,
+            'sistem' => 38,
+            'validasi_stock' => 38,
+            'sisa_stock' => 7,
+            'pendapatan' => 10000
+        ],
+        [
+            'no' => 3,
+            'submission_date' => '01-09-2025',
+            'name_produk' => 'DONAT',
+            'harga_jual' => 3000,
+            'cogs' => 1600,
+            'sistem' => 38,
+            'validasi_stock' => 36,
+            'sisa_stock' => 2,
+            'pendapatan' => 10000
+        ],
+    ];
+    @endphp
+
+    {{-- Tabel Riwayat --}}
+    <div class="card" style="border: 1px solid #ddd; border-radius: 8px; overflow: hidden;">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0" id="tableRiwayatPengajuan">
+                <thead style="background: #CFC7FF;">
+                    <tr>
+                        <th style="width: 50px;">NO</th>
+                        <th>SUBMISSION DATE</th>
+                        <th>NAME PRODUK</th>
+                        <th>HARGA JUAL</th>
+                        <th>COGS</th>
+                        <th>SISTEM</th>
+                        <th>VALIDASI STOCK</th>
+                        <th>SISA STOCK</th>
+                        <th>PENDAPATAN</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($riwayat_pengajuan as $item)
+                    <tr>
+                        <td>{{ $item['no'] }}</td>
+                        <td>{{ $item['submission_date'] }}</td>
+                        <td>{{ $item['name_produk'] }}</td>
+                        <td>RP {{ number_format($item['harga_jual'], 0, ',', '.') }}</td>
+                        <td>RP {{ number_format($item['cogs'], 0, ',', '.') }}</td>
+                        <td>{{ $item['sistem'] }}</td>
+                        <td>{{ $item['validasi_stock'] }}</td>
+                        <td>{{ $item['sisa_stock'] }}</td>
+                        <td>RP {{ number_format($item['pendapatan'], 0, ',', '.') }}</td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+
+        {{-- Pagination --}}
+        <div class="card-footer" style="background: white; border-top: 1px solid #ddd;">
+            <div class="d-flex justify-content-between align-items-center">
+                <small class="text-muted">Showing 1 to {{ count($riwayat_pengajuan) }} of 20 entries</small>
+
+                <nav>
+                    <ul class="pagination mb-0">
+                        <li class="page-item"><a class="page-link" href="#" style="background: #9B8CFF; color: white; border: none;">1</a></li>
+                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                        <li class="page-item"><a class="page-link" href="#">4</a></li>
+                        <li class="page-item disabled"><a class="page-link" href="#">...</a></li>
+                        <li class="page-item"><a class="page-link" href="#">10</a></li>
+                        <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                    </ul>
+                </nav>
             </div>
         </div>
+    </div>
+
+</div>
+
+{{-- INCLUDE MODAL ADD JUMLAH PRODUK --}}
+@include('components.penitip.modal_add_jumlah_produk')
+
+{{-- INCLUDE MODAL FILTER RIWAYAT --}}
+@include('components.penitip.modal_filter_riwayat')
+
+
+{{-- Script Search Riwayat --}}
+<script>
+$(document).ready(function() {
+    // Live Search untuk Tab Riwayat
+    $('#searchRiwayat').on('keyup', function() {
+        const value = $(this).val().toLowerCase();
+
+        $('#tableRiwayatPengajuan tbody tr').filter(function() {
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+        });
+    });
+});
+</script>
 
     </div>
 </div>
+
+{{-- MODAL FILTER --}}
+@include('components.penitip.modal_filter')
 
 {{-- CSS untuk Tab Active --}}
 <style>
@@ -229,3 +384,19 @@
 </style>
 
 @endsection
+
+{{-- JS untuk Search & Filter --}}
+@push('scripts')
+<script>
+$(document).ready(function() {
+    // Live Search
+    $('#searchInput').on('keyup', function() {
+        const value = $(this).val().toLowerCase();
+
+        $('#tableRiwayat tbody tr').filter(function() {
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+        });
+    });
+});
+</script>
+@endpush
