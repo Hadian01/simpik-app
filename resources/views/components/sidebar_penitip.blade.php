@@ -11,12 +11,6 @@
         <li class="mb-3">
             <a href="{{ route('penitip.produk') }}" class="sidebar-link" style="display: block; padding: 12px 20px; color: #333; text-decoration: none; font-weight: 500;">Produk Saya</a>
         </li>
-        <li class="mb-3">
-            <a href="{{ route('penitip.dashboard') }}" class="sidebar-link" style="display: block; padding: 12px 20px; color: #333; text-decoration: none; font-weight: 500;">Dashboard</a>
-        </li>
-        <li class="mb-3">
-            <a href="#" class="sidebar-link" style="display: block; padding: 12px 20px; color: #333; text-decoration: none; font-weight: 500;">Riwayat Penjualan</a>
-        </li>
     </ul>
 </div>
 

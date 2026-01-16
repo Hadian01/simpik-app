@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>SIMPIK @if(isset($userType) && $userType === 'penjual')Penjual @endif - @yield('title', 'Dashboard')</title>
+    <title>SIMPIK Penjual - @yield('title', 'Dashboard')</title>
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
@@ -15,13 +15,7 @@
 <body class="bg-light">
 
     @include('components.navbar')
-
-    {{-- Sidebar dinamis berdasarkan parameter $userType --}}
-    @if(isset($userType) && $userType === 'penjual')
-        @include('components.sidebar_penjual')
-    @else
-        @include('components.sidebar_penitip')
-    @endif
+    @include('components.sidebar_penjual')
 
     <main class="container-fluid mt-4">
         @yield('content')
@@ -33,13 +27,11 @@
     {{-- SIDEBAR SCRIPT --}}
     <script>
         $(document).ready(function() {
-            // Buka sidebar
             $('#btnSidebar').click(function() {
                 $('#sidebar').addClass('active');
                 $('#sidebarOverlay').css('display', 'block');
             });
 
-            // Tutup sidebar
             $('#sidebarOverlay').click(function() {
                 $('#sidebar').removeClass('active');
                 $(this).css('display', 'none');

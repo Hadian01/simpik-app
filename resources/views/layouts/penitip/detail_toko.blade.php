@@ -85,6 +85,6 @@
 </div>
 
 {{-- INCLUDE MODAL --}}
-@include('penitip.join_penitip')
+@include('layouts.penitip.join_penitip')
 
 @endsection

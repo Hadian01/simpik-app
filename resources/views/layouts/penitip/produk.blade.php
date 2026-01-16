@@ -34,7 +34,7 @@
 </div>
 
 {{-- INCLUDE MODAL --}}
-@include('penitip.add_produk')
+@include('layouts.penitip.add_produk')
 
 @endsection
 

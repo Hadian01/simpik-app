@@ -49,7 +49,7 @@
                 <div class="mt-4">
                     <button class="btn btn-warning">Edit Produk</button>
                     <button class="btn btn-danger">Hapus Produk</button>
-                    <a href="{{ route('penitip.produk') }}" class="btn btn-secondary">Kembali</a>
+                    <a href="{{ route('layouts.penitip.produk') }}" class="btn btn-secondary">Kembali</a>
                 </div>
             </div>
 
