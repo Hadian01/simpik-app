@@ -16,6 +16,11 @@
             </a>
         </li>
         <li class="mb-3">
+            <a href="{{ route('penjual.penitip_approved') }}" class="sidebar-link" style="display: block; padding: 12px 20px; color: #333; text-decoration: none; font-weight: 500;">
+                <i class="bi bi-people-fill"></i> Penitip Approved
+            </a>
+        </li>
+        <li class="mb-3">
             <a href="{{ route('penjual.riwayat_pengajuan') }}" class="sidebar-link" style="display: block; padding: 12px 20px; color: #333; text-decoration: none; font-weight: 500;">
                 <i class="bi bi-clock-history"></i> Riwayat Pengajuan
             </a>

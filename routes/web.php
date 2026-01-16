@@ -38,18 +38,26 @@ Route::prefix('penitip')->name('penitip.')->group(function () {
 Route::prefix('penjual')->name('penjual.')->group(function () {
 
     Route::get('/dashboard', function () {
-        return view('layouts.penjual.dashboard');  // ← UBAH INI
+        return view('layouts.penjual.dashboard');
     })->name('dashboard');
 
     Route::get('/penitip', function () {
-        return view('layouts.penjual.list_penitip');  // ← UBAH INI
+        return view('layouts.penjual.list_penitip');  // Halaman pengajuan (yang lama)
     })->name('penitip');
 
+    Route::get('/penitip-approved', function () {
+        return view('layouts.penjual.list_penitip_approved');  // Halaman penitip approved (BARU)
+    })->name('penitip_approved');
+
+    Route::get('/penitip/{id}/pengajuan', function ($id) {
+        return view('layouts.penjual.detail_penitip_approved', ['penitip_id' => $id]);  // Detail pengajuan per penitip (BARU)
+    })->name('detail_pengajuan_penitip');
+
     Route::get('/riwayat-pengajuan', function () {
-        return view('layouts.penjual.riwayat_pengajuan');  // ← UBAH INI
+        return view('layouts.penjual.riwayat_pengajuan');
     })->name('riwayat_pengajuan');
 
     Route::get('/stok-harian', function () {
-        return view('layouts.penjual.stok_harian');  // ← UBAH INI
+        return view('layouts.penjual.stok_harian');
     })->name('stok_harian');
 });
