@@ -38,7 +38,7 @@ Route::prefix('penitip')->name('penitip.')->group(function () {
 Route::prefix('penjual')->name('penjual.')->group(function () {
 
     Route::get('/dashboard', function () {
-        return view('layouts.penjual.dashboard');
+    return view('layouts.penjual.dashboard');
     })->name('dashboard');
 
     Route::get('/penitip', function () {

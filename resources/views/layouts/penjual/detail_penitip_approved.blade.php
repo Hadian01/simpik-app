@@ -78,12 +78,20 @@
                             <input type="number" class="form-control form-control-sm" value="{{ $item['stock'] }}" style="width: 80px;">
                         </td>
                         <td>
-                            <button class="btn btn-sm" style="background: white; border: 1px solid #ddd; padding: 5px 15px; border-radius: 5px;">
+                            <button class="btn btn-sm btn-edit-stock"
+                                    style="background: white; border: 1px solid #ddd; padding: 5px 15px; border-radius: 5px;"
+                                    data-type="validasi"
+                                    data-row="{{ $item['no'] }}"
+                                    data-produk="{{ $item['name_produk'] }}">
                                 <i class="bi bi-pencil"></i>
                             </button>
                         </td>
                         <td>
-                            <button class="btn btn-sm" style="background: white; border: 1px solid #ddd; padding: 5px 15px; border-radius: 5px;">
+                            <button class="btn btn-sm btn-edit-stock"
+                                    style="background: white; border: 1px solid #ddd; padding: 5px 15px; border-radius: 5px;"
+                                    data-type="sisa"
+                                    data-row="{{ $item['no'] }}"
+                                    data-produk="{{ $item['name_produk'] }}">
                                 <i class="bi bi-pencil"></i>
                             </button>
                         </td>
@@ -117,19 +125,216 @@
 
 </div>
 
+{{-- MODAL VALIDASI STOCK --}}
+<div class="modal fade" id="modalValidasiStock" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 500px;">
+        <div class="modal-content" style="border-radius: 12px; border: none; box-shadow: 0 10px 40px rgba(0,0,0,0.15);">
+
+            {{-- Header --}}
+            <div class="modal-header" style="border-bottom: 1px solid #e5e7eb; padding: 20px 30px; background: white; border-radius: 12px 12px 0 0;">
+                <h5 class="modal-title" id="modalValidasiTitle" style="font-weight: 600; font-size: 1.25rem; color: #1f2937;">Validasi Stock</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="font-size: 1.5rem; font-weight: 300; color: #9ca3af; opacity: 1;">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            {{-- Body --}}
+            <div class="modal-body" style="padding: 30px;">
+                <form id="formValidasiStock">
+                    {{-- Hidden Fields --}}
+                    <input type="hidden" id="stockType" name="type">
+                    <input type="hidden" id="rowId" name="row_id">
+                    <input type="hidden" id="productName" name="product_name">
+
+                    {{-- Jumlah Stock --}}
+                    <div class="form-group mb-4">
+                        <label for="jumlahStock" style="font-weight: 500; color: #374151; margin-bottom: 8px; display: block; font-size: 0.95rem;">Jumlah Stock</label>
+                        <select class="form-control" id="jumlahStock" name="jumlah_stock" required
+                                style="border: 2px solid #e5e7eb; border-radius: 8px; padding: 12px 16px; font-size: 1rem; color: #374151; height: 48px; appearance: none; background: white url('data:image/svg+xml;utf8,<svg fill=\"%23374151\" height=\"24\" viewBox=\"0 0 24 24\" width=\"24\" xmlns=\"http://www.w3.org/2000/svg"><path d=\"M7 10l5 5 5-5z\"/></svg>') no-repeat right 12px center; background-size: 20px; padding-right: 40px;">
+                            <option value="" style="color: #9ca3af;">Pilih jumlah</option>
+                            <option value="1">1</option>
+                            <option value="5">5</option>
+                            <option value="10">10</option>
+                            <option value="20">20</option>
+                            <option value="50">50</option>
+                            <option value="100">100</option>
+                        </select>
+                    </div>
+
+                    {{-- Upload Foto --}}
+                    <div class="form-group mb-3">
+                        <label for="uploadFoto" style="font-weight: 500; color: #374151; margin-bottom: 8px; display: block;">Upload Foto</label>
+                        <div class="custom-file-upload" style="position: relative;">
+                            <input type="file" class="form-control-file" id="uploadFoto" name="foto" accept="image/*"
+                                   style="border: 2px solid #e5e7eb; border-radius: 8px; padding: 12px 16px; width: 100%; display: block; cursor: pointer; font-size: 0.95rem;">
+                        </div>
+                        <small class="form-text" style="color: #9ca3af; font-size: 0.85rem; margin-top: 6px; display: block;">Format: JPG, PNG, JPEG (Max: 2MB)</small>
+                    </div>
+
+                    {{-- Preview Image --}}
+                    <div id="previewContainer" style="display: none; margin-top: 20px; text-align: center;">
+                        <img id="previewImage" src="" alt="Preview"
+                             style="max-width: 100%; height: auto; max-height: 200px; border-radius: 8px; border: 2px solid #e5e7eb;">
+                    </div>
+                </form>
+            </div>
+
+            {{-- Footer --}}
+            <div class="modal-footer" style="border-top: 1px solid #e5e7eb; padding: 20px 30px; background: white; border-radius: 0 0 12px 12px; justify-content: flex-end; gap: 10px;">
+                <button type="button" class="btn px-4 py-2" data-dismiss="modal"
+                        style="background: white; color: #6b7280; border: 1px solid #d1d5db; border-radius: 8px; font-weight: 500; font-size: 0.95rem;">
+                    Batal
+                </button>
+                <button type="button" class="btn px-4 py-2" id="btnSubmitStock"
+                        style="background-color: #9B8CFF; color: white; border: none; border-radius: 8px; font-weight: 500; font-size: 0.95rem;">
+                    Submit
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<style>
+/* Modal Style Enhancement */
+#modalValidasiStock .modal-content {
+    animation: modalSlideDown 0.3s ease-out;
+}
+
+@keyframes modalSlideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+#jumlahStock:focus,
+#uploadFoto:focus {
+    border-color: #9B8CFF !important;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(155, 140, 255, 0.1);
+}
+
+#btnSubmitStock:hover {
+    background-color: #8b7aef !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(155, 140, 255, 0.3);
+    transition: all 0.2s;
+}
+
+.modal-footer button:first-child:hover {
+    background-color: #f9fafb !important;
+}
+</style>
+
 @endsection
 
-{{-- Script Search --}}
+{{-- Script --}}
 @push('scripts')
 <script>
 $(document).ready(function() {
     // Live Search
     $('#searchInput').on('keyup', function() {
         const value = $(this).val().toLowerCase();
-
         $('#tableDetailPengajuan tbody tr').filter(function() {
             $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
         });
+    });
+
+    // Open Modal saat icon pensil diklik
+    $('.btn-edit-stock').on('click', function() {
+        const type = $(this).data('type');
+        const rowId = $(this).data('row');
+        const productName = $(this).data('produk');
+
+        // Set judul modal berdasarkan tipe
+        if (type === 'validasi') {
+            $('#modalValidasiTitle').text('Validasi Stock');
+        } else {
+            $('#modalValidasiTitle').text('Validasi sisa stock');
+        }
+
+        // Set hidden fields
+        $('#stockType').val(type);
+        $('#rowId').val(rowId);
+        $('#productName').val(productName);
+
+        // Reset form
+        $('#formValidasiStock')[0].reset();
+        $('#previewContainer').hide();
+        $('#previewImage').attr('src', '');
+
+        // Show modal
+        $('#modalValidasiStock').modal('show');
+    });
+
+    // Preview gambar saat file dipilih
+    $('#uploadFoto').on('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            // Validasi ukuran file (max 2MB)
+            if (file.size > 2 * 1024 * 1024) {
+                alert('Ukuran file maksimal 2MB');
+                $(this).val('');
+                return;
+            }
+
+            // Validasi tipe file
+            if (!file.type.match('image.*')) {
+                alert('File harus berupa gambar');
+                $(this).val('');
+                return;
+            }
+
+            // Preview
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                $('#previewImage').attr('src', e.target.result);
+                $('#previewContainer').show();
+            }
+            reader.readAsDataURL(file);
+        }
+    });
+
+    // Submit form
+    $('#btnSubmitStock').on('click', function() {
+        const type = $('#stockType').val();
+        const rowId = $('#rowId').val();
+        const productName = $('#productName').val();
+        const jumlahStock = $('#jumlahStock').val();
+        const foto = $('#uploadFoto')[0].files[0];
+
+        // Validasi
+        if (!jumlahStock) {
+            alert('Silakan pilih jumlah stock');
+            return;
+        }
+
+        // Buat FormData untuk kirim file
+        const formData = new FormData();
+        formData.append('_token', '{{ csrf_token() }}');
+        formData.append('type', type);
+        formData.append('row_id', rowId);
+        formData.append('product_name', productName);
+        formData.append('jumlah_stock', jumlahStock);
+        if (foto) {
+            formData.append('foto', foto);
+        }
+
+        // Log data (untuk testing)
+        console.log('Data yang akan dikirim:');
+        console.log('Type:', type);
+        console.log('Row ID:', rowId);
+        console.log('Produk:', productName);
+        console.log('Jumlah Stock:', jumlahStock);
+        console.log('Foto:', foto ? foto.name : 'Tidak ada');
+
+        alert('Data siap dikirim!\n\nType: ' + type + '\nProduk: ' + productName + '\nJumlah: ' + jumlahStock);
+        $('#modalValidasiStock').modal('hide');
     });
 });
 </script>

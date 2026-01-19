@@ -1,42 +1,93 @@
-{{-- MODAL ADD JUMLAH PRODUK --}}
-<div class="modal fade" id="modalAddJumlahProduk" tabindex="-1" role="dialog">
+{{--
+    MODAL ADD JUMLAH PRODUK
+    Untuk pengajuan stok/pemesanan produk
+--}}
+
+<div class="modal fade" id="modalAddJumlahProduk" tabindex="-1" role="dialog" aria-labelledby="modalAddJumlahProdukLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
-        <div class="modal-content" style="border-radius: 12px;">
+        <div class="modal-content modal-content-custom">
 
             {{-- Header --}}
-            <div class="modal-header" style="border-bottom: 1px solid #ddd;">
-                <h5 class="modal-title">Add Jumlah Produk</h5>
-                <button type="button" class="close" data-dismiss="modal">
-                    <span>&times;</span>
+            <div class="modal-header modal-header-custom">
+                <h5 class="modal-title" id="modalAddJumlahProdukLabel">
+                    <i class="bi bi-plus-circle"></i> Add Jumlah Produk
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
                 </button>
             </div>
 
             {{-- Body --}}
-            <div class="modal-body">
+            <div class="modal-body modal-body-custom">
                 <form id="formAddJumlahProduk">
+                    @csrf
 
                     {{-- Pilih Produk --}}
                     <div class="form-group">
-                        <label>Pilih Produk</label>
-                        <select name="produk_id" class="form-control" required>
+                        <label class="form-label-small">
+                            Pilih Produk <span class="text-danger">*</span>
+                        </label>
+                        <select name="produk_id" id="selectProduk" class="form-control" required>
                             <option value="">-- Pilih Produk --</option>
-                            <option value="1">RISOL</option>
-                            <option value="2">TAHU ISI</option>
-                            <option value="3">DONAT</option>
-                            <option value="4">KUE LAPIS</option>
+                            {{-- DUMMY DATA - Nanti ganti dengan loop dari database --}}
+                            @php
+                            $produk_options = [
+                                ['id' => 1, 'nama' => 'RISOL'],
+                                ['id' => 2, 'nama' => 'TAHU ISI'],
+                                ['id' => 3, 'nama' => 'DONAT'],
+                                ['id' => 4, 'nama' => 'KUE LAPIS'],
+                            ];
+                            @endphp
+
+                            @foreach($produk_options as $produk)
+                                <option value="{{ $produk['id'] }}">{{ $produk['nama'] }}</option>
+                            @endforeach
                         </select>
+                        <small class="text-muted">Pilih produk yang ingin ditambahkan stoknya</small>
                     </div>
 
                     {{-- Jumlah Produk --}}
                     <div class="form-group">
-                        <label>Jumlah Produk</label>
-                        <input type="number" name="jumlah" class="form-control" placeholder="Masukkan jumlah" required min="1">
+                        <label class="form-label-small">
+                            Jumlah Produk <span class="text-danger">*</span>
+                        </label>
+                        <input
+                            type="number"
+                            name="jumlah"
+                            id="inputJumlah"
+                            class="form-control"
+                            placeholder="Masukkan jumlah"
+                            required
+                            min="1"
+                            step="1"
+                        >
+                        <small class="text-muted">Minimal 1 unit</small>
+                    </div>
+
+                    {{-- Keterangan (Optional) --}}
+                    <div class="form-group">
+                        <label class="form-label-small">Keterangan (Opsional)</label>
+                        <textarea
+                            name="keterangan"
+                            class="form-control"
+                            rows="3"
+                            placeholder="Tambahkan catatan jika diperlukan"
+                        ></textarea>
+                    </div>
+
+                    {{-- Info Alert --}}
+                    <div class="alert alert-info info-text-muted mb-4">
+                        <i class="bi bi-info-circle"></i>
+                        <strong>Catatan:</strong> Pengajuan akan diproses oleh admin setelah disubmit.
                     </div>
 
                     {{-- Tombol Submit --}}
-                    <div class="text-center mt-4">
-                        <button type="submit" class="btn" style="background-color: #9B8CFF; color: white; padding: 10px 40px; border-radius: 8px;">
-                            Submit
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-primary-custom px-5">
+                            <i class="bi bi-send"></i> Submit Pengajuan
+                        </button>
+                        <button type="button" class="btn btn-secondary ml-2" data-dismiss="modal">
+                            Batal
                         </button>
                     </div>
 
@@ -46,41 +97,3 @@
         </div>
     </div>
 </div>
-
-<script>
-$(document).ready(function() {
-    $('#formAddJumlahProduk').submit(function(e) {
-        e.preventDefault();
-
-        const produkId = $('select[name="produk_id"]').val();
-        const jumlah = $('input[name="jumlah"]').val();
-
-        console.log('Produk ID:', produkId);
-        console.log('Jumlah:', jumlah);
-
-        // NANTI PAS INTEGRASI: Uncomment code di bawah
-        /*
-        $.ajax({
-            url: '/penitip/pengajuan/store',
-            method: 'POST',
-            data: {
-                produk_id: produkId,
-                jumlah: jumlah,
-                _token: $('meta[name="csrf-token"]').attr('content')
-            },
-            success: function(response) {
-                alert('Pengajuan berhasil ditambahkan!');
-                $('#modalAddJumlahProduk').modal('hide');
-                location.reload();
-            },
-            error: function() {
-                alert('Gagal menambahkan pengajuan!');
-            }
-        });
-        */
-
-        alert('Pengajuan ditambahkan! (Dummy)\nProduk: ' + produkId + '\nJumlah: ' + jumlah);
-        $('#modalAddJumlahProduk').modal('hide');
-    });
-});
-</script>

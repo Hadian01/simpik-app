@@ -1,13 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>SIMPIK @if(isset($userType) && $userType === 'penjual')Penjual @endif - @yield('title', 'Dashboard')</title>
+
+    <title>@yield('title', 'SIMPIK')</title>
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
 
     @stack('styles')
@@ -15,13 +16,7 @@
 <body class="bg-light">
 
     @include('components.navbar')
-
-    {{-- Sidebar dinamis berdasarkan parameter $userType --}}
-    @if(isset($userType) && $userType === 'penjual')
-        @include('components.sidebar_penjual')
-    @else
-        @include('components.sidebar_penitip')
-    @endif
+    @include('components.sidebar_penitip')
 
     <main class="container-fluid mt-4">
         @yield('content')
@@ -30,22 +25,7 @@
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
 
-    {{-- SIDEBAR SCRIPT --}}
-    <script>
-        $(document).ready(function() {
-            // Buka sidebar
-            $('#btnSidebar').click(function() {
-                $('#sidebar').addClass('active');
-                $('#sidebarOverlay').css('display', 'block');
-            });
-
-            // Tutup sidebar
-            $('#sidebarOverlay').click(function() {
-                $('#sidebar').removeClass('active');
-                $(this).css('display', 'none');
-            });
-        });
-    </script>
+    <script src="{{ asset('js/sidebar.js') }}"></script>
 
     @stack('scripts')
 </body>
