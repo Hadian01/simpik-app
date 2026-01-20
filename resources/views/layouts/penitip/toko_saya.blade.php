@@ -87,6 +87,11 @@
                 Riwayat Penjualan
             </a>
         </li>
+        <li class="nav-item">
+            <a class="nav-link" id="produk-tab" data-toggle="tab" href="#produk" role="tab" style="color: #333; font-weight: 500;">
+                Produk
+            </a>
+        </li>
     </ul>
 
     {{-- TAB Content --}}
@@ -128,7 +133,7 @@
 
                         <div class="row">
                             @foreach($produk_toko as $produk)
-                                @include('components.penitip.card_produk', [
+                                @include('components.penitip.list_produk', [
                                     'id' => $produk['id'],
                                     'nama' => $produk['nama'],
                                     'gambar' => $produk['gambar'],
@@ -218,130 +223,182 @@
         </div>
 
         {{-- TAB 3: Riwayat Penjualan --}}
-<div class="tab-pane fade" id="riwayat" role="tabpanel">
+        <div class="tab-pane fade" id="riwayat" role="tabpanel">
 
-    {{-- Header dengan Search, Filter & Add Button --}}
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h4>Riwayat Pengajuan {{ $toko['nama_toko'] }}</h4>
+            {{-- Header dengan Search, Filter & Add Button --}}
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h4>Riwayat Pengajuan {{ $toko['nama_toko'] }}</h4>
 
-        <div class="d-flex align-items-center gap-2">
-            {{-- Search --}}
-            <div class="input-group" style="width: 250px;">
-                <div class="input-group-prepend">
-                    <span class="input-group-text" style="background: white; border-right: none;">
-                        <i class="bi bi-search"></i>
-                    </span>
+                <div class="d-flex align-items-center gap-2">
+                    {{-- Search --}}
+                    <div class="input-group" style="width: 250px;">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" style="background: white; border-right: none;">
+                                <i class="bi bi-search"></i>
+                            </span>
+                        </div>
+                        <input type="text" id="searchRiwayat" class="form-control" placeholder="Search" style="border-left: none;">
+                    </div>
+
+                    {{-- Filter Button --}}
+                    <button type="button" class="btn btn-outline-secondary" data-toggle="modal" data-target="#modalFilterRiwayat">
+                        <i class="bi bi-funnel"></i> Filter
+                    </button>
+
+                    {{-- Add Button --}}
+                    <button type="button" class="btn" style="background-color: #9B8CFF; color: white;" data-toggle="modal" data-target="#modalAddJumlahProduk">
+                        <i class="bi bi-plus-lg"></i> Add
+                    </button>
                 </div>
-                <input type="text" id="searchRiwayat" class="form-control" placeholder="Search" style="border-left: none;">
             </div>
 
-            {{-- Filter Button --}}
-            <button type="button" class="btn btn-outline-secondary" data-toggle="modal" data-target="#modalFilterRiwayat">
-                <i class="bi bi-funnel"></i> Filter
-            </button>
+            {{-- DATA DUMMY RIWAYAT PENGAJUAN --}}
+            @php
+            $riwayat_pengajuan = [
+                [
+                    'no' => 1,
+                    'submission_date' => '01-09-2025',
+                    'name_produk' => 'RISOL',
+                    'harga_jual' => 2000,
+                    'cogs' => 1800,
+                    'sistem' => 38,
+                    'validasi_stock' => 36,
+                    'sisa_stock' => 2,
+                    'pendapatan' => 10000
+                ],
+                [
+                    'no' => 2,
+                    'submission_date' => '02-09-2025',
+                    'name_produk' => 'TAHU ISI',
+                    'harga_jual' => 2000,
+                    'cogs' => 1800,
+                    'sistem' => 38,
+                    'validasi_stock' => 38,
+                    'sisa_stock' => 7,
+                    'pendapatan' => 10000
+                ],
+                [
+                    'no' => 3,
+                    'submission_date' => '01-09-2025',
+                    'name_produk' => 'DONAT',
+                    'harga_jual' => 3000,
+                    'cogs' => 1600,
+                    'sistem' => 38,
+                    'validasi_stock' => 36,
+                    'sisa_stock' => 2,
+                    'pendapatan' => 10000
+                ],
+            ];
+            @endphp
 
-            {{-- Add Button --}}
-            <button type="button" class="btn" style="background-color: #9B8CFF; color: white;" data-toggle="modal" data-target="#modalAddJumlahProduk">
-                <i class="bi bi-plus-lg"></i> Add
-            </button>
-        </div>
-    </div>
+            {{-- Tabel Riwayat --}}
+            <div class="card" style="border: 1px solid #ddd; border-radius: 8px; overflow: hidden;">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0" id="tableRiwayatPengajuan">
+                        <thead style="background: #CFC7FF;">
+                            <tr>
+                                <th style="width: 50px;">NO</th>
+                                <th>SUBMISSION DATE</th>
+                                <th>NAME PRODUK</th>
+                                <th>HARGA JUAL</th>
+                                <th>COGS</th>
+                                <th>SISTEM</th>
+                                <th>VALIDASI STOCK</th>
+                                <th>SISA STOCK</th>
+                                <th>PENDAPATAN</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($riwayat_pengajuan as $item)
+                            <tr>
+                                <td>{{ $item['no'] }}</td>
+                                <td>{{ $item['submission_date'] }}</td>
+                                <td>{{ $item['name_produk'] }}</td>
+                                <td>RP {{ number_format($item['harga_jual'], 0, ',', '.') }}</td>
+                                <td>RP {{ number_format($item['cogs'], 0, ',', '.') }}</td>
+                                <td>{{ $item['sistem'] }}</td>
+                                <td>{{ $item['validasi_stock'] }}</td>
+                                <td>{{ $item['sisa_stock'] }}</td>
+                                <td>RP {{ number_format($item['pendapatan'], 0, ',', '.') }}</td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
 
-    {{-- DATA DUMMY RIWAYAT PENGAJUAN --}}
-    @php
-    $riwayat_pengajuan = [
-        [
-            'no' => 1,
-            'submission_date' => '01-09-2025',
-            'name_produk' => 'RISOL',
-            'harga_jual' => 2000,
-            'cogs' => 1800,
-            'sistem' => 38,
-            'validasi_stock' => 36,
-            'sisa_stock' => 2,
-            'pendapatan' => 10000
-        ],
-        [
-            'no' => 2,
-            'submission_date' => '02-09-2025',
-            'name_produk' => 'TAHU ISI',
-            'harga_jual' => 2000,
-            'cogs' => 1800,
-            'sistem' => 38,
-            'validasi_stock' => 38,
-            'sisa_stock' => 7,
-            'pendapatan' => 10000
-        ],
-        [
-            'no' => 3,
-            'submission_date' => '01-09-2025',
-            'name_produk' => 'DONAT',
-            'harga_jual' => 3000,
-            'cogs' => 1600,
-            'sistem' => 38,
-            'validasi_stock' => 36,
-            'sisa_stock' => 2,
-            'pendapatan' => 10000
-        ],
-    ];
-    @endphp
+                {{-- Pagination --}}
+                <div class="card-footer" style="background: white; border-top: 1px solid #ddd;">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <small class="text-muted">Showing 1 to {{ count($riwayat_pengajuan) }} of 20 entries</small>
 
-    {{-- Tabel Riwayat --}}
-    <div class="card" style="border: 1px solid #ddd; border-radius: 8px; overflow: hidden;">
-        <div class="table-responsive">
-            <table class="table table-hover mb-0" id="tableRiwayatPengajuan">
-                <thead style="background: #CFC7FF;">
-                    <tr>
-                        <th style="width: 50px;">NO</th>
-                        <th>SUBMISSION DATE</th>
-                        <th>NAME PRODUK</th>
-                        <th>HARGA JUAL</th>
-                        <th>COGS</th>
-                        <th>SISTEM</th>
-                        <th>VALIDASI STOCK</th>
-                        <th>SISA STOCK</th>
-                        <th>PENDAPATAN</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($riwayat_pengajuan as $item)
-                    <tr>
-                        <td>{{ $item['no'] }}</td>
-                        <td>{{ $item['submission_date'] }}</td>
-                        <td>{{ $item['name_produk'] }}</td>
-                        <td>RP {{ number_format($item['harga_jual'], 0, ',', '.') }}</td>
-                        <td>RP {{ number_format($item['cogs'], 0, ',', '.') }}</td>
-                        <td>{{ $item['sistem'] }}</td>
-                        <td>{{ $item['validasi_stock'] }}</td>
-                        <td>{{ $item['sisa_stock'] }}</td>
-                        <td>RP {{ number_format($item['pendapatan'], 0, ',', '.') }}</td>
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
+                        <nav>
+                            <ul class="pagination mb-0">
+                                <li class="page-item"><a class="page-link" href="#" style="background: #9B8CFF; color: white; border: none;">1</a></li>
+                                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                <li class="page-item"><a class="page-link" href="#">4</a></li>
+                                <li class="page-item disabled"><a class="page-link" href="#">...</a></li>
+                                <li class="page-item"><a class="page-link" href="#">10</a></li>
+                                <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
 
-        {{-- Pagination --}}
-        <div class="card-footer" style="background: white; border-top: 1px solid #ddd;">
-            <div class="d-flex justify-content-between align-items-center">
-                <small class="text-muted">Showing 1 to {{ count($riwayat_pengajuan) }} of 20 entries</small>
+                {{-- TAB PRODUK  --}}
+                <div class="modal fade" id="Produk" tabindex="-1">
+            <div class="modal-dialog modal-md modal-dialog-centered">
+                <div class="modal-content">
 
-                <nav>
-                    <ul class="pagination mb-0">
-                        <li class="page-item"><a class="page-link" href="#" style="background: #9B8CFF; color: white; border: none;">1</a></li>
-                        <li class="page-item"><a class="page-link" href="#">2</a></li>
-                        <li class="page-item"><a class="page-link" href="#">3</a></li>
-                        <li class="page-item"><a class="page-link" href="#">4</a></li>
-                        <li class="page-item disabled"><a class="page-link" href="#">...</a></li>
-                        <li class="page-item"><a class="page-link" href="#">10</a></li>
-                        <li class="page-item"><a class="page-link" href="#">Next</a></li>
-                    </ul>
-                </nav>
+                    <div class="modal-header">
+                        <h5 class="modal-title">Tambah Produk ke Toko</h5>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+
+                    <div class="modal-body">
+                        <form>
+                            <div class="form-group">
+                                <label>Pilih Produk Milik Anda</label>
+                                <select class="form-control">
+                                    <option>Donat Coklat</option>
+                                    <option>Pastel Ayam</option>
+                                    <option>Risoles Mayo</option>
+                                </select>
+                            </div>
+
+                            <div class="text-right">
+                                <button class="btn btn-outline-secondary" data-dismiss="modal">Batal</button>
+                                <button class="btn" style="background:#9B8CFF;color:white">Ajukan</button>
+                            </div>
+                        </form>
+                    </div>
+
+                </div>
             </div>
         </div>
-    </div>
+        </div>
+        </div>
+            {{-- TAB PRODUK--}}
+        <div class="tab-pane fade" id="produk">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h4>Produk yang Dijual</h4>
+                <button class="btn"
+                        style="background:#9B8CFF;color:white"
+                        data-toggle="modal"
+                        data-target="#modalAddProdukToko">
+                    <i class="bi bi-plus-lg"></i> Tambah Produk
+                </button>
+            </div>
 
-</div>
+            <div class="row">
+                @foreach($produk_toko as $produk)
+                    @include('components.penitip.card_produk', $produk)
+                @endforeach
+            </div>
+        </div>
+        
+{{-- INCLUDE MODAL ADD JUMLAH PRODUK --}}
+@include('components.penitip.add_new_produk')
 
 {{-- INCLUDE MODAL ADD JUMLAH PRODUK --}}
 @include('components.penitip.modal_add_jumlah_produk')

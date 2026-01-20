@@ -1,93 +1,101 @@
-{{--
-    MODAL ADD JUMLAH PRODUK
-    Untuk pengajuan stok/pemesanan produk
---}}
-
-<div class="modal fade" id="modalAddJumlahProduk" tabindex="-1" role="dialog" aria-labelledby="modalAddJumlahProdukLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content modal-content-custom">
+{{-- MODAL ADD JUMLAH PRODUK --}}
+<div class="modal fade" id="modalAddJumlahProduk" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-md modal-dialog-centered">
+        <div class="modal-content" style="border-radius: 12px;">
 
             {{-- Header --}}
-            <div class="modal-header modal-header-custom">
-                <h5 class="modal-title" id="modalAddJumlahProdukLabel">
-                    <i class="bi bi-plus-circle"></i> Add Jumlah Produk
-                </h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
+            <div class="modal-header border-0 pb-0">
+                <div>
+                    <h5 class="mb-1 font-weight-bold">Tambah Jumlah Produk</h5>
+                    <small class="text-muted">
+                        Ajukan penambahan stok produk
+                    </small>
+                </div>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span>
                 </button>
             </div>
 
             {{-- Body --}}
-            <div class="modal-body modal-body-custom">
+            <div class="modal-body pt-3">
                 <form id="formAddJumlahProduk">
                     @csrf
 
-                    {{-- Pilih Produk --}}
+                    {{-- Produk --}}
                     <div class="form-group">
-                        <label class="form-label-small">
-                            Pilih Produk <span class="text-danger">*</span>
+                        <label class="small font-weight-medium">
+                            Produk <span class="text-danger">*</span>
                         </label>
-                        <select name="produk_id" id="selectProduk" class="form-control" required>
-                            <option value="">-- Pilih Produk --</option>
-                            {{-- DUMMY DATA - Nanti ganti dengan loop dari database --}}
+                        <select name="produk_id" class="form-control" required>
+                            <option value="">Pilih Produk</option>
                             @php
-                            $produk_options = [
-                                ['id' => 1, 'nama' => 'RISOL'],
-                                ['id' => 2, 'nama' => 'TAHU ISI'],
-                                ['id' => 3, 'nama' => 'DONAT'],
-                                ['id' => 4, 'nama' => 'KUE LAPIS'],
-                            ];
+                                $produk_options = [
+                                    ['id' => 1, 'nama' => 'Risol'],
+                                    ['id' => 2, 'nama' => 'Tahu Isi'],
+                                    ['id' => 3, 'nama' => 'Donat'],
+                                    ['id' => 4, 'nama' => 'Kue Lapis'],
+                                ];
                             @endphp
-
                             @foreach($produk_options as $produk)
-                                <option value="{{ $produk['id'] }}">{{ $produk['nama'] }}</option>
+                                <option value="{{ $produk['id'] }}">
+                                    {{ $produk['nama'] }}
+                                </option>
                             @endforeach
                         </select>
-                        <small class="text-muted">Pilih produk yang ingin ditambahkan stoknya</small>
                     </div>
 
-                    {{-- Jumlah Produk --}}
+                    {{-- Jumlah --}}
                     <div class="form-group">
-                        <label class="form-label-small">
-                            Jumlah Produk <span class="text-danger">*</span>
+                        <label class="small font-weight-medium">
+                            Jumlah <span class="text-danger">*</span>
                         </label>
                         <input
                             type="number"
                             name="jumlah"
-                            id="inputJumlah"
                             class="form-control"
-                            placeholder="Masukkan jumlah"
-                            required
+                            placeholder="Contoh: 20"
                             min="1"
-                            step="1"
+                            required
                         >
-                        <small class="text-muted">Minimal 1 unit</small>
+                        <small class="text-muted">
+                            Minimal pengajuan 1 unit
+                        </small>
                     </div>
 
-                    {{-- Keterangan (Optional) --}}
+                    {{-- Keterangan --}}
                     <div class="form-group">
-                        <label class="form-label-small">Keterangan (Opsional)</label>
+                        <label class="small font-weight-medium">
+                            Catatan <span class="text-muted">(opsional)</span>
+                        </label>
                         <textarea
                             name="keterangan"
-                            class="form-control"
                             rows="3"
-                            placeholder="Tambahkan catatan jika diperlukan"
+                            class="form-control"
+                            placeholder="Contoh: untuk stok akhir pekan"
                         ></textarea>
                     </div>
 
-                    {{-- Info Alert --}}
-                    <div class="alert alert-info info-text-muted mb-4">
-                        <i class="bi bi-info-circle"></i>
-                        <strong>Catatan:</strong> Pengajuan akan diproses oleh admin setelah disubmit.
+                    {{-- Info ringan --}}
+                    <div class="bg-light rounded p-3 mb-4 small text-muted">
+                        <i class="bi bi-info-circle mr-1"></i>
+                        Pengajuan akan direview oleh admin sebelum diproses.
                     </div>
 
-                    {{-- Tombol Submit --}}
-                    <div class="text-center">
-                        <button type="submit" class="btn btn-primary-custom px-5">
-                            <i class="bi bi-send"></i> Submit Pengajuan
-                        </button>
-                        <button type="button" class="btn btn-secondary ml-2" data-dismiss="modal">
+                    {{-- Action --}}
+                    <div class="d-flex justify-content-end">
+                        <button
+                            type="button"
+                            class="btn btn-outline-secondary mr-2"
+                            data-dismiss="modal"
+                        >
                             Batal
+                        </button>
+                        <button
+                            type="submit"
+                            class="btn"
+                            style="background:#9B8CFF;color:#fff;padding:8px 24px;border-radius:8px;"
+                        >
+                            Ajukan
                         </button>
                     </div>
 

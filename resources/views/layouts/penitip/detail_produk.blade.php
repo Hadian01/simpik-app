@@ -32,7 +32,7 @@
                     <tr>
                         <td><strong>Harga Modal</strong></td>
                         <td>Rp 8.000</td>
-                    </tr>
+                    </tr>php 
                     <tr>
                         <td><strong>Harga Jual</strong></td>
                         <td>Rp 10.000</td>
