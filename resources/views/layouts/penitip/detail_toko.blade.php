@@ -4,7 +4,9 @@
 
 <div class="container-fluid">
 
-    {{-- DATA DUMMY TOKO --}}
+    {{-- =========================
+        DATA DUMMY TOKO
+    ========================== --}}
     @php
     $toko = [
         'id' => 1,
@@ -16,7 +18,7 @@
         'start_operasional' => '2020-09-15',
         'jam_operasional' => 'Every Day, 05.00 - 12.00',
         'deskripsi' => 'Toko dian ini toko pertama saya di masa pandemi untuk membangkitkan perekonomian',
-        'banner' => null, // atau 'images/banner-toko1.jpg'
+        'banner' => null,
     ];
 
     $produk_toko = [
@@ -25,24 +27,66 @@
         ['id' => 3, 'nama' => 'Roti Tawar', 'gambar' => null],
         ['id' => 4, 'nama' => 'Donat', 'gambar' => null],
         ['id' => 5, 'nama' => 'Kue Bolu', 'gambar' => null],
-        ['id' => 6, 'nama' => 'Kue Cubit', 'gambar' => null]
+        ['id' => 6, 'nama' => 'Kue Cubit', 'gambar' => null],
     ];
+
+    /**
+     * STATUS PENGAJUAN
+     * not_joined | pending | approved | rejected
+     */
+    $status_pengajuan = 'not_joined'; // ganti nanti dari DB
     @endphp
 
-     {{-- Header dengan Tombol Join --}}
+    {{-- =========================
+        HEADER + ACTION BUTTON
+    ========================== --}}
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2>{{ $toko['nama_toko'] }}</h2>
 
-        {{-- COMPONENT: Join Button --}}
-        @include('components.button', [
-            'text' => 'Join Sebagai Penitip',
-            'icon' => '+',
-            'dataToggle' => 'modal',
-            'dataTarget' => '#modalJoin'
-        ])
+        {{-- ACTION BUTTON DINAMIS --}}
+        @if($status_pengajuan === 'not_joined')
+            <button id="btnJoinPenitip"
+                class="btn"
+                style="background:#9B8CFF;color:white"
+                data-toggle="modal"
+                data-target="#modalJoin">
+                ➕ Join Sebagai Penitip
+            </button>
+
+            <button id="btnStatusPengajuan"
+                class="btn btn-warning"
+                data-toggle="modal"
+                data-target="#modalStatusPengajuan"
+                style="display:none">
+                ⏳ Menunggu Approval
+            </button>
+
+        @elseif($status_pengajuan === 'pending')
+            <button
+                class="btn btn-warning"
+                data-toggle="modal"
+                data-target="#modalStatusPengajuan">
+                ⏳ Menunggu Approval
+            </button>
+
+        @elseif($status_pengajuan === 'approved')
+            <span class="badge badge-success px-3 py-2">
+                ✔️ Anda sudah menjadi penitip
+            </span>
+
+        @elseif($status_pengajuan === 'rejected')
+            <button
+                class="btn btn-danger"
+                data-toggle="modal"
+                data-target="#modalStatusPengajuan">
+                ❌ Pengajuan Ditolak
+            </button>
+        @endif
     </div>
 
-    {{-- COMPONENT: Banner Toko --}}
+    {{-- =========================
+        BANNER TOKO
+    ========================== --}}
     @include('components.penitip.banner_toko', [
         'banner' => $toko['banner'],
         'nama_toko' => $toko['nama_toko']
@@ -50,7 +94,7 @@
 
     <div class="row">
 
-        {{-- KIRI: Info Toko --}}
+        {{-- INFO TOKO --}}
         <div class="col-md-6 mb-4">
             @include('components.penitip.detail_toko', [
                 'nama_toko' => $toko['nama_toko'],
@@ -64,13 +108,12 @@
             ])
         </div>
 
-        {{-- KANAN: Produk Toko --}}
+        {{-- PRODUK TOKO --}}
         <div class="col-md-6">
-            <div class="card" style="border: 1px solid #ddd; border-radius: 8px; padding: 20px;">
+            <div class="card" style="border:1px solid #ddd;border-radius:8px;padding:20px;">
                 <h5 class="mb-3">Produk {{ $toko['nama_toko'] }}</h5>
 
                 <div class="row">
-                    {{-- Loop Card Produk --}}
                     @foreach($produk_toko as $produk)
                         @include('components.penitip.list_produk', [
                             'nama' => $produk['nama'],
@@ -84,7 +127,10 @@
     </div>
 </div>
 
-{{-- INCLUDE MODAL --}}
+{{-- MODAL JOIN --}}
 @include('layouts.penitip.join_penitip')
+
+{{-- MODAL STATUS --}}
+@include('components.penitip.modal_status_pengajuan')
 
 @endsection

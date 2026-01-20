@@ -396,7 +396,7 @@
                 @endforeach
             </div>
         </div>
-        
+
 {{-- INCLUDE MODAL ADD JUMLAH PRODUK --}}
 @include('components.penitip.add_new_produk')
 
