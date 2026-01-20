@@ -22,7 +22,7 @@
 
                 <table class="table table-borderless">
                     <tr>
-                        <td style="width: 150px;"><strong>Nama Produk</strong></td>
+                        <td style="width: 150px;"><strong>Nama Produk tes</strong></td>
                         <td>Tart Tarik</td>
                     </tr>
                     <tr>
