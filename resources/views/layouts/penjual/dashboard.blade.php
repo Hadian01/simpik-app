@@ -4,108 +4,92 @@
 
 <div class="container-fluid">
 
-    {{-- Header --}}
+    {{-- HEADER --}}
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="mb-0">Sistem Informasi Penitipan Kue</h2>
-        <button class="btn btn-outline-secondary" style="border-radius: 8px;">
+        <button class="btn btn-outline-secondary" style="border-radius:8px">
             <i class="bi bi-funnel"></i> Filter
         </button>
     </div>
 
-    {{-- Stats Cards --}}
+    {{-- STAT CARDS --}}
     <div class="row mb-4">
         <div class="col-md-3 mb-3">
-            <div class="card stat-card" style="background: #E3DFFF; border: 2px solid #9B8CFF; border-radius: 16px;">
-                <div class="card-body text-center py-4">
-                    <h6 class="mb-2" style="font-weight: 600; color: #374151; font-size: 0.9rem;">Total Produk</h6>
-                    <h2 class="mb-0" style="font-weight: 700; color: #1f2937; font-size: 2.5rem;">70</h2>
+            <div class="card stat-card h-100">
+                <div class="card-body text-center">
+                    <h6 class="stat-title">Total Produk</h6>
+                    <h2 class="stat-value">70</h2>
                 </div>
             </div>
         </div>
         <div class="col-md-3 mb-3">
-            <div class="card stat-card" style="background: #E3DFFF; border: 2px solid #9B8CFF; border-radius: 16px;">
-                <div class="card-body text-center py-4">
-                    <h6 class="mb-2" style="font-weight: 600; color: #374151; font-size: 0.9rem;">Total Terjual</h6>
-                    <h2 class="mb-0" style="font-weight: 700; color: #1f2937; font-size: 2.5rem;">300</h2>
+            <div class="card stat-card h-100">
+                <div class="card-body text-center">
+                    <h6 class="stat-title">Total Terjual</h6>
+                    <h2 class="stat-value">300</h2>
                 </div>
             </div>
         </div>
         <div class="col-md-3 mb-3">
-            <div class="card stat-card" style="background: #E3DFFF; border: 2px solid #9B8CFF; border-radius: 16px;">
-                <div class="card-body text-center py-4">
-                    <h6 class="mb-2" style="font-weight: 600; color: #374151; font-size: 0.9rem;">Total Pendapatan</h6>
-                    <h2 class="mb-0" style="font-weight: 700; color: #1f2937; font-size: 1.8rem;">Rp. 1.500,00</h2>
+            <div class="card stat-card h-100">
+                <div class="card-body text-center">
+                    <h6 class="stat-title">Total Pendapatan</h6>
+                    <h2 class="stat-value" style="font-size:1.8rem;">Rp 1.500,00</h2>
                 </div>
             </div>
         </div>
         <div class="col-md-3 mb-3">
-            <div class="card stat-card" style="background: #E3DFFF; border: 2px solid #9B8CFF; border-radius: 16px;">
-                <div class="card-body text-center py-4">
-                    <h6 class="mb-2" style="font-weight: 600; color: #374151; font-size: 0.9rem;">Total Omset</h6>
-                    <h2 class="mb-0" style="font-weight: 700; color: #1f2937; font-size: 1.8rem;">Rp. 10.000.000</h2>
+            <div class="card stat-card h-100">
+                <div class="card-body text-center">
+                    <h6 class="stat-title">Total Omset</h6>
+                    <h2 class="stat-value" style="font-size:1.8rem;">Rp 10.000.000</h2>
                 </div>
             </div>
         </div>
     </div>
 
-    {{-- Tabs --}}
-    <ul class="nav nav-tabs mb-3" style="border-bottom: 2px solid #e5e7eb;">
+    {{-- TAB --}}
+    <ul class="nav nav-tabs mb-3">
         <li class="nav-item">
-            <a class="nav-link active" href="#" style="color: #9B8CFF; border-bottom: 3px solid #9B8CFF; font-weight: 600;">Monthly</a>
+            <a class="nav-link active">Monthly</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="#" style="color: #6b7280;">Yearly</a>
+            <a class="nav-link text-muted">Yearly</a>
         </li>
     </ul>
 
-    {{-- Chart Section --}}
-    {{-- Bar Chart - Full Width --}}
-    <div class="row mb-4">
-        <div class="col-12">
-            <div class="card" style="border: 1px solid #e5e7eb; border-radius: 12px;">
-                <div class="card-body" style="padding: 30px;">
-                    <canvas id="barChart" style="height: 350px;"></canvas>
-                </div>
-            </div>
+    {{-- BAR CHART --}}
+    <div class="card mb-4">
+        <div class="card-body p-4">
+            <canvas id="barChart" height="120"></canvas>
         </div>
     </div>
 
-    {{-- Donut Chart and Product List - Side by Side --}}
+    {{-- DONUT & PRODUK MARGIN --}}
     <div class="row">
-        {{-- Donut Chart --}}
+        {{-- DONUT --}}
         <div class="col-lg-6 mb-4">
-            <div class="card" style="border: 1px solid #e5e7eb; border-radius: 12px; min-height: 450px;">
-                <div class="card-body" style="padding: 30px;">
-                    <h6 class="mb-4" style="font-weight: 600; font-size: 1rem;">Jenis Kue</h6>
+            <div class="card h-100">
+                <div class="card-body p-4">
+                    <h6 class="mb-4">Jenis Kue</h6>
 
                     <div class="row align-items-center">
-                        {{-- Chart --}}
-                        <div class="col-7">
-                            <div class="d-flex justify-content-center align-items-center" style="height: 280px;">
-                                <canvas id="donutChart" style="max-width: 280px; max-height: 280px;"></canvas>
-                            </div>
+                        <div class="col-7 text-center">
+                            <canvas id="donutChart" width="250" height="250"></canvas>
                         </div>
-
-                        {{-- Legend --}}
-                        <div class="col-5">
-                            <div style="padding-left: 10px;">
-                                <p class="mb-3" style="font-size: 0.9rem; font-weight: 500; color: #374151;">Keterangan :</p>
-                                <div class="mb-3 d-flex align-items-center">
-                                    <span style="width: 16px; height: 16px; background: #ef4444; border-radius: 3px; display: inline-block; margin-right: 10px;"></span>
-                                    <small style="color: #6b7280; font-size: 0.9rem;">Keterangan</small>
-                                </div>
-                                <div class="mb-3 d-flex align-items-center">
-                                    <span style="width: 16px; height: 16px; background: #d8b4fe; border-radius: 3px; display: inline-block; margin-right: 10px;"></span>
-                                    <small style="color: #6b7280; font-size: 0.9rem;">Keterangan</small>
-                                </div>
-                                <div class="mb-3 d-flex align-items-center">
-                                    <span style="width: 16px; height: 16px; background: #ec4899; border-radius: 3px; display: inline-block; margin-right: 10px;"></span>
-                                    <small style="color: #6b7280; font-size: 0.9rem;">Keterangan</small>
-                                </div>
-                                <div class="mb-3 d-flex align-items-center">
-                                    <span style="width: 16px; height: 16px; background: #eab308; border-radius: 3px; display: inline-block; margin-right: 10px;"></span>
-                                    <small style="color: #6b7280; font-size: 0.9rem;">Keterangan</small>
-                                </div>
+                        <div class="col-5 small">
+                            <p class="fw-semibold">Keterangan :</p>
+                            <div class="d-flex align-items-center mb-2">
+                                <span class="legend red"></span> Kue Basah
+                            </div>
+                            <div class="d-flex align-items-center mb-2">
+                                <span class="legend purple"></span> Kue Kering
+                            </div>
+                            <div class="d-flex align-items-center mb-2">
+                                <span class="legend pink"></span> Donat
+                            </div>
+                            <div class="d-flex align-items-center">
+                                <span class="legend yellow"></span> Lainnya
                             </div>
                         </div>
                     </div>
@@ -113,101 +97,41 @@
             </div>
         </div>
 
-        {{-- Product Margin List --}}
+        {{-- PRODUK MARGIN --}}
         <div class="col-lg-6 mb-4">
-            <div class="card" style="border: 1px solid #e5e7eb; border-radius: 12px; min-height: 450px;">
-                <div class="card-body" style="padding: 25px;">
-                    <h6 class="mb-3" style="font-weight: 600; font-size: 1rem;">Produk Margin Tertinggi</h6>
+            <div class="card h-100">
+                <div class="card-body p-4">
+                    <h6 class="mb-4">Produk Margin Tertinggi</h6>
 
-                    {{-- Item 1 --}}
-                    <div class="mb-3 pb-3" style="border-bottom: 1px solid #e5e7eb;">
-                        <div class="d-flex align-items-start">
-                            <div class="me-3">
-                                <i class="bi bi-person-circle" style="font-size: 2.5rem; color: #9ca3af;"></i>
-                                <div class="text-center mt-1">
-                                    <small style="font-size: 0.75rem; color: #6b7280;">Dian</small>
-                                </div>
+                    @for($i=0;$i<3;$i++)
+                    <div class="margin-item">
+                        <div class="d-flex gap-3">
+                            <div class="text-center" style="width:60px">
+                                <i class="bi bi-person-circle fs-1 text-secondary"></i>
+                                <small class="text-muted">Dian</small>
                             </div>
-                            <div class="flex-grow-1" style="font-size: 0.85rem;">
-                                <div class="d-flex justify-content-between mb-1">
-                                    <span style="color: #9ca3af;">Nama Produk</span>
-                                    <span style="color: #374151; font-weight: 500;">: Nasi Jemol Kua rica</span>
+                            <div class="flex-grow-1 small">
+                                <div class="d-flex">
+                                    <div class="margin-label">Nama Produk</div>
+                                    <div>: Nasi Jemol Kua Rica</div>
                                 </div>
-                                <div class="d-flex justify-content-between mb-1">
-                                    <span style="color: #9ca3af;">Total Terjual</span>
-                                    <span style="color: #374151; font-weight: 500;">: 250</span>
+                                <div class="d-flex">
+                                    <div class="margin-label">Total Terjual</div>
+                                    <div>: 250</div>
                                 </div>
-                                <div class="d-flex justify-content-between mb-1">
-                                    <span style="color: #9ca3af;">Total Omset</span>
-                                    <span style="color: #374151; font-weight: 500;">: Rp. 2.000.000</span>
+                                <div class="d-flex">
+                                    <div class="margin-label">Total Omset</div>
+                                    <div>: Rp 2.000.000</div>
                                 </div>
-                                <div class="d-flex justify-content-between">
-                                    <span style="color: #9ca3af;">Pemasukan</span>
-                                    <span style="color: #374151; font-weight: 500;">: Rp. 300.000</span>
+                                <div class="d-flex">
+                                    <div class="margin-label">Pemasukan</div>
+                                    <div class="fw-semibold">: Rp 300.000</div>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    @endfor
 
-                    {{-- Item 2 --}}
-                    <div class="mb-3 pb-3" style="border-bottom: 1px solid #e5e7eb;">
-                        <div class="d-flex align-items-start">
-                            <div class="me-3">
-                                <i class="bi bi-person-circle" style="font-size: 2.5rem; color: #9ca3af;"></i>
-                                <div class="text-center mt-1">
-                                    <small style="font-size: 0.75rem; color: #6b7280;">Dian</small>
-                                </div>
-                            </div>
-                            <div class="flex-grow-1" style="font-size: 0.85rem;">
-                                <div class="d-flex justify-content-between mb-1">
-                                    <span style="color: #9ca3af;">Nama Produk</span>
-                                    <span style="color: #374151; font-weight: 500;">: Nasi Jemol Kua rica</span>
-                                </div>
-                                <div class="d-flex justify-content-between mb-1">
-                                    <span style="color: #9ca3af;">Total Terjual</span>
-                                    <span style="color: #374151; font-weight: 500;">: 250</span>
-                                </div>
-                                <div class="d-flex justify-content-between mb-1">
-                                    <span style="color: #9ca3af;">Total Omset</span>
-                                    <span style="color: #374151; font-weight: 500;">: Rp. 2.000.000</span>
-                                </div>
-                                <div class="d-flex justify-content-between">
-                                    <span style="color: #9ca3af;">Pemasukan</span>
-                                    <span style="color: #374151; font-weight: 500;">: Rp. 300.000</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    {{-- Item 3 --}}
-                    <div class="mb-3">
-                        <div class="d-flex align-items-start">
-                            <div class="me-3">
-                                <i class="bi bi-person-circle" style="font-size: 2.5rem; color: #9ca3af;"></i>
-                                <div class="text-center mt-1">
-                                    <small style="font-size: 0.75rem; color: #6b7280;">Dian</small>
-                                </div>
-                            </div>
-                            <div class="flex-grow-1" style="font-size: 0.85rem;">
-                                <div class="d-flex justify-content-between mb-1">
-                                    <span style="color: #9ca3af;">Nama Produk</span>
-                                    <span style="color: #374151; font-weight: 500;">: Nasi Jemol Kua rica</span>
-                                </div>
-                                <div class="d-flex justify-content-between mb-1">
-                                    <span style="color: #9ca3af;">Total Terjual</span>
-                                    <span style="color: #374151; font-weight: 500;">: 250</span>
-                                </div>
-                                <div class="d-flex justify-content-between mb-1">
-                                    <span style="color: #9ca3af;">Total Omset</span>
-                                    <span style="color: #374151; font-weight: 500;">: Rp. 2.000.000</span>
-                                </div>
-                                <div class="d-flex justify-content-between">
-                                    <span style="color: #9ca3af;">Pemasukan</span>
-                                    <span style="color: #374151; font-weight: 500;">: Rp. 300.000</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -220,80 +144,52 @@
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
 <script>
-$(document).ready(function() {
+new Chart(document.getElementById('barChart'), {
+    type: 'bar',
+    data: {
+        labels: ['Dian','Eka','Ardia','Bella','Bella','Bella'],
+        datasets: [{
+            data: [100,150,75,125,90,180],
+            backgroundColor:'#C7D2FE',
+            borderRadius:6
+        }]
+    },
+    options:{
+        plugins:{legend:{display:false}},
+        scales:{y:{beginAtZero:true}}
+    }
+});
 
-    // Bar Chart
-    const barCtx = document.getElementById('barChart').getContext('2d');
-    const barChart = new Chart(barCtx, {
-        type: 'bar',
-        data: {
-            labels: ['Dian', 'Eka', 'Ardia', 'Bella', 'Bella', 'Bella', 'Bella', 'Bella', 'Bella', 'Bella', 'Bella', 'Bella', 'Bella', 'Bella', 'Bella', 'Bella', 'Bella', 'Bella', 'Bella', 'Bella', 'Bella', 'Bella', 'Bella', 'Bella'],
-            datasets: [{
-                data: [100, 150, 75, 125, 90, 180, 110, 140, 95, 200, 130, 160, 105, 145, 115, 135, 120, 155, 125, 140, 130, 150, 140, 165],
-                backgroundColor: '#C7D2FE',
-                borderRadius: 4,
-                barThickness: 20
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    display: false
-                }
-            },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    max: 200,
-                    ticks: {
-                        stepSize: 50,
-                        font: {
-                            size: 11
-                        }
-                    },
-                    grid: {
-                        color: '#f3f4f6'
-                    }
-                },
-                x: {
-                    ticks: {
-                        font: {
-                            size: 10
-                        }
-                    },
-                    grid: {
-                        display: false
-                    }
-                }
-            }
-        }
-    });
-
-    // Donut Chart
-    const donutCtx = document.getElementById('donutChart').getContext('2d');
-    const donutChart = new Chart(donutCtx, {
-        type: 'doughnut',
-        data: {
-            datasets: [{
-                data: [35, 25, 15, 25],
-                backgroundColor: ['#ef4444', '#d8b4fe', '#ec4899', '#eab308'],
-                borderWidth: 0
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: true,
-            cutout: '65%',
-            plugins: {
-                legend: {
-                    display: false
-                }
-            }
-        }
-    });
-
+new Chart(document.getElementById('donutChart'), {
+    type: 'doughnut',
+    data: {
+        datasets: [{
+            data:[35,25,15,25],
+            backgroundColor:['#ef4444','#d8b4fe','#ec4899','#eab308']
+        }]
+    },
+    options:{plugins:{legend:{display:false}},cutout:'65%'}
 });
 </script>
 @endpush
+
+{{-- CSS --}}
+<style>
+.stat-card{
+    background:#E3DFFF;
+    border:2px solid #9B8CFF;
+    border-radius:16px;
+    min-height:130px
+}
+.stat-title{font-size:.85rem;font-weight:600;color:#374151}
+.stat-value{font-weight:700;color:#1f2937;font-size:2.2rem}
+
+.margin-item{border-bottom:1px solid #e5e7eb;padding-bottom:16px;margin-bottom:16px}
+.margin-label{width:130px;color:#9ca3af}
+
+.legend{width:14px;height:14px;border-radius:3px;margin-right:8px}
+.legend.red{background:#ef4444}
+.legend.purple{background:#d8b4fe}
+.legend.pink{background:#ec4899}
+.legend.yellow{background:#eab308}
+</style>

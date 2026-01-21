@@ -19,6 +19,16 @@
                         <label>Tipe Produk</label>
                         <select class="form-control" required>
                             <option value="">-- Pilih --</option>
+                            <option>Minuman</option>
+                            <option>Kue Basah</option>
+                            <option>Kue Kering</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Produk</label>
+                        <select class="form-control" required>
+                            <option value="">-- Pilih --</option>
                             <option>Kue</option>
                             <option>Roti</option>
                             <option>Snack</option>
@@ -42,8 +52,13 @@
                     </small>
 
                     <div class="text-center">
-                        <button type="submit" class="btn btn-primary px-5">Simpan</button>
+                        @include('components.button', [
+                            'type' => 'submit',
+                            'text' => 'Simpan',
+                            'class' => 'px-5'
+                        ])
                     </div>
+
 
                 </form>
             </div>

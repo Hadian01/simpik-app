@@ -24,11 +24,37 @@
     $id = $toko['id'];
     $is_active = $toko['is_active'];
 
-    $produk_toko = [
-        ['id' => 1, 'nama' => 'Kue Lapis', 'gambar' => null, 'is_active' => true, 'harga' => 10000],
-        ['id' => 2, 'nama' => 'Brownies', 'gambar' => null, 'is_active' => true, 'harga' => 15000],
-        ['id' => 3, 'nama' => 'Roti Tawar', 'gambar' => null, 'is_active' => true, 'harga' => 10000],
-    ];
+   $produk_toko = [
+    [
+        'id' => 1,
+        'nama' => 'Kue Lapis',
+        'gambar' => null,
+        'harga' => 10000,
+        'status' => 'approved'
+    ],
+    [
+        'id' => 2,
+        'nama' => 'Brownies',
+        'gambar' => null,
+        'harga' => 15000,
+        'status' => 'approved'
+    ],
+    [
+        'id' => 3,
+        'nama' => 'Roti Tawar',
+        'gambar' => null,
+        'harga' => 10000,
+        'status' => 'pending'
+    ],
+    [
+        'id' => 4,
+        'nama' => 'Donat',
+        'gambar' => null,
+        'harga' => 9000,
+        'status' => 'rejected'
+    ],
+];
+
 
     // DATA DUMMY DASHBOARD
     $dashboard = [
@@ -137,7 +163,6 @@
                                     'id' => $produk['id'],
                                     'nama' => $produk['nama'],
                                     'gambar' => $produk['gambar'],
-                                    'is_active' => $produk['is_active'],
                                     'harga' => $produk['harga']
                                 ])
                             @endforeach
@@ -378,24 +403,53 @@
         </div>
         </div>
         </div>
-            {{-- TAB PRODUK--}}
-        <div class="tab-pane fade" id="produk">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <h4>Produk yang Dijual</h4>
-                <button class="btn"
-                        style="background:#9B8CFF;color:white"
-                        data-toggle="modal"
-                        data-target="#modalAddProdukToko">
-                    <i class="bi bi-plus-lg"></i> Tambah Produk
-                </button>
-            </div>
+          {{-- TAB PRODUK --}}
+<div class="tab-pane fade" id="produk">
 
-            <div class="row">
-                @foreach($produk_toko as $produk)
-                    @include('components.penitip.card_produk', $produk)
-                @endforeach
+    {{-- HEADER --}}
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h4>Produk Toko</h4>
+        <button class="btn"
+                style="background:#9B8CFF;color:white"
+                data-toggle="modal"
+                data-target="#modalAddProdukToko">
+            <i class="bi bi-plus-lg"></i> Tambah Produk
+        </button>
+    </div>
+
+    {{-- PRODUK APPROVED --}}
+    <h5 class="mb-3">Produk Aktif</h5>
+
+    <div class="row mb-5">
+        @forelse($produk_toko as $produk)
+            @if($produk['status'] === 'approved')
+                @include('components.penitip.card_produk', $produk)
+            @endif
+        @empty
+            <div class="col-12">
+                <p class="text-muted">Belum ada produk aktif.</p>
             </div>
-        </div>
+        @endforelse
+    </div>
+
+    {{-- PRODUK PENGAJUAN --}}
+    <h5 class="mb-3">Produk Pengajuan</h5>
+
+    <div class="row">
+        @forelse($produk_toko as $produk)
+            @if(in_array($produk['status'], ['pending', 'rejected']))
+                @include('components.penitip.card_produk_pengajuan', $produk)
+            @endif
+        @empty
+            <div class="col-12">
+                <p class="text-muted">Tidak ada produk pengajuan.</p>
+            </div>
+        @endforelse
+    </div>
+
+</div>
+
+
 
 {{-- INCLUDE MODAL ADD JUMLAH PRODUK --}}
 @include('components.penitip.add_new_produk')

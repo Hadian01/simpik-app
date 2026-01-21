@@ -29,6 +29,10 @@ Route::prefix('penitip')->name('penitip.')->group(function () {
         return view('layouts.penitip.detail_produk', ['produk_id' => $id]);
     })->name('detail_produk');
 
+    Route::get('/detail_produk_v2/{id}', function ($id) {
+        return view('layouts.penitip.detail_produk_v2', ['produk_id' => $id]);
+    })->name('detail_produk_v2');
+    
     Route::get('/riwayat', function () {
         return view('layouts.penitip.riwayat');
     })->name('riwayat');

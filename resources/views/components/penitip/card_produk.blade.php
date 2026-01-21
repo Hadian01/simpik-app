@@ -13,7 +13,7 @@
         </div>
 
         {{-- Card Link --}}
-        <a href="{{ route('penitip.detail_produk', $id) }}" class="text-decoration-none text-dark">
+        <a href="{{ route('penitip.detail_produk', $id) }}" class="stretched-link"></a>
             <div class="bg-light d-flex align-items-center justify-content-center" style="height:200px;">
                 <strong>Produk</strong>
             </div>

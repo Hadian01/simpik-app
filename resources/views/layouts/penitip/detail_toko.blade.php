@@ -44,14 +44,15 @@
         <h2>{{ $toko['nama_toko'] }}</h2>
 
         {{-- ACTION BUTTON DINAMIS --}}
-        @if($status_pengajuan === 'not_joined')
-            <button id="btnJoinPenitip"
-                class="btn"
-                style="background:#9B8CFF;color:white"
-                data-toggle="modal"
-                data-target="#modalJoin">
-                ➕ Join Sebagai Penitip
-            </button>
+       @if($status_pengajuan === 'not_joined')
+    <button id="btnJoinPenitip"
+        class="btn"
+        style="background:#9B8CFF;color:white"
+        data-toggle="modal"
+        data-target="#modalJoin">
+        <i class="bi bi-plus-lg"></i> Join Sebagai Penitip
+    </button>
+
 
             <button id="btnStatusPengajuan"
                 class="btn btn-warning"

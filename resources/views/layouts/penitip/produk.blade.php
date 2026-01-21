@@ -6,9 +6,15 @@
 
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h4 class="mb-0">Daftar Produk</h4>
-    <button class="btn btn-primary" data-toggle="modal" data-target="#modalTambahProduk">
-        <i class="bi bi-plus"></i> Tambah Produk
-    </button>
+    <div class="text-center">
+        @include('components.button', [
+    'type' => 'button',
+    'text' => 'Tambah Produk',
+    'class' => 'px-5',
+    'dataToggle' => 'modal',
+    'dataTarget' => '#modalTambahProduk'
+    ])
+    </div>
 </div>
 
 @php
