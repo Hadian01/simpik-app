@@ -32,7 +32,7 @@ Route::prefix('penitip')->name('penitip.')->group(function () {
     Route::get('/detail_produk_v2/{id}', function ($id) {
         return view('layouts.penitip.detail_produk_v2', ['produk_id' => $id]);
     })->name('detail_produk_v2');
-    
+
     Route::get('/riwayat', function () {
         return view('layouts.penitip.riwayat');
     })->name('riwayat');
@@ -57,9 +57,9 @@ Route::prefix('penjual')->name('penjual.')->group(function () {
         return view('layouts.penjual.detail_penitip_approved', ['penitip_id' => $id]);  // Detail pengajuan per penitip (BARU)
     })->name('detail_pengajuan_penitip');
 
-    Route::get('/riwayat-pengajuan', function () {
-        return view('layouts.penjual.riwayat_pengajuan');
-    })->name('riwayat_pengajuan');
+    Route::get('/penjual-register-toko', function () {
+        return view('layouts.penjual.register_toko');
+    })->name('register_toko');
 
     Route::get('/stok-harian', function () {
         return view('layouts.penjual.stok_harian');

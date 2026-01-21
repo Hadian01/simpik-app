@@ -53,38 +53,28 @@
             </table>
 
             {{-- ACTION BUTTON --}}
-            @switch($status)
+        @switch($status)
 
-                @case('approved')
-                    <a href="{{ route('penitip.toko_saya', ['id' => $id]) }}"
-                       class="btn btn-sm btn-block mt-3"
-                       style="background:#9B8CFF;color:white;">
-                        Open
-                    </a>
-                    @break
+            @case('approved')
+                <a href="{{ route('penitip.toko_saya', ['id' => $id]) }}"
+                class="btn btn-sm btn-block mt-3"
+                style="background:#9B8CFF;color:white;">
+                    Open
+                </a>
+                @break
 
-                @case('pending')
-                    <button class="btn btn-sm btn-block mt-3 btn-secondary" disabled>
-                        Menunggu Approval
-                    </button>
-                    @break
+            @default
+                   {{-- not_joined | pending | rejected --}}
+    <a href="{{ route('penitip.detail_toko', [
+        'id' => $id,
+        'status' => $status
+    ]) }}"
+       class="btn btn-sm btn-block mt-3"
+       style="background:#9B8CFF;color:white;">
+        Kunjungi Toko
+    </a>
+        @endswitch
 
-                @case('rejected')
-                    <a href="{{ route('penitip.detail_toko', ['id' => $id]) }}"
-                       class="btn btn-sm btn-block mt-3 btn-outline-danger">
-                        Ajukan Ulang
-                    </a>
-                    @break
-
-                @case('not_joined')
-                    <a href="{{ route('penitip.detail_toko', ['id' => $id]) }}"
-                       class="btn btn-sm btn-block mt-3"
-                       style="background:#9B8CFF;color:white;">
-                        Kunjungi Toko
-                    </a>
-                    @break
-
-            @endswitch
         </div>
     </div>
 </div>

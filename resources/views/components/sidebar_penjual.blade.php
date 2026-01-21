@@ -21,8 +21,8 @@
             </a>
         </li>
         <li class="mb-3">
-            <a href="{{ route('penjual.riwayat_pengajuan') }}" class="sidebar-link" style="display: block; padding: 12px 20px; color: #333; text-decoration: none; font-weight: 500;">
-                <i class="bi bi-clock-history"></i> Riwayat Pengajuan
+            <a href="{{ route('penjual.register_toko') }}" class="sidebar-link" style="display: block; padding: 12px 20px; color: #333; text-decoration: none; font-weight: 500;">
+                <i class="bi bi-clock-history"></i> Register Toko
             </a>
         </li>
         <li class="mb-3">

@@ -1,4 +1,4 @@
-@extends('layouts.app', ['userType' => 'penitip'])
+@extends('layouts.app', ['userType' => 'penjual'])
 
 @section('content')
 

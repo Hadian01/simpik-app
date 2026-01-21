@@ -34,56 +34,66 @@
      * STATUS PENGAJUAN
      * not_joined | pending | approved | rejected
      */
-    $status_pengajuan = 'not_joined'; // ganti nanti dari DB
+    $status_pengajuan = request('status', 'not_joined');
+ // ganti nanti dari DB
     @endphp
 
     {{-- =========================
         HEADER + ACTION BUTTON
     ========================== --}}
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2>{{ $toko['nama_toko'] }}</h2>
+    <h2>{{ $toko['nama_toko'] }}</h2>
 
-        {{-- ACTION BUTTON DINAMIS --}}
-       @if($status_pengajuan === 'not_joined')
-    <button id="btnJoinPenitip"
-        class="btn"
-        style="background:#9B8CFF;color:white"
-        data-toggle="modal"
-        data-target="#modalJoin">
-        <i class="bi bi-plus-lg"></i> Join Sebagai Penitip
-    </button>
+    {{-- ACTION BUTTON DINAMIS --}}
+    @switch($status_pengajuan)
 
+        @case('not_joined')
+            @include('components.button', [
+                'type' => 'button',
+                'text' => 'Join Sebagai Penitip',
+                'icon' => '+',
+                'dataToggle' => 'modal',
+                'dataTarget' => '#modalJoin'
+            ])
+            @break
 
-            <button id="btnStatusPengajuan"
-                class="btn btn-warning"
-                data-toggle="modal"
-                data-target="#modalStatusPengajuan"
-                style="display:none">
-                ⏳ Menunggu Approval
-            </button>
+        @case('pending')
+            @include('components.button', [
+                'type' => 'button',
+                'text' => 'Lihat Status Pengajuan',
+                'dataToggle' => 'modal',
+                'dataTarget' => '#modalStatusPengajuan'
+            ])
+            @break
 
-        @elseif($status_pengajuan === 'pending')
-            <button
-                class="btn btn-warning"
-                data-toggle="modal"
-                data-target="#modalStatusPengajuan">
-                ⏳ Menunggu Approval
-            </button>
+        @case('rejected')
+            <div class="d-flex gap-2">
+                @include('components.button', [
+                    'type' => 'button',
+                    'text' => 'Lihat Status',
+                    'class' => 'mr-2',
+                    'dataToggle' => 'modal',
+                    'dataTarget' => '#modalStatusPengajuan'
+                ])
 
-        @elseif($status_pengajuan === 'approved')
+                @include('components.button', [
+                    'type' => 'button',
+                    'text' => 'Ajukan Ulang',
+                    'icon' => '↻',
+                    'dataToggle' => 'modal',
+                    'dataTarget' => '#modalJoin'
+                ])
+            </div>
+            @break
+
+        @case('approved')
             <span class="badge badge-success px-3 py-2">
                 ✔️ Anda sudah menjadi penitip
             </span>
+            @break
 
-        @elseif($status_pengajuan === 'rejected')
-            <button
-                class="btn btn-danger"
-                data-toggle="modal"
-                data-target="#modalStatusPengajuan">
-                ❌ Pengajuan Ditolak
-            </button>
-        @endif
-    </div>
+    @endswitch
+</div>
 
     {{-- =========================
         BANNER TOKO

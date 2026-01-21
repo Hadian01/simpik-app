@@ -16,7 +16,13 @@
 <body class="bg-light">
 
     @include('components.navbar')
-    @include('components.sidebar_penitip')
+
+    @if(($userType ?? 'penitip') === 'penjual')
+        @include('components.sidebar_penjual')
+    @else
+        @include('components.sidebar_penitip')
+    @endif
+
 
     <main class="container-fluid mt-4">
         @yield('content')
