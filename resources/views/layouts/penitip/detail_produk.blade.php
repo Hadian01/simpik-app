@@ -47,7 +47,16 @@
 
                 {{-- Tombol --}}
                 <div class="mt-4">
-                    <button class="btn btn-warning">Edit Produk</button>
+                    <button class="btn btn-warning"
+                            onclick="openEditProduk({
+                                tipe: 'kue_basah',
+                                nama: 'kue',
+                                modal: 8000,
+                                jual: 10000,
+                                status: 'active'
+                            })">
+                        Edit
+                    </button>
                     <button class="btn btn-danger">Hapus Produk</button>
                     <a href="{{ route('penitip.produk') }}" class="btn btn-secondary">Kembali</a>
                 </div>
@@ -58,3 +67,4 @@
 </div>
 
 @endsection
+@include('layouts.penitip.add_produk')

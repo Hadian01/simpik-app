@@ -65,3 +65,7 @@ Route::prefix('penjual')->name('penjual.')->group(function () {
         return view('layouts.penjual.stok_harian');
     })->name('stok_harian');
 });
+
+    Route::get('/login', function () {
+        return view('auth.login');
+    })->name('login');

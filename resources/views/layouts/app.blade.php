@@ -15,9 +15,13 @@
 </head>
 <body class="bg-light">
 
+     @php
+        $role = $userType ?? 'penitip';
+    @endphp
+
     @include('components.navbar')
 
-    @if(($userType ?? 'penitip') === 'penjual')
+    @if($role === 'penjual')
         @include('components.sidebar_penjual')
     @else
         @include('components.sidebar_penitip')

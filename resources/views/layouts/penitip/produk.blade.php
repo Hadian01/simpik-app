@@ -6,15 +6,10 @@
 
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h4 class="mb-0">Daftar Produk</h4>
-    <div class="text-center">
-        @include('components.button', [
-    'type' => 'button',
-    'text' => 'Tambah Produk',
-    'class' => 'px-5',
-    'dataToggle' => 'modal',
-    'dataTarget' => '#modalTambahProduk'
-    ])
-    </div>
+    <button class="btn btn-primary" onclick="openTambahProduk()">
+    Tambah Produk
+</button>
+
 </div>
 
 @php
