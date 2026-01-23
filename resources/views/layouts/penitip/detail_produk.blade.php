@@ -22,7 +22,7 @@
 
                 <table class="table table-borderless">
                     <tr>
-                        <td style="width: 150px;"><strong>Nama Produk tes</strong></td>
+                        <td style="width: 150px;"><strong>Nama Produk</strong></td>
                         <td>Tart Tarik</td>
                     </tr>
                     <tr>
@@ -32,7 +32,7 @@
                     <tr>
                         <td><strong>Harga Modal</strong></td>
                         <td>Rp 8.000</td>
-                    </tr>php 
+                    </tr>
                     <tr>
                         <td><strong>Harga Jual</strong></td>
                         <td>Rp 10.000</td>

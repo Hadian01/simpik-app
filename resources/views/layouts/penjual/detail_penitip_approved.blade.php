@@ -148,18 +148,25 @@
 
                     {{-- Jumlah Stock --}}
                     <div class="form-group mb-4">
-                        <label for="jumlahStock" style="font-weight: 500; color: #374151; margin-bottom: 8px; display: block; font-size: 0.95rem;">Jumlah Stock</label>
-                        <select class="form-control" id="jumlahStock" name="jumlah_stock" required
-                                style="border: 2px solid #e5e7eb; border-radius: 8px; padding: 12px 16px; font-size: 1rem; color: #374151; height: 48px; appearance: none; background: white url('data:image/svg+xml;utf8,<svg fill=\"%23374151\" height=\"24\" viewBox=\"0 0 24 24\" width=\"24\" xmlns=\"http://www.w3.org/2000/svg"><path d=\"M7 10l5 5 5-5z\"/></svg>') no-repeat right 12px center; background-size: 20px; padding-right: 40px;">
-                            <option value="" style="color: #9ca3af;">Pilih jumlah</option>
-                            <option value="1">1</option>
-                            <option value="5">5</option>
-                            <option value="10">10</option>
-                            <option value="20">20</option>
-                            <option value="50">50</option>
-                            <option value="100">100</option>
-                        </select>
+                        <label for="jumlahStock"
+                            style="font-weight: 500; color: #374151; margin-bottom: 8px; display: block;">
+                            Jumlah Stock
+                        </label>
+
+                        <input type="number"
+                            class="form-control"
+                            id="jumlahStock"
+                            name="jumlah_stock"
+                            min="0"
+                            placeholder="Masukkan jumlah stock"
+                            required
+                            style="border: 2px solid #e5e7eb;
+                                    border-radius: 8px;
+                                    padding: 12px 16px;
+                                    font-size: 1rem;
+                                    height: 48px;">
                     </div>
+
 
                     {{-- Upload Foto --}}
                     <div class="form-group mb-3">

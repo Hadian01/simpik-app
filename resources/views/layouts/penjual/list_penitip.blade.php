@@ -59,7 +59,6 @@ $pengajuan_list = [
         'status' => 'waiting',
     ],
 ];
-@endphp
     @endphp
 
     {{-- TABEL --}}

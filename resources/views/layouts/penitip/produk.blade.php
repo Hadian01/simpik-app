@@ -34,8 +34,8 @@ $produkList = [
             'id' => $produk['id'],
             'nama' => $produk['nama'],
             'harga' => $produk['harga'],
-            'gambar' => $produk['gambar'],
-            'is_active' => $produk['is_active']
+            'is_active' => $produk['is_active'],
+            'showToggle' => true
         ])
     @endforeach
 </div>

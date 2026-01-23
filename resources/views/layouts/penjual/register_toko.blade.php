@@ -72,11 +72,19 @@
                         </div>
 
                         <div class="form-group">
-                            <label>Jam Operasional</label>
+                            <label>Start Jam Operasional</label>
                             <input type="text"
                                    class="form-control"
                                    name="jam_operasional"
-                                   placeholder="Contoh: Every Day, 05.00 - 12.00"
+                                   placeholder="Contoh: 05.00 "
+                                   required>
+                        </div>
+                        <div class="form-group">
+                            <label>End Jam Operasional</label>
+                            <input type="text"
+                                   class="form-control"
+                                   name="jam_operasional"
+                                   placeholder="Contoh: 12.00"
                                    required>
                         </div>
 

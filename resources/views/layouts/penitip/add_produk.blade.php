@@ -10,31 +10,29 @@
             <div class="modal-body">
                 <form id="formTambahProduk">
 
-                    <div class="form-group">
-                        <label>Nama Produk</label>
-                        <input type="text" class="form-control" required>
-                    </div>
-
+                    {{-- TIPE PRODUK --}}
                     <div class="form-group">
                         <label>Tipe Produk</label>
                         <select class="form-control" required>
                             <option value="">-- Pilih --</option>
-                            <option>Minuman</option>
-                            <option>Kue Basah</option>
-                            <option>Kue Kering</option>
+                            <option value="minuman">Minuman</option>
+                            <option value="kue_basah">Kue Basah</option>
+                            <option value="kue_kering">Kue Kering</option>
                         </select>
                     </div>
 
+                    {{-- PRODUK --}}
                     <div class="form-group">
                         <label>Produk</label>
                         <select class="form-control" required>
                             <option value="">-- Pilih --</option>
-                            <option>Kue</option>
-                            <option>Roti</option>
-                            <option>Snack</option>
+                            <option value="kue">Kue</option>
+                            <option value="roti">Roti</option>
+                            <option value="snack">Snack</option>
                         </select>
                     </div>
 
+                    {{-- HARGA --}}
                     <div class="form-row">
                         <div class="form-group col">
                             <label>Harga Modal</label>
@@ -51,14 +49,24 @@
                         • Harga jual maksimal 50% dari harga modal
                     </small>
 
-                    <div class="text-center">
+                    {{-- STATUS PRODUK (BARU) --}}
+                    <div class="form-group">
+                        <label>Status Produk</label>
+                        <select class="form-control" required>
+                            <option value="">-- Pilih Status --</option>
+                            <option value="active">Aktif</option>
+                            <option value="inactive">Nonaktif</option>
+                        </select>
+                    </div>
+
+                    {{-- ACTION --}}
+                    <div class="text-center mt-4">
                         @include('components.button', [
                             'type' => 'submit',
                             'text' => 'Simpan',
                             'class' => 'px-5'
                         ])
                     </div>
-
 
                 </form>
             </div>
