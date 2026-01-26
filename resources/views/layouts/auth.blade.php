@@ -9,7 +9,8 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
 </head>
-<body class="bg-light">
+
+<body style="margin:0; height:100vh;">
 
     @yield('content')
 

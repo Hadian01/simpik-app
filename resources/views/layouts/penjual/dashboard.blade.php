@@ -1,7 +1,8 @@
 @extends('layouts.app', ['userType' => 'penjual'])
 
-@section('content')
+@section('title', 'Dashboard')
 
+@section('content')
 <div class="container-fluid">
 
     {{-- HEADER --}}
@@ -48,21 +49,41 @@
         </div>
     </div>
 
-    {{-- TAB --}}
-    <ul class="nav nav-tabs mb-3">
+    {{-- TABS --}}
+    <ul class="nav nav-tabs mb-3" role="tablist">
         <li class="nav-item">
-            <a class="nav-link active">Monthly</a>
+            <a class="nav-link active" data-toggle="tab" href="#monthly" role="tab">
+                Monthly
+            </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link text-muted">Yearly</a>
+            <a class="nav-link" data-toggle="tab" href="#yearly" role="tab">
+                Yearly
+            </a>
         </li>
     </ul>
 
-    {{-- BAR CHART --}}
-    <div class="card mb-4">
-        <div class="card-body p-4">
-            <canvas id="barChart" height="120"></canvas>
+    {{-- TAB CONTENT --}}
+    <div class="tab-content mb-4">
+
+        {{-- MONTHLY --}}
+        <div class="tab-pane fade show active" id="monthly" role="tabpanel">
+            <div class="card">
+                <div class="card-body p-4">
+                    <canvas id="barChartMonthly" height="120"></canvas>
+                </div>
+            </div>
         </div>
+
+        {{-- YEARLY --}}
+        <div class="tab-pane fade" id="yearly" role="tabpanel">
+            <div class="card">
+                <div class="card-body p-4">
+                    <canvas id="barChartYearly" height="120"></canvas>
+                </div>
+            </div>
+        </div>
+
     </div>
 
     {{-- DONUT & PRODUK MARGIN --}}
@@ -72,7 +93,6 @@
             <div class="card h-100">
                 <div class="card-body p-4">
                     <h6 class="mb-4">Jenis Kue</h6>
-
                     <div class="row align-items-center">
                         <div class="col-7 text-center">
                             <canvas id="donutChart" width="250" height="250"></canvas>
@@ -103,31 +123,36 @@
                 <div class="card-body p-4">
                     <h6 class="mb-4">Produk Margin Tertinggi</h6>
 
-                    @for($i=0;$i<3;$i++)
+                    @for($i = 0; $i < 3; $i++)
                     <div class="margin-item">
-                        <div class="d-flex gap-3">
-                            <div class="text-center" style="width:60px">
+                        <div class="d-flex align-items-start gap-4">
+
+                            {{-- ICON + NAMA --}}
+                            <div class="text-center margin-avatar">
                                 <i class="bi bi-person-circle fs-1 text-secondary"></i>
-                                <small class="text-muted">Dian</small>
+                                <small class="text-muted d-block mt-1">Dian</small>
                             </div>
-                            <div class="flex-grow-1 small">
-                                <div class="d-flex">
-                                    <div class="margin-label">Nama Produk</div>
-                                    <div>: Nasi Jemol Kua Rica</div>
+
+                            {{-- DETAIL --}}
+                            <div class="margin-detail">
+                                <div class="detail-row">
+                                    <span class="label">Nama Produk</span>
+                                    <span class="value">Nasi Jemol Kua Rica</span>
                                 </div>
-                                <div class="d-flex">
-                                    <div class="margin-label">Total Terjual</div>
-                                    <div>: 250</div>
+                                <div class="detail-row">
+                                    <span class="label">Total Terjual</span>
+                                    <span class="value">250</span>
                                 </div>
-                                <div class="d-flex">
-                                    <div class="margin-label">Total Omset</div>
-                                    <div>: Rp 2.000.000</div>
+                                <div class="detail-row">
+                                    <span class="label">Total Omset</span>
+                                    <span class="value">Rp 2.000.000</span>
                                 </div>
-                                <div class="d-flex">
-                                    <div class="margin-label">Pemasukan</div>
-                                    <div class="fw-semibold">: Rp 300.000</div>
+                                <div class="detail-row">
+                                    <span class="label">Pemasukan</span>
+                                    <span class="value fw-semibold">Rp 300.000</span>
                                 </div>
                             </div>
+
                         </div>
                     </div>
                     @endfor
@@ -138,19 +163,35 @@
     </div>
 
 </div>
-
 @endsection
 
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+
 <script>
-new Chart(document.getElementById('barChart'), {
+new Chart(document.getElementById('barChartMonthly'), {
     type: 'bar',
     data: {
-        labels: ['Dian','Eka','Ardia','Bella','Bella','Bella'],
+        labels: ['Dian','Eka','Ardia','Bella','Cici','Dodo'],
         datasets: [{
             data: [100,150,75,125,90,180],
             backgroundColor:'#C7D2FE',
+            borderRadius:6
+        }]
+    },
+    options:{
+        plugins:{legend:{display:false}},
+        scales:{y:{beginAtZero:true}}
+    }
+});
+
+new Chart(document.getElementById('barChartYearly'), {
+    type: 'bar',
+    data: {
+        labels: ['Jan','Feb','Mar','Apr','Mei','Jun'],
+        datasets: [{
+            data: [600,750,500,800,700,900],
+            backgroundColor:'#A5B4FC',
             borderRadius:6
         }]
     },
@@ -168,7 +209,10 @@ new Chart(document.getElementById('donutChart'), {
             backgroundColor:['#ef4444','#d8b4fe','#ec4899','#eab308']
         }]
     },
-    options:{plugins:{legend:{display:false}},cutout:'65%'}
+    options:{
+        plugins:{legend:{display:false}},
+        cutout:'65%'
+    }
 });
 </script>
 @endpush
@@ -192,4 +236,39 @@ new Chart(document.getElementById('donutChart'), {
 .legend.purple{background:#d8b4fe}
 .legend.pink{background:#ec4899}
 .legend.yellow{background:#eab308}
+
+/* Container item */
+.margin-item{
+    padding: 20px 0;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+/* Avatar kiri */
+.margin-avatar{
+    width: 80px;
+}
+
+/* Detail kanan */
+.margin-detail{
+    padding-left: 10px;
+}
+
+/* Baris label & value */
+.detail-row{
+    display: flex;
+    gap: 24px;
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+}
+
+/* Label kiri */
+.detail-row .label{
+    width: 130px;
+    color: #9ca3af;
+}
+
+/* Value kanan */
+.detail-row .value{
+    color: #111827;
+}
 </style>

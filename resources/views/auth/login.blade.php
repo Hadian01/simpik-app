@@ -3,24 +3,20 @@
 @section('title', 'Login')
 
 @section('content')
-<div class="container d-flex align-items-center justify-content-center min-vh-100">
+<div class="container-fluid min-vh-100">
 
-    <div class="row w-100" style="max-width:900px; border:1px solid #ddd;">
+<div class="row min-vh-100">
 
-        {{-- KIRI : LOGO --}}
         <div class="col-md-6 d-flex align-items-center justify-content-center bg-white">
-            <div class="text-center">
-                <div class="rounded-circle border d-flex align-items-center justify-content-center"
-                     style="width:200px;height:200px;">
-                    <h3 class="m-0">LOGO</h3>
-                </div>
-            </div>
+        LOGO
         </div>
 
         {{-- KANAN : FORM LOGIN --}}
         <div class="col-md-6 d-flex align-items-center justify-content-center"
-             style="background:#B9B4FF;">
-            <div class="bg-white p-4 w-75" style="border-radius:8px;">
+            style="background:#B9B4FF;">
+
+            <div class="bg-white p-4"
+                 style="width:360px; border-radius:12px;">
 
                 <h4 class="text-center mb-4"><strong>LOGIN</strong></h4>
 
@@ -36,15 +32,16 @@
                     </div>
 
                     <div class="text-right">
-                        <button type="button"
+                        <button type="submit"
                                 class="btn btn-sm"
                                 style="background:#9B8CFF;color:white;">
-                            Register
+                            Login
                         </button>
                     </div>
                 </form>
 
             </div>
+
         </div>
 
     </div>
