@@ -47,7 +47,7 @@
                     <i class="bi bi-shop me-2"></i> Data Toko
                 </a>
             @else
-                <a class="dropdown-item" href="#">
+                <a class="dropdown-item" href="{{ route('penitip.data_diri') }}">
                     <i class="bi bi-person me-2"></i> Data Diri
                 </a>
             @endif

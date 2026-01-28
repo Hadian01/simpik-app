@@ -21,7 +21,9 @@
             'cogs' => 1800,
             'stock' => 38,
             'validasi_stock' => 38,
+            'foto_validasi' => asset('dummy/validasi.jpg'),
             'sisa_stock' => 2,
+            'foto_sisa' => asset('dummy/sisa.jpg'),
             'pendapatan' => 61200
         ],
         [
@@ -32,7 +34,9 @@
             'cogs' => 1800,
             'stock' => 38,
             'validasi_stock' => 38,
+            'foto_validasi' => asset('dummy/validasi.jpg'),
             'sisa_stock' => 2,
+            'foto_sisa' => asset('dummy/sisa.jpg'),
             'pendapatan' => 61200
         ],
         [
@@ -43,7 +47,9 @@
             'cogs' => 1800,
             'stock' => 38,
             'validasi_stock' => 38,
+            'foto_validasi' => asset('dummy/validasi.jpg'),
             'sisa_stock' => 2,
+            'foto_sisa' => asset('dummy/sisa.jpg'),
             'pendapatan' => 61200
         ],
     ];
@@ -62,7 +68,9 @@
                         <th>COGS</th>
                         <th>STOCK</th>
                         <th>VALIDASI STOCK</th>
+                        <th>FOTO VALIDASI</th>
                         <th>SISA_STOCK</th>
+                        <th>FOTO SISA</th>
                         <th>PENDAPATAN</th>
                     </tr>
                 </thead>
@@ -86,6 +94,14 @@
                                 <i class="bi bi-pencil"></i>
                             </button>
                         </td>
+                             <td>
+                            <a href="javascript:void(0)"
+                            class="text-primary btn-view-foto"
+                            data-foto="{{ $item['foto_validasi'] }}"
+                            data-title="Foto Validasi Stock">
+                                Lihat Foto
+                            </a>
+                        </td>
                         <td>
                             <button class="btn btn-sm btn-edit-stock"
                                     style="background: white; border: 1px solid #ddd; padding: 5px 15px; border-radius: 5px;"
@@ -94,6 +110,14 @@
                                     data-produk="{{ $item['name_produk'] }}">
                                 <i class="bi bi-pencil"></i>
                             </button>
+                        </td>
+                         <td>
+                            <a href="javascript:void(0)"
+                            class="text-primary btn-view-foto"
+                            data-foto="{{ $item['foto_sisa'] }}"
+                            data-title="Foto Sisa Stock">
+                                Lihat Foto
+                            </a>
                         </td>
                         <td>RP {{ number_format($item['pendapatan'], 0, ',', '.') }}</td>
                     </tr>
@@ -202,6 +226,25 @@
     </div>
 </div>
 
+<div class="modal fade" id="modalViewFoto" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content" style="border-radius:12px;">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalFotoTitle">Foto</h5>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body text-center">
+                <img id="modalFotoImage"
+                     src=""
+                     class="img-fluid rounded"
+                     style="max-height:500px; border:1px solid #ddd;">
+            </div>
+        </div>
+    </div>
+</div>
 <style>
 /* Modal Style Enhancement */
 #modalValidasiStock .modal-content {
@@ -305,6 +348,17 @@ $(document).ready(function() {
             }
             reader.readAsDataURL(file);
         }
+    });
+
+    // View Foto
+    $('.btn-view-foto').on('click', function () {
+        const foto = $(this).data('foto');
+        const title = $(this).data('title');
+
+        $('#modalFotoTitle').text(title);
+        $('#modalFotoImage').attr('src', foto);
+
+        $('#modalViewFoto').modal('show');
     });
 
     // Submit form

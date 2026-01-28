@@ -36,6 +36,11 @@ Route::prefix('penitip')->name('penitip.')->group(function () {
     Route::get('/riwayat', function () {
         return view('layouts.penitip.riwayat');
     })->name('riwayat');
+
+    Route::get('/data-diri', function () {
+        return view('layouts.penitip.data_diri');
+    })->name('data_diri');
+    
 });
 
 // ========== ROUTE PENJUAL ==========
