@@ -12,24 +12,18 @@
 
 </div>
 
-@php
-$produkList = [
-    ['id'=>1,'nama'=>'Kue Lapis','harga'=>15000,'gambar'=>null,'is_active'=>true],
-    ['id'=>2,'nama'=>'Brownies','harga'=>25000,'gambar'=>null,'is_active'=>false],
-    ['id'=>3,'nama'=>'Donat','harga'=>8000,'gambar'=>null,'is_active'=>true],
-    ['id'=>1,'nama'=>'Kue Lapis','harga'=>15000,'gambar'=>null,'is_active'=>true],
-    ['id'=>2,'nama'=>'Brownies','harga'=>25000,'gambar'=>null,'is_active'=>false],
-    ['id'=>3,'nama'=>'Donat','harga'=>8000,'gambar'=>null,'is_active'=>true],
-];
-@endphp
-
 <div class="row">
-    @foreach($produkList as $produk)
+    @foreach($produk as $item)
         @include('components.penitip.card_produk', [
-            'id' => $produk['id'],
-            'nama' => $produk['nama'],
-            'harga' => $produk['harga'],
-            'is_active' => $produk['is_active'],
+            'id' => $item->produk_id,
+            'nama' => $item->produk_name,
+            'harga_modal' => $item->harga_modal,
+            'harga_jual' => $item->harga_jual,
+            'status_produk' => $item->status_produk,
+            'produk_description' => $item->produk_description,
+            'is_active' => $item->is_active,
+            'produk_type' => $item->produk_type,
+            'penitip_id' => $item->penitip_id,
             'showToggle' => true
         ])
     @endforeach

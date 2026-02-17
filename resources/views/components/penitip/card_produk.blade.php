@@ -32,7 +32,7 @@
                 </div>
                 <div class="text-right">
                     {{ $nama }}<br>
-                    Rp {{ number_format($harga,0,',','.') }}
+                    Rp {{ number_format($harga_jual,0,',','.') }}
                 </div>
             </div>
         </div>

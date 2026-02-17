@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PenitipController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -21,13 +22,8 @@ Route::prefix('penitip')->name('penitip.')->group(function () {
         return view('layouts.penitip.detail_toko', ['toko_id' => $id]);
     })->name('detail_toko');
 
-    Route::get('/produk', function () {
-        return view('layouts.penitip.produk');
-    })->name('produk');
-
-    Route::get('/detail_produk/{id}', function ($id) {
-        return view('layouts.penitip.detail_produk', ['produk_id' => $id]);
-    })->name('detail_produk');
+    Route::get('/produk', [PenitipController::class, 'show']) -> name('produk');
+    Route::get('/detail_produk/{produk_id}', [PenitipController::class, 'detail_produk']) -> name('detail_produk');
 
     Route::get('/detail_produk_v2/{id}', function ($id) {
         return view('layouts.penitip.detail_produk_v2', ['produk_id' => $id]);
@@ -40,7 +36,7 @@ Route::prefix('penitip')->name('penitip.')->group(function () {
     Route::get('/data-diri', function () {
         return view('layouts.penitip.data_diri');
     })->name('data_diri');
-    
+
 });
 
 // ========== ROUTE PENJUAL ==========

@@ -18,29 +18,29 @@
 
             {{-- Info Produk --}}
             <div class="col-md-8">
-                <h3 class="mb-3">Tart Tarik</h3>
+                <h3 class="mb-3">{{ $detail_produk->produk_name }} </h3>
 
                 <table class="table table-borderless">
                     <tr>
                         <td style="width: 150px;"><strong>Nama Produk</strong></td>
-                        <td>Tart Tarik</td>
+                        <td>{{ $detail_produk->produk_name }}</td>
                     </tr>
                     <tr>
                         <td><strong>Tipe Produk</strong></td>
-                        <td>Kue</td>
+                        <td>{{ $detail_produk->produk_type }}</td>
                     </tr>
                     <tr>
                         <td><strong>Harga Modal</strong></td>
-                        <td>Rp 8.000</td>
+                        <td>Rp {{ $detail_produk->harga_modal }}</td>
                     </tr>
                     <tr>
                         <td><strong>Harga Jual</strong></td>
-                        <td>Rp 10.000</td>
+                        <td>Rp {{ $detail_produk->harga_jual }}</td>
                     </tr>
                     <tr>
                         <td><strong>Status</strong></td>
                         <td>
-                            <span class="badge badge-success">Aktif</span>
+                            <span class="badge badge-success">{{ $detail_produk->status_produk }}</span>
                         </td>
                     </tr>
                 </table>
