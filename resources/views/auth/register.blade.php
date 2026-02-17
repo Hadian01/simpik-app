@@ -29,8 +29,8 @@
                     <div class="form-group">
                         <select name="type" class="form-control">
                             <option value="">Pilih Type</option>
-                            <option value="user">User</option>
-                            <option value="admin">Admin</option>
+                            <option value="user">Penjual</option>
+                            <option value="admin">Penitip</option>
                         </select>
                     </div>
 
