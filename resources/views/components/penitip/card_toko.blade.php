@@ -66,7 +66,7 @@
             @default
                    {{-- not_joined | pending | rejected --}}
     <a href="{{ route('penitip.detail_toko', [
-        'id' => $id,
+        'penjual_id' => $id,
         'status' => $status
     ]) }}"
        class="btn btn-sm btn-block mt-3"

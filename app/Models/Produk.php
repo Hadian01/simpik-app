@@ -8,9 +8,15 @@ use Illuminate\Database\Eloquent\Model;
 class Produk extends Model
 {
     use HasFactory;
+
     protected $table = 'tbl_produk';
 
     protected $primaryKey = 'produk_id';
 
-    public $incrementing = true; // kalau auto increment
+    public $incrementing = true;
+
+    public function approval()
+    {
+        return $this->hasMany(ProdukPenjual::class, 'produk_id');
+    }
 }
