@@ -38,5 +38,10 @@ class Penjual extends Model
     {
         return $this->hasMany(ProdukPenjual::class, 'penjual_id');
     }
+    public function pengajuan()
+    {
+        return $this->hasMany(Pengajuan::class, 'penjual_id');
+    }
+
 
 }

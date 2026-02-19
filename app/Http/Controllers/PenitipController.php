@@ -8,35 +8,65 @@ use App\Models\User;
 use App\Models\UserManual;
 use App\Models\Produk;
 use App\Models\Penjual;
+use App\Models\Pengajuan;
 use Illuminate\View\View;
 
 class PenitipController extends Controller
 {
     public function show(): View
     {
-
         $produk = Produk::all();
-
         return view('layouts.penitip.produk', compact('produk'));
-
     }
+
     public function detail_produk(string $produk_id): View
     {
         return view('layouts.penitip.detail_produk', [
             'detail_produk' => Produk::findOrFail($produk_id)
         ]);
     }
-    public function daftar_toko(): View
+
+      public function daftar_toko(): View
     {
-       // Sementara kosong (karena belum ada tabel join)
-    $toko_saya = collect();
+        $penitip_id = 1; // sementara hardcode
 
-    // Semua toko tampil sebagai toko lainnya
-    $toko_lainnya = Penjual::all();
+        $pengajuan = Pengajuan::with('penjual')
+            ->where('penitip_id', $penitip_id)
+            ->get();
 
-    return view('layouts.penitip.daftar_toko', compact('toko_saya','toko_lainnya'));
+        // ambil id penjual yang sudah diajukan
+        $penjualIds = $pengajuan->pluck('penjual_id');
+
+        // =====================
+        // TOKO SAYA (atas)
+        // =====================
+        $toko_saya = collect();
+
+        foreach ($pengajuan as $item) {
+            if ($item->penjual) {
+                $toko = $item->penjual;
+                $toko->status_pengajuan = $item->status;
+                $toko_saya->push($toko);
+            }
+        }
+
+        // =====================
+        // TOKO LAINNYA (bawah)
+        // =====================
+        $toko_lainnya = Penjual::whereNotIn('penjual_id', $penjualIds)
+            ->get();
+
+        foreach ($toko_lainnya as $toko) {
+            $toko->status_pengajuan = 'not_joined';
+        }
+
+        return view('layouts.penitip.daftar_toko',
+            compact('toko_saya','toko_lainnya'));
     }
-     public function detail_toko(string $penjual_id): View
+
+
+    // 🔥 INI YANG KURANG TADI
+    public function detail_toko(string $penjual_id): View
     {
         $toko = Penjual::findOrFail($penjual_id);
 
@@ -49,5 +79,4 @@ class PenitipController extends Controller
 
         return view('layouts.penitip.detail_toko', compact('toko','produk'));
     }
-
 }

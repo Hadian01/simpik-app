@@ -423,7 +423,13 @@
     <div class="row mb-5">
         @forelse($produk_toko as $produk)
             @if($produk['status'] === 'approved')
-                @include('components.penitip.card_produk', $produk)
+                @include('components.penitip.card_produk', [
+                'id' => $produk['id'],
+                'nama' => $produk['nama'],
+                'harga_jual' => $produk['harga'],
+                'is_active' => true,
+                'showToggle' => false
+            ])
             @endif
         @empty
             <div class="col-12">
