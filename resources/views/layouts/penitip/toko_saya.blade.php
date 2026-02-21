@@ -4,97 +4,8 @@
 
 <div class="container-fluid">
 
-    {{-- DATA DUMMY TOKO --}}
-    @php
-    $toko = [
-        'id' => 1,
-        'nama_toko' => 'Toko Hadian Nelvi',
-        'pemilik' => 'Hadian Nelvi',
-        'alamat' => 'Marina, Kota Batam',
-        'no_hp' => '082145687458',
-        'email' => 'hadianelvi82@gmai.com',
-        'start_operasional' => '2020-09-15',
-        'jam_operasional' => 'Every Day, 05.00 - 12.00',
-        'deskripsi' => 'Toko dian ini toko pertama saya di masa pandemi untuk membangkitkan perekonomian',
-        'banner' => null,
-        'is_active' => true,
-    ];
-
-    // Variabel $id untuk component yang membutuhkan
-    $id = $toko['id'];
-    $is_active = $toko['is_active'];
-
-   $produk_toko = [
-    [
-        'id' => 1,
-        'nama' => 'Kue Lapis',
-        'gambar' => null,
-        'harga' => 10000,
-        'status' => 'approved'
-    ],
-    [
-        'id' => 2,
-        'nama' => 'Brownies',
-        'gambar' => null,
-        'harga' => 15000,
-        'status' => 'approved'
-    ],
-    [
-        'id' => 3,
-        'nama' => 'Roti Tawar',
-        'gambar' => null,
-        'harga' => 10000,
-        'status' => 'pending'
-    ],
-    [
-        'id' => 4,
-        'nama' => 'Donat',
-        'gambar' => null,
-        'harga' => 9000,
-        'status' => 'rejected'
-    ],
-];
-
-
-    // DATA DUMMY DASHBOARD
-    $dashboard = [
-        'total_penjualan' => 2500000,
-        'produk_terjual' => 150,
-        'komisi' => 250000,
-        'pendapatan_bersih' => 2250000,
-        'bulan' => 'Januari 2025'
-    ];
-
-    // DATA DUMMY STATISTIK (untuk dashboard)
-    $statistik = [
-        ['title' => 'Total Terjual', 'value' => '500', 'bg_color' => '#CFC7FF'],
-        ['title' => 'Total Dititip', 'value' => '600', 'bg_color' => '#CFC7FF'],
-        ['title' => 'Total Pendapatan', 'value' => 'Rp 2.000.000', 'bg_color' => '#CFC7FF'],
-    ];
-
-    // DATA DUMMY RIWAYAT (untuk dashboard)
-    $riwayat_list = [
-        ['no' => 1, 'submission_date' => '01-09-2025', 'name' => 'RISOL', 'nama_toko' => 'TOKO MAJU', 'stock' => 35, 'stock_terjual' => 30, 'cogs' => 'RP 1.800', 'pendapatan' => 'RP 40.000'],
-        ['no' => 2, 'submission_date' => '01-09-2025', 'name' => 'TAHU', 'nama_toko' => 'TOKO MAJU', 'stock' => 35, 'stock_terjual' => 26, 'cogs' => 'RP 1.800', 'pendapatan' => 'RP 39.00'],
-        ['no' => 3, 'submission_date' => '01-09-2025', 'name' => 'TAHU', 'nama_toko' => 'TOKO SEDERHANA', 'stock' => 35, 'stock_terjual' => 26, 'cogs' => 'RP 1.800', 'pendapatan' => 'RP 39.00'],
-        ['no' => 4, 'submission_date' => '01-09-2025', 'name' => 'TAHU', 'nama_toko' => 'TOKO SEDERHANA', 'stock' => 35, 'stock_terjual' => 26, 'cogs' => 'RP 1.800', 'pendapatan' => 'RP 39.00'],
-    ];
-
-    // DATA DUMMY RIWAYAT PENJUALAN (untuk tab riwayat)
-    $riwayat_penjualan = [
-        ['no' => 1, 'tanggal' => '2025-01-05', 'produk' => 'Kue Lapis', 'jumlah' => 10, 'total' => 100000],
-        ['no' => 2, 'tanggal' => '2025-01-05', 'produk' => 'Brownies', 'jumlah' => 5, 'total' => 75000],
-        ['no' => 3, 'tanggal' => '2025-01-04', 'produk' => 'Roti Tawar', 'jumlah' => 8, 'total' => 80000],
-    ];
-
-    // Untuk pagination dummy
-    $total_data = 20;
-    $per_page = 10;
-    $current_page = 1;
-    @endphp
-
     {{-- Header --}}
-    <h2 class="mb-4">{{ $toko['nama_toko'] }}</h2>
+    <h2 class="mb-4">{{ $toko->nama_toko }}</h2>
 
     {{-- TAB Navigation --}}
     <ul class="nav nav-tabs mb-4" id="tokoTab" role="tablist" style="border-bottom: 2px solid #ddd;">
@@ -128,10 +39,10 @@
 
             {{-- Banner Toko --}}
             @include('components.penitip.banner_toko', [
-                'id' => $toko['id'],
-                'banner' => $toko['banner'],
-                'nama_toko' => $toko['nama_toko'],
-                'is_active' => $toko['is_active']
+                'id' => $toko->penjual_id,
+                'banner' => $toko->banner ?? null,
+                'nama_toko' => $toko->nama_toko,
+                'is_active' => $toko->is_active ?? true
             ])
 
             <div class="row">
@@ -139,16 +50,18 @@
                 {{-- KIRI: Info Toko --}}
                 <div class="col-md-6 mb-4">
                     @include('components.penitip.detail_toko', [
-                        'id' => $toko['id'],
-                        'nama_toko' => $toko['nama_toko'],
-                        'pemilik' => $toko['pemilik'],
-                        'alamat' => $toko['alamat'],
-                        'no_hp' => $toko['no_hp'],
-                        'email' => $toko['email'],
-                        'start_operasional' => $toko['start_operasional'],
-                        'jam_operasional' => $toko['jam_operasional'],
-                        'deskripsi' => $toko['deskripsi'],
-                        'is_active' => $toko['is_active']
+                        'id' => $toko->penjual_id,
+                        'nama_toko' => $toko->nama_toko,
+                        'pemilik' => $toko->nama_pemilik,
+                        'alamat' => $toko->alamat_toko,
+                        'no_hp' => $toko->no_hp,
+                        'email' => optional($toko->user)->email ?? '-',
+                        'start_operasional' => $toko->tanggal_join,
+                        'jam_operasional' => $toko->jam_buka && $toko->jam_tutup
+                            ? $toko->jam_buka->format('H:i').' - '.$toko->jam_tutup->format('H:i')
+                            : '-',
+                        'deskripsi' => $toko->deskripsi_toko,
+                        'is_active' => $toko->is_active ?? true
                     ])
                 </div>
 
@@ -160,12 +73,13 @@
                         <div class="row">
                             @foreach($produk_toko as $produk)
                                 @include('components.penitip.list_produk', [
-                                    'id' => $produk['id'],
-                                    'nama' => $produk['nama'],
-                                    'gambar' => $produk['gambar'],
-                                    'harga' => $produk['harga']
+                                    'id' => $produk->produk_id,
+                                    'nama' => $produk->produk_name,
+                                    'gambar' => null,
+                                    'harga' => $produk->harga_jual
                                 ])
                             @endforeach
+
                         </div>
                     </div>
                 </div>

@@ -79,4 +79,86 @@ class PenitipController extends Controller
 
         return view('layouts.penitip.detail_toko', compact('toko','produk'));
     }
+
+    public function toko_saya($id)
+    {
+        $penitip_id = 1; // sementara hardcode login
+
+        // Ambil data toko
+        $toko = Penjual::findOrFail($id);
+
+        // Ambil produk milik penitip
+        $produk_toko = Produk::where('penitip_id', $penitip_id)->get();
+
+        /*
+        |--------------------------------------------------------------------------
+        | DASHBOARD DATA (sementara dummy aman)
+        |--------------------------------------------------------------------------
+        */
+
+        $dashboard = [
+            'total_penjualan' => 0,
+            'produk_terjual' => 0,
+            'komisi' => 0,
+            'pendapatan_bersih' => 0,
+            'bulan' => now()->format('F Y')
+        ];
+
+        /*
+        |--------------------------------------------------------------------------
+        | STATISTIK CARD
+        |--------------------------------------------------------------------------
+        */
+
+        $statistik = [
+            [
+                'title' => 'Total Terjual',
+                'value' => 0,
+                'bg_color' => '#CFC7FF'
+            ],
+            [
+                'title' => 'Total Dititip',
+                'value' => $produk_toko->count(),
+                'bg_color' => '#CFC7FF'
+            ],
+            [
+                'title' => 'Total Pendapatan',
+                'value' => 'Rp 0',
+                'bg_color' => '#CFC7FF'
+            ],
+        ];
+
+        /*
+        |--------------------------------------------------------------------------
+        | RIWAYAT LIST (kosong dulu biar aman)
+        |--------------------------------------------------------------------------
+        */
+
+        $riwayat_list = collect();
+
+        /*
+        |--------------------------------------------------------------------------
+        | PAGINATION DUMMY
+        |--------------------------------------------------------------------------
+        */
+
+        $total_data = $riwayat_list->count();
+        $per_page = 10;
+        $current_page = 1;
+
+        return view(
+            'layouts.penitip.toko_saya',
+            compact(
+                'toko',
+                'produk_toko',
+                'dashboard',
+                'statistik',
+                'riwayat_list',
+                'total_data',
+                'per_page',
+                'current_page'
+            )
+        );
+    }
+
 }

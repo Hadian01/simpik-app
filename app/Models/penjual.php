@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\User;
 
 class Penjual extends Model
 {
@@ -41,6 +42,10 @@ class Penjual extends Model
     public function pengajuan()
     {
         return $this->hasMany(Pengajuan::class, 'penjual_id');
+    }
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
     }
 
 

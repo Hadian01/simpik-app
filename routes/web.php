@@ -16,9 +16,12 @@ Route::prefix('penitip')->name('penitip.')->group(function () {
 
     Route::get('/daftar_toko',[PenitipController::class, 'daftar_toko'])->name('daftar_toko');
 
-    Route::get('/toko_saya/{id}', function ($id) {
-        return view('layouts.penitip.toko_saya', ['toko_id' => $id]);
-    })->name('toko_saya');
+    // Route::get('/toko_saya/{id}', function ($id) {
+    //     return view('layouts.penitip.toko_saya', ['toko_id' => $id]);
+    // })->name('toko_saya');
+
+    Route::get('/toko_saya/{id}', [PenitipController::class, 'toko_saya'])->name('toko_saya');
+
 
     // Route::get('/detail_toko/{id}', function ($id) {
     //     return view('layouts.penitip.detail_toko', ['toko_id' => $id]);
