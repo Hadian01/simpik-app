@@ -26,5 +26,13 @@ class Pengajuan extends Model
     {
         return $this->belongsTo(Penjual::class, 'penjual_id');
     }
+       public function penitip()
+    {
+        return $this->belongsTo(Penitip::class, 'penitip_id');
+    }
+      public function detail()
+    {
+        return $this->hasMany(PengajuanDetail::class, 'pengajuan_id');
+    }
 }
 

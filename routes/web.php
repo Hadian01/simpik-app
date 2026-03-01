@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PenitipController;
+use App\Http\Controllers\PenjualController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -10,22 +11,8 @@ Route::get('/', function () {
 // ========== ROUTE PENITIP ==========
 Route::prefix('penitip')->name('penitip.')->group(function () {
 
-    // Route::get('/daftar_toko', function () {
-    //     return view('layouts.penitip.daftar_toko');
-    // })->name('daftar_toko');
-
     Route::get('/daftar_toko',[PenitipController::class, 'daftar_toko'])->name('daftar_toko');
-
-    // Route::get('/toko_saya/{id}', function ($id) {
-    //     return view('layouts.penitip.toko_saya', ['toko_id' => $id]);
-    // })->name('toko_saya');
-
     Route::get('/toko_saya/{id}', [PenitipController::class, 'toko_saya'])->name('toko_saya');
-
-
-    // Route::get('/detail_toko/{id}', function ($id) {
-    //     return view('layouts.penitip.detail_toko', ['toko_id' => $id]);
-    // })->name('detail_toko');
     Route::get('/detail_toko/{penjual_id}',[PenitipController::class, 'detail_toko'])->name('detail_toko');
 
 
@@ -53,9 +40,8 @@ Route::prefix('penjual')->name('penjual.')->group(function () {
     return view('layouts.penjual.dashboard');
     })->name('dashboard');
 
-    Route::get('/penitip', function () {
-        return view('layouts.penjual.list_penitip');  // Halaman pengajuan (yang lama)
-    })->name('penitip');
+    Route::get('/penitip',[PenjualController::class, 'show'])->name('penitip');
+    Route::get('/penjual/pengajuan/{id}/detail',[PenjualController::class, 'getDetailPengajuan'])->name('get_detail_pengajuan');
 
     Route::get('/penitip-approved', function () {
         return view('layouts.penjual.list_penitip_approved');  // Halaman penitip approved (BARU)
