@@ -41,15 +41,29 @@ Route::prefix('penjual')->name('penjual.')->group(function () {
     })->name('dashboard');
 
     Route::get('/penitip',[PenjualController::class, 'show'])->name('penitip');
-    Route::get('/penjual/pengajuan/{id}/detail',[PenjualController::class, 'getDetailPengajuan'])->name('get_detail_pengajuan');
+    Route::get('/pengajuan/{id}/detail',[PenjualController::class, 'getDetailPengajuan'])->name('get_detail_pengajuan');
+    Route::get('/penitip-approved', [PenjualController::class, 'show_penitip_approved'])->name('penitip_approved');
+    Route::get('/detail-penitip-approved/{penjual_id}', [PenjualController::class, 'show_detail_penitip_approved'])->name('detail_penitip_approved');
 
-    Route::get('/penitip-approved', function () {
-        return view('layouts.penjual.list_penitip_approved');  // Halaman penitip approved (BARU)
-    })->name('penitip_approved');
+    // Route::get('/penitip/{id}/pengajuan', function ($id) {
+    //     return view('layouts.penjual.detail_penitip_approved', ['penitip_id' => $id]);  // Detail pengajuan per penitip (BARU)
+    // })->name('detail_pengajuan_penitip');
 
-    Route::get('/penitip/{id}/pengajuan', function ($id) {
-        return view('layouts.penjual.detail_penitip_approved', ['penitip_id' => $id]);  // Detail pengajuan per penitip (BARU)
-    })->name('detail_pengajuan_penitip');
+    Route::post('/pengajuan/approve',
+        [PenjualController::class, 'approve']
+    )->name('approve_produk');
+
+    Route::post('/pengajuan/reject',
+        [PenjualController::class, 'reject']
+    )->name('reject_pengajuan');
+
+    Route::post('/stock/update-validated',
+        [PenjualController::class, 'updateValidatedStock']
+    )->name('update_validated_stock');
+
+    Route::post('/stock/update-sisa',
+        [PenjualController::class, 'updateSisaStock']
+    )->name('update_sisa_stock');
 
     Route::get('/penjual-register-toko', function () {
         return view('layouts.penjual.register_toko');

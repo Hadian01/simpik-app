@@ -1,3 +1,4 @@
+
 {{-- MODAL DETAIL LIST PENGAJUAN --}}
 <div class="modal fade modal-right" id="modalDetailPengajuan" tabindex="-1">
     <div class="modal-dialog">
@@ -6,6 +7,8 @@
             {{-- HEADER --}}
             <div class="modal-header">
                 <h5 class="modal-title font-weight-bold">Detail List Pengajuan</h5>
+                <!-- STATUS BADGE -->
+            <div class="px-4 pt-2" id="statusContainer"></div>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
 
@@ -14,6 +17,7 @@
 
                 {{-- PERSONAL INFO --}}
                 <h6 class="font-weight-bold mb-3">Personal Information</h6>
+
                 <table class="table table-borderless table-sm">
                     <tr><td width="110">Nama</td><td id="detailNama">-</td></tr>
                     <tr><td>Email</td><td id="detailEmail">-</td></tr>
@@ -23,7 +27,7 @@
 
                 <hr>
 
-                {{-- PRODUK INFO --}}
+                {{-- PRODUK --}}
                 <h6 class="font-weight-bold mb-3">Produk Information</h6>
 
                 <table class="table table-sm">
@@ -35,32 +39,26 @@
                             <th>Harga Jual</th>
                         </tr>
                     </thead>
-                    <tbody>
+
+                    <!-- ✅ WAJIB ADA -->
+                    <tbody id="produkContainer">
                         <tr>
-                            <td><input type="checkbox" class="produk-check" value="1"></td>
-                            <td>RISOL</td>
-                            <td>Rp 1.800</td>
-                            <td>
-                                <input type="number" class="form-control form-control-sm harga-jual"
-                                       value="2000" style="width:110px;">
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><input type="checkbox" class="produk-check" value="2"></td>
-                            <td>DONAT</td>
-                            <td>Rp 2.000</td>
-                            <td>
-                                <input type="number" class="form-control form-control-sm harga-jual"
-                                       value="3000" style="width:110px;">
+                            <td colspan="4" class="text-center text-muted">
+                                Pilih pengajuan untuk melihat detail
                             </td>
                         </tr>
                     </tbody>
                 </table>
 
+                <!-- hidden id -->
+                <input type="hidden" id="selectedPengajuanId">
+                <input type="hidden" id="selectedStatus">
             </div>
 
             {{-- FOOTER --}}
-            <div class="modal-footer d-flex justify-content-between">
+            <div class="modal-footer d-flex justify-content-between"
+                id="actionButtons">
+
                 <button class="btn btn-outline-danger" id="btnRejectOpen">
                     Reject
                 </button>
@@ -70,8 +68,8 @@
                         id="btnApproveSelected">
                     Setujui Produk Terpilih
                 </button>
-            </div>
 
+            </div>
         </div>
     </div>
 </div>
@@ -95,6 +93,10 @@
     border-radius: 0;
     border: none;
     overflow-y: auto;
+}
+
+.table td, .table th {
+    vertical-align: middle;
 }
 
 @media (max-width:576px) {

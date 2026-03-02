@@ -48,7 +48,7 @@
                                     </span>
                                     @break
 
-                                @case('rejected')
+                                @case('Rejected')
                                     <span class="badge badge-danger px-3 py-2" style="font-size:12px;">
                                         Rejected
                                     </span>

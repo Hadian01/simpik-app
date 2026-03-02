@@ -21,6 +21,6 @@ class Penitip extends Model
     // relationship to user for email etc
     public function user()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(UserManual::class, 'user_id');
     }
 }

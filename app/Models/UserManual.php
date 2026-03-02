@@ -9,5 +9,6 @@ class UserManual extends Model
 {
     use HasFactory;
     protected $table = 'tbl_user';
+    protected $primaryKey = 'user_id';
 public $timestamps = false;
 }

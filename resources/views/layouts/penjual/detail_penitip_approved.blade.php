@@ -10,51 +10,6 @@
     {{-- Search & Filter --}}
     @include('components.penitip.search_filter')
 
-    {{-- DATA DUMMY PENGAJUAN --}}
-    @php
-    $pengajuan_list = [
-        [
-            'no' => 1,
-            'submission_date' => '01-09-2025',
-            'name_produk' => 'RISOL',
-            'harga_jual' => 2000,
-            'cogs' => 1800,
-            'stock' => 38,
-            'validasi_stock' => 38,
-            'foto_validasi' => asset('dummy/validasi.jpg'),
-            'sisa_stock' => 2,
-            'foto_sisa' => asset('dummy/sisa.jpg'),
-            'pendapatan' => 61200
-        ],
-        [
-            'no' => 2,
-            'submission_date' => '01-09-2025',
-            'name_produk' => 'TAHU ISI',
-            'harga_jual' => 2000,
-            'cogs' => 1800,
-            'stock' => 38,
-            'validasi_stock' => 38,
-            'foto_validasi' => asset('dummy/validasi.jpg'),
-            'sisa_stock' => 2,
-            'foto_sisa' => asset('dummy/sisa.jpg'),
-            'pendapatan' => 61200
-        ],
-        [
-            'no' => 3,
-            'submission_date' => '01-09-2025',
-            'name_produk' => 'DONAT',
-            'harga_jual' => 2000,
-            'cogs' => 1800,
-            'stock' => 38,
-            'validasi_stock' => 38,
-            'foto_validasi' => asset('dummy/validasi.jpg'),
-            'sisa_stock' => 2,
-            'foto_sisa' => asset('dummy/sisa.jpg'),
-            'pendapatan' => 61200
-        ],
-    ];
-    @endphp
-
     {{-- Tabel Pengajuan --}}
     <div class="card" style="border: 1px solid #ddd; border-radius: 8px; overflow: hidden;">
         <div class="table-responsive">
@@ -75,51 +30,80 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($pengajuan_list as $index => $item)
+                    @foreach($detail_penitip_approved as $index => $item)
                     <tr>
-                        <td>{{ $item['no'] }}</td>
-                        <td>{{ $item['submission_date'] }}</td>
-                        <td>{{ $item['name_produk'] }}</td>
-                        <td>RP{{ number_format($item['harga_jual'], 0, ',', '.') }}</td>
-                        <td>RP{{ number_format($item['cogs'], 0, ',', '.') }}</td>
+                        <td>{{ $index + 1 }}</td>
+                        <td>{{ $item->created_at }}</td>
+                        <td>{{ $item->produk->produk_name }}</td>
+                        <td>RP{{ number_format($item->harga_jual, 0, ',', '.') }}</td>
+                        <td>RP{{ number_format($item->harga_modal, 0, ',', '.') }}</td>
                         <td>
-                            <input type="number" class="form-control form-control-sm" value="{{ $item['stock'] }}" style="width: 80px;">
-                        </td>
-                        <td>
-                            <button class="btn btn-sm btn-edit-stock"
-                                    style="background: white; border: 1px solid #ddd; padding: 5px 15px; border-radius: 5px;"
-                                    data-type="validasi"
-                                    data-row="{{ $item['no'] }}"
-                                    data-produk="{{ $item['name_produk'] }}">
-                                <i class="bi bi-pencil"></i>
-                            </button>
-                        </td>
-                             <td>
-                            <a href="javascript:void(0)"
-                            class="text-primary btn-view-foto"
-                            data-foto="{{ $item['foto_validasi'] }}"
-                            data-title="Foto Validasi Stock">
-                                Lihat Foto
-                            </a>
+                            <input type="text" class="form-control form-control-sm" value="{{ $item->stock_qty }}" style="width: 80px;" readonly>
                         </td>
                         <td>
-                            <button class="btn btn-sm btn-edit-stock"
-                                    style="background: white; border: 1px solid #ddd; padding: 5px 15px; border-radius: 5px;"
-                                    data-type="sisa"
-                                    data-row="{{ $item['no'] }}"
-                                    data-produk="{{ $item['name_produk'] }}">
-                                <i class="bi bi-pencil"></i>
-                            </button>
+                            @if($item->stock)
+                                <input type="text" class="form-control form-control-sm" value="{{ $item->stock }}" style="width: 80px;" readonly>
+                            @else
+                                <button class="btn btn-sm btn-edit-stock"
+                                        style="background: white; border: 1px solid #ddd; padding: 5px 15px; border-radius: 5px;"
+                                        data-type="validasi"
+                                        data-stock-id="{{ $item->stock_id }}"
+                                        data-row="{{ $index + 1 }}"
+                                        data-produk="{{ $item->produk->produk_name }}"
+                                        data-stock="{{ $item->stock_qty }}">
+                                    <i class="bi bi-pencil"></i> Validasi
+                                </button>
+                            @endif
                         </td>
-                         <td>
-                            <a href="javascript:void(0)"
-                            class="text-primary btn-view-foto"
-                            data-foto="{{ $item['foto_sisa'] }}"
-                            data-title="Foto Sisa Stock">
-                                Lihat Foto
-                            </a>
+                        <td>
+                            @if($item->validasi_foto)
+                                <a href="javascript:void(0)"
+                                class="text-primary btn-view-foto"
+                                data-foto="{{ asset('storage/stok_validasi/' . $item->validasi_foto) }}"
+                                data-title="Foto Validasi Stock">
+                                    Lihat Foto
+                                </a>
+                            @else
+                                <span class="text-muted">-</span>
+                            @endif
                         </td>
-                        <td>RP {{ number_format($item['pendapatan'], 0, ',', '.') }}</td>
+                        <td>
+                            @if($item->stock)
+                                @if($item->sisa_stock !== null)
+                                    <input type="text" class="form-control form-control-sm" value="{{ $item->sisa_stock }}" style="width: 80px;" readonly>
+                                @else
+                                    <button class="btn btn-sm btn-edit-stock"
+                                            style="background: white; border: 1px solid #ddd; padding: 5px 15px; border-radius: 5px;"
+                                            data-type="sisa"
+                                            data-stock-id="{{ $item->stock_id }}"
+                                            data-row="{{ $index + 1 }}"
+                                            data-produk="{{ $item->produk->produk_name }}">
+                                        <i class="bi bi-pencil"></i> Input
+                                    </button>
+                                @endif
+                            @else
+                                <span class="text-muted">-</span>
+                            @endif
+                        </td>
+                        <td>
+                            @if($item->sisa_foto)
+                                <a href="javascript:void(0)"
+                                class="text-primary btn-view-foto"
+                                data-foto="{{ asset('storage/stok_sisa/' . $item->sisa_foto) }}"
+                                data-title="Foto Sisa Stock">
+                                    Lihat Foto
+                                </a>
+                            @else
+                                <span class="text-muted">-</span>
+                            @endif
+                        </td>
+                        <td>
+                            @if($item->stock && $item->sisa_stock !== null)
+                                RP {{ number_format(($item->stock - $item->sisa_stock) * $item->harga_modal, 0, ',', '.') }}
+                            @else
+                                <span class="text-muted">-</span>
+                            @endif
+                        </td>
                     </tr>
                     @endforeach
                 </tbody>
@@ -129,7 +113,7 @@
         {{-- Pagination --}}
         <div class="card-footer" style="background: white; border-top: 1px solid #ddd;">
             <div class="d-flex justify-content-between align-items-center">
-                <small class="text-muted">Showing 1 to {{ count($pengajuan_list) }} of 20 entries</small>
+                <small class="text-muted">Showing 1 to {{ count($detail_penitip_approved) }} of 20 entries</small>
 
                 <nav>
                     <ul class="pagination mb-0">
@@ -167,6 +151,7 @@
                 <form id="formValidasiStock">
                     {{-- Hidden Fields --}}
                     <input type="hidden" id="stockType" name="type">
+                    <input type="hidden" id="stockId" name="stock_id">
                     <input type="hidden" id="rowId" name="row_id">
                     <input type="hidden" id="productName" name="product_name">
 
@@ -298,20 +283,26 @@ $(document).ready(function() {
     // Open Modal saat icon pensil diklik
     $('.btn-edit-stock').on('click', function() {
         const type = $(this).data('type');
+        const stockId = $(this).data('stock-id');
         const rowId = $(this).data('row');
         const productName = $(this).data('produk');
+        const originalStock = $(this).data('stock');
 
         // Set judul modal berdasarkan tipe
         if (type === 'validasi') {
-            $('#modalValidasiTitle').text('Validasi Stock');
+            $('#modalValidasiTitle').text('Validasi Stock - ' + productName);
         } else {
-            $('#modalValidasiTitle').text('Validasi sisa stock');
+            $('#modalValidasiTitle').text('Validasi sisa stock - ' + productName);
         }
 
         // Set hidden fields
         $('#stockType').val(type);
+        $('#stockId').val(stockId);
         $('#rowId').val(rowId);
         $('#productName').val(productName);
+
+        // Set placeholder dengan nilai original stock
+        $('#jumlahStock').attr('placeholder', 'Stock saat ini: ' + originalStock);
 
         // Reset form
         $('#formValidasiStock')[0].reset();
@@ -364,38 +355,63 @@ $(document).ready(function() {
     // Submit form
     $('#btnSubmitStock').on('click', function() {
         const type = $('#stockType').val();
-        const rowId = $('#rowId').val();
-        const productName = $('#productName').val();
+        const stockId = $('#stockId').val();
         const jumlahStock = $('#jumlahStock').val();
         const foto = $('#uploadFoto')[0].files[0];
 
         // Validasi
+        if (!stockId) {
+            alert('Stock ID tidak ditemukan');
+            return;
+        }
+
         if (!jumlahStock) {
-            alert('Silakan pilih jumlah stock');
+            alert('Silakan input jumlah stock');
             return;
         }
 
         // Buat FormData untuk kirim file
         const formData = new FormData();
         formData.append('_token', '{{ csrf_token() }}');
-        formData.append('type', type);
-        formData.append('row_id', rowId);
-        formData.append('product_name', productName);
-        formData.append('jumlah_stock', jumlahStock);
+        formData.append('stock_id', stockId);
+
+        // Set field name berdasarkan type
+        if (type === 'validasi') {
+            formData.append('validated_stock', jumlahStock);
+        } else {
+            formData.append('sisa_stock', jumlahStock);
+        }
+
         if (foto) {
             formData.append('foto', foto);
         }
 
-        // Log data (untuk testing)
-        console.log('Data yang akan dikirim:');
-        console.log('Type:', type);
-        console.log('Row ID:', rowId);
-        console.log('Produk:', productName);
-        console.log('Jumlah Stock:', jumlahStock);
-        console.log('Foto:', foto ? foto.name : 'Tidak ada');
+        // Tentukan URL route berdasarkan type
+        const url = type === 'validasi'
+            ? '{{ route("penjual.update_validated_stock") }}'
+            : '{{ route("penjual.update_sisa_stock") }}';
 
-        alert('Data siap dikirim!\n\nType: ' + type + '\nProduk: ' + productName + '\nJumlah: ' + jumlahStock);
-        $('#modalValidasiStock').modal('hide');
+        // Kirim AJAX
+        $.ajax({
+            url: url,
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(response) {
+                alert(response.message);
+
+                // Tutup modal
+                $('#modalValidasiStock').modal('hide');
+
+                // Reload halaman untuk update table
+                location.reload();
+            },
+            error: function(xhr) {
+                console.error(xhr);
+                alert('Gagal menyimpan data');
+            }
+        });
     });
 });
 </script>
