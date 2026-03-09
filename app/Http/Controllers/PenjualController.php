@@ -108,6 +108,7 @@ class PenjualController extends Controller
             where('penjual_id', $penjual_id)
             ->with('penjual.user', 'produk')
             ->get();
+
         return view('layouts.penjual.detail_penitip_approved', compact('detail_penitip_approved'));
     }
 

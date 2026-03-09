@@ -1,19 +1,26 @@
 $(document).ready(function () {
 
-    // Toggle produk (dummy)
     $('.toggle-produk').on('change', function () {
+
         const id = $(this).data('id');
-        const status = $(this).is(':checked');
+        const status = $(this).is(':checked') ? 1 : 0;
 
-        console.log('Toggle produk:', id, status);
-        alert('Status produk berubah (dummy)');
-    });
+        $.ajax({
+            url: '/penitip/update_status_produk',
+            method: 'POST',
+            data: {
+                produk_id: id,
+                is_active: status,
+                _token: $('meta[name="csrf-token"]').attr('content')
+            },
+            success: function(response){
+                console.log(response.message);
+            },
+            error: function(){
+                alert('Gagal update status');
+            }
+        });
 
-    // Submit tambah produk (dummy)
-    $('#formTambahProduk').on('submit', function (e) {
-        e.preventDefault();
-        alert('Produk berhasil ditambahkan (dummy)');
-        $('#modalTambahProduk').modal('hide');
     });
 
 });

@@ -15,6 +15,24 @@ class Produk extends Model
 
     public $incrementing = true;
 
+     protected $fillable = [
+        'produk_id',
+        'produk_name',
+        'produk_description',
+        'harga_modal',
+        'harga_jual',
+        'status_produk',
+        'produk_type',
+        'penitip_id',
+        'is_active',
+        'foto_produk'
+    ];
+
+    protected $casts = [
+        'created_at' => 'datetime',
+        'is_active' => 'boolean',
+    ];
+
     public function approval()
     {
         return $this->hasMany(ProdukPenjual::class, 'produk_id');

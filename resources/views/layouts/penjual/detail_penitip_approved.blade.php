@@ -30,11 +30,11 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($detail_penitip_approved as $index => $item)
+                    @forelse($detail_penitip_approved as $index => $item)
                     <tr>
                         <td>{{ $index + 1 }}</td>
-                        <td>{{ $item->created_at }}</td>
-                        <td>{{ $item->produk->produk_name }}</td>
+                        <td>{{ $item->created_at ?? '-' }}</td>
+                        <td>{{ $item->produk?->produk_name ?? '-' }}</td>
                         <td>RP{{ number_format($item->harga_jual, 0, ',', '.') }}</td>
                         <td>RP{{ number_format($item->harga_modal, 0, ',', '.') }}</td>
                         <td>
@@ -49,7 +49,7 @@
                                         data-type="validasi"
                                         data-stock-id="{{ $item->stock_id }}"
                                         data-row="{{ $index + 1 }}"
-                                        data-produk="{{ $item->produk->produk_name }}"
+                                        data-produk="{{ $item->produk?->produk_name ?? '-' }}"
                                         data-stock="{{ $item->stock_qty }}">
                                     <i class="bi bi-pencil"></i> Validasi
                                 </button>
@@ -77,7 +77,7 @@
                                             data-type="sisa"
                                             data-stock-id="{{ $item->stock_id }}"
                                             data-row="{{ $index + 1 }}"
-                                            data-produk="{{ $item->produk->produk_name }}">
+                                            data-produk="{{ $item->produk?->produk_name }}">
                                         <i class="bi bi-pencil"></i> Input
                                     </button>
                                 @endif
@@ -105,7 +105,13 @@
                             @endif
                         </td>
                     </tr>
-                    @endforeach
+                    @empty
+                    <tr>
+                        <td colspan="11" class="text-center text-muted py-4">
+                            Tidak ada data pengajuan untuk penitip ini
+                        </td>
+                    </tr>
+                    @endforelse
                 </tbody>
             </table>
         </div>

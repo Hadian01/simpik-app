@@ -24,7 +24,8 @@
             'is_active' => $item->is_active,
             'produk_type' => $item->produk_type,
             'penitip_id' => $item->penitip_id,
-            'showToggle' => true
+            'showToggle' => true,
+            'gambar' => $item->foto_produk,
         ])
     @endforeach
 </div>

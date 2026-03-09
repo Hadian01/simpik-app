@@ -6,9 +6,9 @@
             <div class="position-absolute" style="top:10px; right:10px; z-index:2;">
                 <label class="switch mb-0">
                     <input type="checkbox"
-                           class="toggle-produk"
-                           data-id="{{ $id }}"
-                           {{ $is_active ? 'checked' : '' }}>
+                        class="toggle-produk"
+                        data-id="{{ $id }}"
+                        {{ $is_active ? 'checked' : '' }}>
                     <span class="slider round"></span>
                 </label>
             </div>
@@ -18,9 +18,16 @@
         <a href="{{ route('penitip.detail_produk', $id) }}" class="stretched-link"></a>
 
         {{-- GAMBAR --}}
-        <div class="bg-light d-flex align-items-center justify-content-center"
-             style="height:200px;">
-            <strong>Produk</strong>
+        <div style="height:200px; overflow:hidden;">
+            @if($gambar)
+                <img src="{{ asset('storage/'.$gambar) }}"
+                    class="w-100 h-100"
+                    style="object-fit:cover;">
+            @else
+                <div class="bg-light d-flex align-items-center justify-content-center h-100">
+                    <strong>No Image {{ $gambar }}</strong>
+                </div>
+            @endif
         </div>
 
         {{-- BODY --}}

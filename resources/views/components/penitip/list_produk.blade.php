@@ -5,8 +5,8 @@
         {{-- Gambar Produk --}}
         <div style="width: 100%; height: 100px; background: #f0f0f0; display: flex; align-items: center; justify-content: center;">
             @if($gambar)
-                <img src="{{ asset($gambar) }}" alt="{{ $nama }}" style="width: 100%; height: 100%; object-fit: cover;">
-            @else
+                <img src="{{ asset('storage/'.$gambar) }}" alt="{{ $nama }}" style="width: 100%; height: 100%; object-fit: cover;">
+                @else
                 <i class="bi bi-image" style="font-size: 32px; color: #999;"></i>
             @endif
         </div>

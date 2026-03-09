@@ -31,9 +31,9 @@
                         <td>{{ $penitip->penitip->user?->email ?? '-' }}</td>
                         <td>{{ $penitip->created_at->format('Y-m-d') }}</td>
                         <td class="text-center">
-                            <a href="{{ route('penjual.detail_pengajuan_penitip', ['id' => $penitip->penitip_id]) }}" class="btn btn-sm btn-link p-0">
+                            <a href="{{ route('penjual.detail_pengajuan_penitip', ['penjual_id' => $penitip->penjual_id]) }}" class="btn btn-sm btn-link p-0">
                                 <i class="bi bi-eye" style="font-size: 18px; color: #666;"></i>
-                            </a>            
+                            </a>
                         </td>
                     </tr>
                     @endforeach
