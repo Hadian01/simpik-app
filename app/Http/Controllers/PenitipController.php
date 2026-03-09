@@ -190,25 +190,24 @@ class PenitipController extends Controller
         | DASHBOARD DATA
         |--------------------------------
         */
-
         $dashboard_data = DB::table('tbl_stock_harian')
             ->where('penitip_id', $penitip_id)
             ->where('penjual_id', $id)
             ->whereRaw("DATE_TRUNC('month', date) = DATE_TRUNC('month', CURRENT_DATE)")
             ->selectRaw('
-                SUM(stock::int) as total_dititip,
-                SUM(stock::int - sisa_stock::int) as total_terjual,
-                SUM(pendapatan::int) as total_pendapatan
+                COALESCE(SUM(stock::int),0) as total_dititip,
+                COALESCE(SUM(stock::int - sisa_stock::int),0) as total_terjual,
+                COALESCE(SUM(pendapatan::int),0) as total_pendapatan
             ')
             ->first();
 
 
         $dashboard = [
-            'total_penjualan' => $dashboard_data->total_terjual ?? 0,
-            'produk_terjual' => $dashboard_data->total_terjual ?? 0,
-            'komisi' => 0,
-            'pendapatan_bersih' => $dashboard_data->total_pendapatan ?? 0,
-            'bulan' => now()->format('F Y')
+            'total_penjualan'   => $dashboard_data->total_terjual,
+            'produk_terjual'    => $dashboard_data->total_terjual,
+            'komisi'            => 0,
+            'pendapatan_bersih' => $dashboard_data->total_pendapatan,
+            'bulan'             => now()->format('F Y')
         ];
 
 
@@ -217,24 +216,23 @@ class PenitipController extends Controller
         | STATISTIK DASHBOARD
         |--------------------------------
         */
-
         $statistik = [
 
             [
                 'title' => 'Total Terjual',
-                'value' => $dashboard_data->total_terjual ?? 0,
+                'value' => $dashboard_data->total_terjual,
                 'bg_color' => '#CFC7FF'
             ],
 
             [
                 'title' => 'Total Dititip',
-                'value' => $dashboard_data->total_dititip ?? $produk_toko->count(),
+                'value' => $dashboard_data->total_dititip ?: $produk_toko->count(),
                 'bg_color' => '#CFC7FF'
             ],
 
             [
                 'title' => 'Total Pendapatan',
-                'value' => 'Rp ' . number_format($dashboard_data->total_pendapatan ?? 0),
+                'value' => 'Rp ' . number_format($dashboard_data->total_pendapatan),
                 'bg_color' => '#CFC7FF'
             ],
 
@@ -243,10 +241,9 @@ class PenitipController extends Controller
 
         /*
         |--------------------------------
-        | RIWAYAT PENJUALAN
+        | RIWAYAT DASHBOARD (TAB 2)
         |--------------------------------
         */
-
         $riwayat = DB::table('tbl_stock_harian as sh')
             ->join('tbl_produk as p', 'sh.produk_id', '=', 'p.produk_id')
             ->join('tbl_penjual as pj', 'sh.penjual_id', '=', 'pj.penjual_id')
@@ -268,13 +265,13 @@ class PenitipController extends Controller
 
         $riwayat_list = [];
 
-        $no = 1;
+        $no_dashboard = 1;
 
         foreach ($riwayat as $r) {
 
             $riwayat_list[] = [
 
-                'no' => $no++,
+                'no' => $no_dashboard++,
                 'submission_date' => date('d M Y', strtotime($r->created_at)),
                 'name' => $r->produk_name,
                 'nama_toko' => $r->nama_toko,
@@ -287,7 +284,54 @@ class PenitipController extends Controller
         }
 
 
+        /*
+        |--------------------------------
+        | RIWAYAT PENJUALAN (TAB 3)
+        |--------------------------------
+        */
+        $riwayat_penjualan = DB::table('tbl_stock_harian as sh')
+            ->join('tbl_produk as p', 'sh.produk_id', '=', 'p.produk_id')
+            ->where('sh.penjual_id', $id)
+            ->where('sh.penitip_id', $penitip_id)
+            ->selectRaw('
+                sh.created_at,
+                p.produk_name,
+                sh.harga_jual::int as harga_jual,
+                sh.harga_modal::int as cogs,
+                sh.stock::int as sistem,
+                (sh.stock::int - sh.sisa_stock::int) as validasi_stock,
+                sh.sisa_stock::int as sisa_stock,
+                sh.pendapatan::int as pendapatan
+            ')
+            ->orderBy('sh.created_at','desc')
+            ->get();
+
+
+        $riwayat_penjualan_list = [];
+
+        $no_riwayat = 1;
+
+        foreach ($riwayat_penjualan as $r) {
+
+            $riwayat_penjualan_list[] = [
+
+                'no' => $no_riwayat++,
+                'submission_date' => date('d-m-Y', strtotime($r->created_at)),
+                'name_produk' => $r->produk_name,
+                'harga_jual' => $r->harga_jual,
+                'cogs' => $r->cogs,
+                'sistem' => $r->sistem,
+                'validasi_stock' => $r->validasi_stock,
+                'sisa_stock' => $r->sisa_stock,
+                'pendapatan' => $r->pendapatan
+
+            ];
+        }
+
+
         $total_data = count($riwayat_list);
+        $total_data_penjualan = count($riwayat_penjualan_list);
+
         $per_page = 10;
         $current_page = 1;
 
@@ -300,7 +344,9 @@ class PenitipController extends Controller
                 'dashboard',
                 'statistik',
                 'riwayat_list',
+                'riwayat_penjualan_list',
                 'total_data',
+                'total_data_penjualan',
                 'per_page',
                 'current_page'
             )
@@ -430,157 +476,55 @@ class PenitipController extends Controller
         ]);
     }
 
-    public function dashboard($id)
+    public function add_jumlah_produk(Request $request, $id)
     {
+        $request->validate([
+            'produk_id' => 'required|exists:tbl_produk,produk_id',
+            'jumlah' => 'required|integer|min:1',
+            'keterangan' => 'nullable|string'
+        ]);
 
         $penitip_id = 1; // sementara hardcode login
 
-        $toko = Penjual::findOrFail($id);
-
-        /*
-        |--------------------------------------------------------------------------
-        | PRODUK YANG DITITIPKAN KE TOKO
-        |--------------------------------------------------------------------------
-        */
-
-        $produk_toko = DB::table('tbl_produk_penjual')
-            ->join('tbl_produk', 'tbl_produk_penjual.produk_id', '=', 'tbl_produk.produk_id')
-            ->where('tbl_produk_penjual.penjual_id', $id)
-            ->where('tbl_produk.penitip_id', $penitip_id)
-            ->select(
-                'tbl_produk_penjual.*',
-                'tbl_produk.produk_name',
-                'tbl_produk.harga_modal',
-                'tbl_produk.harga_jual',
-                'tbl_produk.foto_produk',
-            )
-            ->get();
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | DASHBOARD HEADER
-        |--------------------------------------------------------------------------
-        */
-
-        $dashboard = [
-            'bulan' => now()->format('F Y')
-        ];
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | STATISTIK DASHBOARD (PER BULAN)
-        |--------------------------------------------------------------------------
-        */
-
-        $dashboard_data = DB::table('tbl_stock_harian')
-            ->where('penitip_id', $penitip_id)
-            ->where('penjual_id', $id)
-            ->whereRaw("DATE_TRUNC('month', date) = DATE_TRUNC('month', CURRENT_DATE)")
-            ->selectRaw('
-                SUM(stock::int) as total_dititip,
-                SUM(stock::int - sisa_stock::int) as total_terjual,
-                SUM(pendapatan::int) as total_pendapatan
-            ')
+        // ambil data produk
+        $produk = DB::table('tbl_produk')
+            ->where('produk_id', $request->produk_id)
             ->first();
 
-
-        $statistik = [
-
-            [
-                'title' => 'Total Terjual',
-                'value' => $dashboard_data->total_terjual ?? 0,
-                'bg_color' => '#CFC7FF'
-            ],
-
-            [
-                'title' => 'Total Dititip',
-                'value' => $dashboard_data->total_dititip ?? 0,
-                'bg_color' => '#CFC7FF'
-            ],
-
-            [
-                'title' => 'Total Pendapatan',
-                'value' => 'Rp ' . number_format($dashboard_data->total_pendapatan ?? 0),
-                'bg_color' => '#CFC7FF'
-            ]
-
-        ];
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | RIWAYAT PENJUALAN
-        |--------------------------------------------------------------------------
-        */
-
-        $riwayat = DB::table('tbl_stock_harian as sh')
-            ->join('tbl_produk as p', 'sh.produk_id', '=', 'p.produk_id')
-            ->join('tbl_penjual as pj', 'sh.penjual_id', '=', 'pj.penjual_id')
-            ->where('sh.penitip_id', $penitip_id)
-            ->where('sh.penjual_id', $id)
-            ->whereRaw("DATE_TRUNC('month', sh.date) = DATE_TRUNC('month', CURRENT_DATE)")
-            ->selectRaw('
-                sh.created_at,
-                p.produk_name,
-                pj.nama_toko,
-                sh.stock::int as stock,
-                (sh.stock::int - sh.sisa_stock::int) as stock_terjual,
-                sh.harga_modal::int as cogs,
-                sh.pendapatan::int as pendapatan
-            ')
-            ->orderBy('sh.created_at', 'desc')
-            ->get();
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | FORMAT DATA KE VIEW
-        |--------------------------------------------------------------------------
-        */
-
-        $riwayat_list = [];
-
-        $no = 1;
-
-        foreach ($riwayat as $r) {
-
-            $riwayat_list[] = [
-
-                'no' => $no++,
-                'submission_date' => date('d M Y', strtotime($r->created_at)),
-                'name' => $r->produk_name,
-                'nama_toko' => $r->nama_toko,
-                'stock' => $r->stock,
-                'stock_terjual' => $r->stock_terjual,
-                'cogs' => 'Rp ' . number_format($r->cogs),
-                'pendapatan' => 'Rp ' . number_format($r->pendapatan)
-
-            ];
-
+        if (!$produk) {
+            return redirect()->back()->with('error', 'Produk tidak ditemukan');
         }
 
-        $total_data = count($riwayat_list);
+        DB::table('tbl_stock_harian')->insert([
 
+            'produk_id'  => $request->produk_id,
+            'penjual_id' => $id,
+            'penitip_id' => $penitip_id,
 
-        /*
-        |--------------------------------------------------------------------------
-        | RETURN VIEW
-        |--------------------------------------------------------------------------
-        */
+            // jumlah stok
+            'stock_qty'  => $request->jumlah,
+            'stock'      => $request->jumlah,
+            'sisa_stock' => $request->jumlah,
 
-        return view(
-            'layouts.penitip.toko_saya',
-            compact(
-                'toko',
-                'dashboard',
-                "produk_toko",
-                'statistik',
-                'riwayat_list',
-                'total_data'
-            )
-        );
+            // harga dari tabel produk
+            'harga_modal' => $produk->harga_modal,
+            'harga_jual'  => $produk->harga_jual,
 
+            // default pendapatan
+            'pendapatan' => 0,
+
+            // tanggal stok
+            'date' => now(),
+
+            // audit
+            'created_at' => now(),
+            'created_by' => 'penitip',
+
+        ]);
+
+        return redirect()
+            ->back()
+            ->with('success', 'Stok produk berhasil ditambahkan')
+            ->with('active_tab','riwayat');
     }
 }

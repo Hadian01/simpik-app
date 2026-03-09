@@ -25,6 +25,9 @@ Route::prefix('penitip')->name('penitip.')->group(function () {
     Route::post('/update_status_produk', [PenitipController::class, 'update_status_produk'])
     ->name('update_status_produk');
 
+    Route::post('/toko_saya/{id}/tambah-jumlah', [PenitipController::class, 'add_jumlah_produk'])
+    ->name('add_jumlah_produk');
+
     Route::get('/detail_produk_v2/{id}', function ($id) {
         return view('layouts.penitip.detail_produk_v2', ['produk_id' => $id]);
     })->name('detail_produk_v2');

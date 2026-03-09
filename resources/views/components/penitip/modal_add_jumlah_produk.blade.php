@@ -18,7 +18,10 @@
 
             {{-- Body --}}
             <div class="modal-body pt-3">
-                <form id="formAddJumlahProduk">
+                    <form id="formAddJumlahProduk"
+                        method="POST"
+                        action="{{ route('penitip.add_jumlah_produk', $toko->penjual_id) }}">
+
                     @csrf
 
                     {{-- Produk --}}
@@ -27,20 +30,17 @@
                             Produk <span class="text-danger">*</span>
                         </label>
                         <select name="produk_id" class="form-control" required>
-                            <option value="">Pilih Produk</option>
-                            @php
-                                $produk_options = [
-                                    ['id' => 1, 'nama' => 'Risol'],
-                                    ['id' => 2, 'nama' => 'Tahu Isi'],
-                                    ['id' => 3, 'nama' => 'Donat'],
-                                    ['id' => 4, 'nama' => 'Kue Lapis'],
-                                ];
-                            @endphp
-                            @foreach($produk_options as $produk)
-                                <option value="{{ $produk['id'] }}">
-                                    {{ $produk['nama'] }}
-                                </option>
-                            @endforeach
+
+                        <option value="">Pilih Produk</option>
+
+                        @foreach($produk_toko as $produk)
+
+                        <option value="{{ $produk->produk_id }}">
+                            {{ $produk->produk_name }}
+                        </option>
+
+                        @endforeach
+
                         </select>
                     </div>
 
