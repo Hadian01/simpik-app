@@ -301,7 +301,9 @@ class PenitipController extends Controller
                 sh.stock::int as sistem,
                 (sh.stock::int - sh.sisa_stock::int) as validasi_stock,
                 sh.sisa_stock::int as sisa_stock,
-                sh.pendapatan::int as pendapatan
+                sh.pendapatan::int as pendapatan,
+                sh.validasi_foto,
+                sh.sisa_foto
             ')
             ->orderBy('sh.created_at','desc')
             ->get();
@@ -323,8 +325,9 @@ class PenitipController extends Controller
                 'sistem' => $r->sistem,
                 'validasi_stock' => $r->validasi_stock,
                 'sisa_stock' => $r->sisa_stock,
-                'pendapatan' => $r->pendapatan
-
+                'pendapatan' => $r->pendapatan,
+                'validasi_foto' => $r->validasi_foto,
+                'sisa_foto' => $r->sisa_foto
             ];
         }
 
@@ -504,7 +507,6 @@ class PenitipController extends Controller
             // jumlah stok
             'stock_qty'  => $request->jumlah,
             'stock'      => $request->jumlah,
-            'sisa_stock' => $request->jumlah,
 
             // harga dari tabel produk
             'harga_modal' => $produk->harga_modal,

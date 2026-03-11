@@ -63,7 +63,7 @@
                     </div>
 
                     {{-- Keterangan --}}
-                    <div class="form-group">
+                    {{-- <div class="form-group">
                         <label class="small font-weight-medium">
                             Catatan <span class="text-muted">(opsional)</span>
                         </label>
@@ -73,7 +73,7 @@
                             class="form-control"
                             placeholder="Contoh: untuk stok akhir pekan"
                         ></textarea>
-                    </div>
+                    </div> --}}
 
                     {{-- Info ringan --}}
                     <div class="bg-light rounded p-3 mb-4 small text-muted">

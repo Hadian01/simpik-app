@@ -35,16 +35,16 @@
         </ul>
 
         {{-- ALERT SUCCESS --}}
-        @if(session('success'))
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @if (session('success'))
+            <div id="successAlert" class="alert alert-success alert-dismissible fade show" role="alert">
 
-            {{ session('success') }}
+                {{ session('success') }}
 
-            <button type="button" class="close" data-dismiss="alert">
-                <span>&times;</span>
-            </button>
+                <button type="button" class="close" data-dismiss="alert">
+                    <span>&times;</span>
+                </button>
 
-        </div>
+            </div>
         @endif
 
         {{-- TAB Content --}}
@@ -124,7 +124,7 @@
                 </div>
 
                 {{-- Tabel Riwayat Detail --}}
-                <div class="card" style="border: 1px solid #ddd; border-radius: 8px; overflow: hidden;">
+                <div class="card" style="border: 1px solid #ddd; border-radius: 8px; overflow: hidden;padding:8px;">
                     <div class="table-responsive">
                         <table class="table table-hover mb-0" id="tableRiwayat">
                             <thead style="background: #CFC7FF;">
@@ -155,27 +155,6 @@
                             </tbody>
                         </table>
                     </div>
-
-                    {{-- Pagination --}}
-                    <div class="card-footer" style="background: white; border-top: 1px solid #ddd;">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <small class="text-muted">Showing 1 to {{ count($riwayat_list) }} of {{ $total_data }}
-                                entries</small>
-
-                            <nav>
-                                <ul class="pagination mb-0">
-                                    <li class="page-item"><a class="page-link" href="#"
-                                            style="background: #9B8CFF; color: white; border: none;">1</a></li>
-                                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                    <li class="page-item"><a class="page-link" href="#">4</a></li>
-                                    <li class="page-item disabled"><a class="page-link" href="#">...</a></li>
-                                    <li class="page-item"><a class="page-link" href="#">10</a></li>
-                                    <li class="page-item"><a class="page-link" href="#">Next</a></li>
-                                </ul>
-                            </nav>
-                        </div>
-                    </div>
                 </div>
 
             </div>
@@ -190,17 +169,13 @@
 
                     <div class="d-flex gap-2">
 
-                        <button class="btn btn-outline-secondary"
-                            data-toggle="modal"
-                            data-target="#modalFilterRiwayat">
+                        <button class="btn btn-outline-secondary" data-toggle="modal" data-target="#modalFilterRiwayat">
 
                             <i class="bi bi-funnel"></i> Filter
 
                         </button>
 
-                        <button class="btn text-white"
-                            style="background:#9B8CFF"
-                            data-toggle="modal"
+                        <button class="btn text-white" style="background:#9B8CFF" data-toggle="modal"
                             data-target="#modalAddJumlahProduk">
 
                             <i class="bi bi-plus-lg"></i> Add
@@ -215,70 +190,96 @@
                 {{-- Card hanya untuk tabel --}}
                 <div class="">
 
-                        <div class="table-responsive">
+                    <div class="table-responsive">
 
-                            <table class="table table-bordered table-hover mb-0 w-100"
-                                id="tableRiwayatPengajuan">
+                        <table class="table table-bordered table-hover mb-0 w-100" id="tableRiwayatPengajuan">
 
-                                <thead class="text-center" style="background:#CFC7FF">
-
-                                    <tr>
-                                        <th style="width:60px">NO</th>
-                                        <th>SUBMISSION DATE</th>
-                                        <th>NAME PRODUK</th>
-                                        <th>HARGA JUAL</th>
-                                        <th>COGS</th>
-                                        <th>SISTEM</th>
-                                        <th>VALIDASI STOCK</th>
-                                        <th>SISA STOCK</th>
-                                        <th>PENDAPATAN</th>
-                                    </tr>
-
-                                </thead>
-
-                                <tbody>
-
-                                @forelse($riwayat_penjualan_list as $item)
+                            <thead class="text-center" style="background:#CFC7FF">
 
                                 <tr>
-
-                                    <td class="text-center">{{ $item['no'] }}</td>
-                                    <td>{{ $item['submission_date'] }}</td>
-                                    <td>{{ $item['name_produk'] }}</td>
-
-                                    <td class="text-right">
-                                        Rp {{ number_format($item['harga_jual'],0,',','.') }}
-                                    </td>
-
-                                    <td class="text-right">
-                                        Rp {{ number_format($item['cogs'],0,',','.') }}
-                                    </td>
-
-                                    <td class="text-center">{{ $item['sistem'] }}</td>
-                                    <td class="text-center">{{ $item['validasi_stock'] }}</td>
-                                    <td class="text-center">{{ $item['sisa_stock'] }}</td>
-
-                                    <td class="text-right">
-                                        Rp {{ number_format($item['pendapatan'],0,',','.') }}
-                                    </td>
-
+                                    <th style="width:60px">NO</th>
+                                    <th>SUBMISSION DATE</th>
+                                    <th>NAME PRODUK</th>
+                                    <th>HARGA JUAL</th>
+                                    <th>COGS</th>
+                                    <th>STOCK</th>
+                                    <th>VALIDASI STOCK</th>
+                                    <th>VALIDASI FOTO</th>
+                                    <th>SISA STOCK</th>
+                                    <th>SISA FOTO</th>
+                                    <th>PENDAPATAN</th>
                                 </tr>
+
+                            </thead>
+
+                            <tbody>
+
+                                @forelse($riwayat_penjualan_list as $item)
+                                    <tr>
+
+                                        <td class="text-center">{{ $item['no'] }}</td>
+                                        <td>{{ $item['submission_date'] }}</td>
+                                        <td>{{ $item['name_produk'] }}</td>
+
+                                        <td class="text-right">
+                                            Rp {{ number_format($item['harga_jual'], 0, ',', '.') }}
+                                        </td>
+
+                                        <td class="text-right">
+                                            Rp {{ number_format($item['cogs'], 0, ',', '.') }}
+                                        </td>
+
+                                        <td class="text-center">{{ $item['sistem'] }}</td>
+                                        <td class="text-center">{{ $item['validasi_stock'] ?? '-' }}</td>
+                                        <td>
+                                            @if ($item['validasi_foto'])
+                                                <a href="javascript:void(0)" class="text-primary btn-view-foto"
+                                                    data-foto="{{ asset('storage/stok_validasi/' . $item['validasi_foto']) }}"
+                                                    data-title="Foto Validasi Stock">
+                                                    Lihat Foto
+                                                </a>
+                                            @else
+                                                <span class="text-muted">-</span>
+                                            @endif
+                                        </td>
+
+                                        <td class="text-center">{{ $item['sisa_stock'] ?? '-' }}</td>
+                                        <td>
+
+                                            @if ($item['sisa_foto'])
+                                                <a href="javascript:void(0)" class="text-primary btn-view-foto"
+                                                    data-foto="{{ asset('storage/stok_sisa/' . $item['sisa_foto']) }}"
+                                                    data-title="Foto Sisa Stock">
+
+                                                    Lihat Foto
+
+                                                </a>
+                                            @else
+                                                <span class="text-muted">-</span>
+                                            @endif
+
+                                        </td>
+
+                                        <td class="text-right">
+                                            Rp {{ number_format($item['pendapatan'], 0, ',', '.') }}
+                                        </td>
+
+                                    </tr>
 
                                 @empty
 
-                                <tr>
-                                    <td colspan="9" class="text-center text-muted py-4">
-                                        Belum ada data riwayat
-                                    </td>
-                                </tr>
-
+                                    <tr>
+                                        <td colspan="9" class="text-center text-muted py-4">
+                                            Belum ada data riwayat
+                                        </td>
+                                    </tr>
                                 @endforelse
 
-                                </tbody>
+                            </tbody>
 
-                            </table>
+                        </table>
 
-                        </div>
+                    </div>
                 </div>
 
             </div>
@@ -339,83 +340,214 @@
                 </div>
 
             </div>
+            <div class="modal fade" id="modalViewFoto" tabindex="-1">
+                <div class="modal-dialog modal-dialog-centered modal-lg">
+
+                    <div class="modal-content" style="border-radius:12px;">
+
+                        <div class="modal-header">
+
+                            <h5 class="modal-title" id="modalFotoTitle">Foto</h5>
+
+                            <button type="button" class="close" data-dismiss="modal">
+                                <span>&times;</span>
+                            </button>
+
+                        </div>
+
+                        <div class="modal-body text-center">
+
+                            <img id="modalFotoImage" src="" class="img-fluid rounded"
+                                style="max-height:500px; border:1px solid #ddd;">
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
 
 
 
-{{-- INCLUDE MODAL ADD PRODUK --}}
-@include('components.penitip.add_new_produk')
+            {{-- INCLUDE MODAL ADD PRODUK --}}
+            @include('components.penitip.add_new_produk')
 
-{{-- INCLUDE MODAL ADD JUMLAH PRODUK --}}
-@include('components.penitip.modal_add_jumlah_produk')
+            {{-- INCLUDE MODAL ADD JUMLAH PRODUK --}}
+            @include('components.penitip.modal_add_jumlah_produk')
 
-{{-- INCLUDE MODAL FILTER RIWAYAT --}}
-@include('components.penitip.modal_filter_riwayat')
+            {{-- INCLUDE MODAL FILTER RIWAYAT --}}
+            @include('components.penitip.modal_filter_riwayat')
 
-{{-- MODAL FILTER --}}
-@include('components.penitip.modal_filter')
+            {{-- MODAL FILTER --}}
+            @include('components.penitip.modal_filter')
 
 
-{{-- CSS TAB ACTIVE --}}
-<style>
-table.dataTable {
-    width:100% !important;
-}
+            {{-- CSS TAB ACTIVE --}}
+            <style>
+                table.dataTable {
+                    width: 100% !important;
+                }
 
-table.dataTable thead th {
-    white-space: nowrap;
-}
+                table.dataTable thead th {
+                    white-space: nowrap;
+                }
 
-.dataTables_wrapper .dataTables_filter {
-    float:right;
-}
+                .dataTables_wrapper .dataTables_filter {
+                    float: right;
+                }
 
-.dataTables_wrapper .dataTables_paginate {
-    float:right;
-}
-.nav-tabs .nav-link.active {
-    color: #9B8CFF !important;
-    border-bottom: 3px solid #9B8CFF !important;
-    font-weight: 600;
-}
+                .dataTables_wrapper .dataTables_paginate {
+                    float: right;
+                }
 
-.nav-tabs .nav-link:hover {
-    color: #9B8CFF !important;
-}
-</style>
+                .nav-tabs .nav-link.active {
+                    color: #9B8CFF !important;
+                    border-bottom: 3px solid #9B8CFF !important;
+                    font-weight: 600;
+                }
 
-@endsection
+                .nav-tabs .nav-link:hover {
+                    color: #9B8CFF !important;
+                }
+            </style>
+        @endsection
 
 
 @push('scripts')
 <script>
-    $(document).ready(function(){
-
-    @if(session('active_tab') == 'riwayat')
-
-        $('#riwayat-tab').tab('show');
-
-    @endif
-
-});
 
 $(document).ready(function(){
 
-    $('#tableRiwayatPengajuan').DataTable({
+let tableDashboard = $('#tableRiwayat').DataTable();
+let tableRiwayat = $('#tableRiwayatPengajuan').DataTable();
 
-        pageLength: 10,
-        ordering: true,
-        searching: true,
-        lengthChange: false,
-        responsive: true,
-        autoWidth: false
 
-    });
+
+/* ======================
+FILTER RIWAYAT
+====================== */
+
+$('#formFilterRiwayat').submit(function(e){
+
+e.preventDefault();
+
+let tanggalDari = $('input[name="tanggal_dari"]').val();
+let tanggalSampai = $('input[name="tanggal_sampai"]').val();
+let produk = $('select[name="produk"]').val();
+
+$.fn.dataTable.ext.search = [];
+
+$.fn.dataTable.ext.search.push(function(settings,data){
+
+if(settings.nTable.id !== 'tableRiwayatPengajuan'){
+return true;
+}
+
+let tanggal = data[1];
+let namaProduk = data[2];
+
+if(produk && !namaProduk.toLowerCase().includes(produk.toLowerCase())){
+return false;
+}
+
+if(tanggalDari && new Date(tanggal) < new Date(tanggalDari)){
+return false;
+}
+
+if(tanggalSampai && new Date(tanggal) > new Date(tanggalSampai)){
+return false;
+}
+
+return true;
+
+});
+
+tableRiwayat.draw();
+
+$('#modalFilterRiwayat').modal('hide');
 
 });
 
 
+/* ======================
+RESET RIWAYAT FILTER
+====================== */
+
+$('#resetFilterRiwayat').click(function(){
+
+$('#formFilterRiwayat')[0].reset();
+
+$.fn.dataTable.ext.search = [];
+
+tableRiwayat.search('').columns().search('').draw();
+
+});
+
+
+
+/* ======================
+FILTER DASHBOARD
+====================== */
+
+$('#formFilter').submit(function(e){
+
+e.preventDefault();
+
+let tanggalDari = $('input[name="tanggal_dari"]').val();
+let tanggalSampai = $('input[name="tanggal_sampai"]').val();
+
+$.fn.dataTable.ext.search.push(function(settings,data){
+
+if(settings.nTable.id !== 'tableRiwayat'){
+return true;
+}
+
+let tanggal = data[1];
+
+if(tanggalDari && new Date(tanggal) < new Date(tanggalDari)){
+return false;
+}
+
+if(tanggalSampai && new Date(tanggal) > new Date(tanggalSampai)){
+return false;
+}
+
+return true;
+
+});
+
+tableDashboard.draw();
+
+$('#modalFilter').modal('hide');
+
+});
+
+
+/* ======================
+RESET DASHBOARD FILTER
+====================== */
+
+$('#resetFilterDashboard').click(function(){
+
+$('#formFilter')[0].reset();
+
+$.fn.dataTable.ext.search = [];
+
+tableDashboard.search('').columns().search('').draw();
+
+});
+
+
+
+/* ======================
+FIX DATATABLE TAB
+====================== */
+
 $('a[data-toggle="tab"]').on('shown.bs.tab', function () {
-    $($.fn.dataTable.tables(true)).DataTable().columns.adjust();
+
+$($.fn.dataTable.tables(true)).DataTable().columns.adjust();
+
+});
+
 });
 
 </script>

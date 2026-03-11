@@ -38,9 +38,18 @@
                     </div>
 
                     {{-- Tombol --}}
-                    <div class="d-flex justify-content-end gap-2 mt-4">
-                        <button type="button" class="btn btn-secondary mr-2" data-dismiss="modal">Batal</button>
-                        <button type="submit" class="btn" style="background-color: #9B8CFF; color: white;">Terapkan Filter</button>
+                    <div class="d-flex justify-content-end gap-2">
+                        <button type="button" id="resetFilterRiwayat" class="btn btn-light">
+                            Reset
+                        </button>
+
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                            Batal
+                        </button>
+
+                        <button type="submit" class="btn" style="background-color: #9B8CFF; color: white;">
+                            Terapkan Filter
+                        </button>
                     </div>
 
                 </form>
@@ -51,16 +60,16 @@
 </div>
 
 <script>
-$(document).ready(function() {
-    $('#formFilterRiwayat').submit(function(e) {
-        e.preventDefault();
+    $(document).ready(function() {
+        $('#formFilterRiwayat').submit(function(e) {
+            e.preventDefault();
 
-        const filterData = $(this).serialize();
-        console.log('Filter:', filterData);
+            const filterData = $(this).serialize();
+            console.log('Filter:', filterData);
 
-        // NANTI: AJAX request
-        alert('Filter diterapkan! (Dummy)');
-        $('#modalFilterRiwayat').modal('hide');
+            // NANTI: AJAX request
+            alert('Filter diterapkan! (Dummy)');
+            $('#modalFilterRiwayat').modal('hide');
+        });
     });
-});
 </script>

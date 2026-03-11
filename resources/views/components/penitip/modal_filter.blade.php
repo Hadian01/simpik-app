@@ -48,8 +48,17 @@
 
                     {{-- Tombol --}}
                     <div class="d-flex justify-content-end gap-2">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
-                        <button type="submit" class="btn" style="background-color: #9B8CFF; color: white;">Terapkan Filter</button>
+                        <button type="button" id="resetFilterDashboard" class="btn btn-light">
+                            Reset
+                        </button>
+
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                            Batal
+                        </button>
+
+                        <button type="submit" class="btn" style="background-color: #9B8CFF; color: white;">
+                            Terapkan Filter
+                        </button>
                     </div>
 
                 </form>
@@ -60,28 +69,28 @@
 </div>
 
 <script>
-$(document).ready(function() {
-    $('#formFilter').submit(function(e) {
-        e.preventDefault();
+    $(document).ready(function() {
+        $('#formFilter').submit(function(e) {
+            e.preventDefault();
 
-        // Ambil data filter
-        const filterData = $(this).serialize();
-        console.log('Filter data:', filterData);
+            // Ambil data filter
+            const filterData = $(this).serialize();
+            console.log('Filter data:', filterData);
 
-        // NANTI: Kirim AJAX request ke backend
-        /*
-        $.ajax({
-            url: '/penitip/riwayat/filter',
-            method: 'GET',
-            data: filterData,
-            success: function(response) {
-                // Update tabel dengan data filtered
-            }
+            // NANTI: Kirim AJAX request ke backend
+            /*
+            $.ajax({
+                url: '/penitip/riwayat/filter',
+                method: 'GET',
+                data: filterData,
+                success: function(response) {
+                    // Update tabel dengan data filtered
+                }
+            });
+            */
+
+            alert('Filter diterapkan! (Dummy)');
+            $('#modalFilter').modal('hide');
         });
-        */
-
-        alert('Filter diterapkan! (Dummy)');
-        $('#modalFilter').modal('hide');
     });
-});
 </script>
