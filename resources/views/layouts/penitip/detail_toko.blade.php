@@ -4,51 +4,54 @@
 
 <div class="container-fluid">
 
+{{-- ================= HEADER ================= --}}
 <div class="d-flex justify-content-between align-items-center mb-4">
 
 <h2>{{ $toko->nama_toko }}</h2>
 
-@switch($status_pengajuan)
+{{-- STATUS ACTION --}}
+@if($status_pengajuan === 'not_joined')
 
-@case('not_joined')
 <button class="btn btn-primary" data-toggle="modal" data-target="#modalJoin">
 Join Sebagai Penitip
 </button>
-@break
 
-@case('pending')
+@elseif($status_pengajuan === 'pending')
+
 <button class="btn btn-warning" data-toggle="modal" data-target="#modalStatusPengajuan">
 Lihat Status Pengajuan
 </button>
-@break
 
-@case('approved')
+
+@elseif($status_pengajuan === 'approved')
+
 <span class="badge badge-success px-3 py-2">
 ✔️ Anda sudah menjadi penitip
 </span>
-@break
 
-@case('rejected')
-<button class="btn btn-danger" data-toggle="modal" data-target="#modalJoin">
-Ajukan Ulang
+@elseif($status_pengajuan === 'rejected')
+
+<div class="text-right">
+
+<button class="btn btn-danger" data-toggle="modal" data-target="#modalStatusPengajuan">
+Lihat Alasan Penolakan
 </button>
-@break
-
-@endswitch
 
 </div>
 
+@endif
 
-{{-- BANNER --}}
+</div>
+
+{{-- ================= BANNER ================= --}}
 @include('components.penitip.banner_toko',[
 'banner'=>null,
 'nama_toko'=>$toko->nama_toko
 ])
 
-
 <div class="row">
 
-{{-- INFO TOKO --}}
+{{-- ================= INFO TOKO ================= --}}
 <div class="col-md-6 mb-4">
 
 @include('components.penitip.detail_toko',[
@@ -58,14 +61,19 @@ Ajukan Ulang
 'no_hp'=>$toko->no_hp,
 'email'=>optional($toko->user)->email ?? '-',
 'start_operasional'=>$toko->tanggal_join,
-'jam_operasional'=>$toko->jam_buka->format('H:i').' - '.$toko->jam_tutup->format('H:i'),
+
+'jam_operasional' =>
+($toko->jam_buka && $toko->jam_tutup)
+? $toko->jam_buka->format('H:i').' - '.$toko->jam_tutup->format('H:i')
+: '-',
+
 'deskripsi'=>$toko->deskripsi_toko
 ])
 
 </div>
 
 
-{{-- PRODUK TOKO --}}
+{{-- ================= PRODUK TOKO ================= --}}
 <div class="col-md-6">
 
 <div class="card" style="border:1px solid #ddd;border-radius:8px;padding:20px;">
@@ -101,13 +109,12 @@ Belum ada produk yang disetujui di toko ini.
 
 </div>
 
-{{-- MODAL JOIN --}}
+{{-- ================= MODALS ================= --}}
 @include('layouts.penitip.join_penitip')
-
-{{-- MODAL STATUS --}}
 @include('components.penitip.modal_status_pengajuan')
 
 @endsection
+
 
 @push('scripts')
 
@@ -137,14 +144,14 @@ alert(res.message);
 
 $('#modalJoin').modal('hide');
 
+setTimeout(function(){
 location.reload();
+},500);
 
 },
 
 error:function(){
-
 alert('Terjadi kesalahan');
-
 }
 
 });

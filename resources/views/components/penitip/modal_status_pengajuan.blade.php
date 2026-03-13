@@ -20,43 +20,43 @@ Status Pengajuan Penitip
 $status = $status_pengajuan;
 @endphp
 
+{{-- ================= HEADER ================= --}}
 <div class="d-flex justify-content-between align-items-center mb-4">
 
 <div>
-<strong>Toko:</strong> {{ $toko->nama_toko }}<br>
+<strong>Toko:</strong> {{ $toko->nama_toko }} <br>
 <small class="text-muted">Pengajuan Anda sebagai penitip</small>
 </div>
 
-@if($status === 'pending')
+<div>
 
-<span class="badge badge-warning px-3 py-2">
-⏳ Menunggu Approval
-</span>
+@if($status === 'pending')
+<span class="badge badge-warning px-3 py-2">⏳ Menunggu Approval</span>
 
 @elseif($status === 'approved')
-
-<span class="badge badge-success px-3 py-2">
-✔️ Disetujui
-</span>
+<span class="badge badge-success px-3 py-2">✔️ Disetujui</span>
 
 @elseif($status === 'rejected')
-
-<span class="badge badge-danger px-3 py-2">
-❌ Ditolak
-</span>
+<span class="badge badge-danger px-3 py-2">❌ Ditolak</span>
 
 @endif
 
 </div>
 
+</div>
 
+{{-- ================= TIMELINE ================= --}}
 <ul class="list-group mb-4">
 
 <li class="list-group-item">
 <strong>📨 Pengajuan Dikirim</strong><br>
 
 <small class="text-muted">
-{{ $pengajuan ? \Carbon\Carbon::parse($pengajuan->created_at)->format('d F Y H:i') : '-' }}
+{{ $latest_pengajuan
+? \Carbon\Carbon::parse($latest_pengajuan->created_at)
+->timezone('Asia/Jakarta')
+->format('d F Y H:i')
+: '-' }}
 </small>
 
 </li>
@@ -79,27 +79,29 @@ $status = $status_pengajuan;
 
 <li class="list-group-item list-group-item-danger">
 <strong>❌ Ditolak</strong><br>
-<small>Silakan ajukan ulang.</small>
+<small>Silakan perbaiki data dan ajukan ulang.</small>
 </li>
 
 @endif
 
 </ul>
 
-
+{{-- ================= CATATAN ADMIN ================= --}}
 @if($status === 'rejected')
 
 <div class="alert alert-danger">
 
 <strong>Catatan Admin:</strong><br>
 
-{{ $pengajuan->catatan_admin ?? 'Pengajuan ditolak oleh admin.' }}
+{{ $latest_pengajuan && $latest_pengajuan->reject_reason
+? $latest_pengajuan->reject_reason
+: 'Pengajuan ditolak oleh admin.' }}
 
 </div>
 
 @endif
 
-
+{{-- ================= ACTION ================= --}}
 <div class="text-center">
 
 <button class="btn btn-secondary" data-dismiss="modal">
@@ -112,9 +114,7 @@ Tutup
 data-toggle="modal"
 data-target="#modalJoin"
 data-dismiss="modal">
-
 Ajukan Ulang
-
 </button>
 
 @endif

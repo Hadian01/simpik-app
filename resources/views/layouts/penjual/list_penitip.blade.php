@@ -42,7 +42,7 @@
                                     </span>
                                     @break
 
-                                @case('Pending')
+                                @case('pending')
                                     <span class="badge badge-warning px-3 py-2" style="font-size:12px;">
                                         Waiting Approval
                                     </span>

@@ -41,61 +41,85 @@ class PenitipController extends Controller
     {
         $penitip_id = 1; // sementara hardcode
 
+        // ambil semua pengajuan + relasi toko
         $pengajuan = Pengajuan::with('penjual')
             ->where('penitip_id', $penitip_id)
-            ->get();
-
-        $penjualIds = $pengajuan->pluck('penjual_id');
+            ->orderBy('created_at', 'desc') // penting!
+            ->get()
+            ->groupBy('penjual_id'); // group per toko
 
         $toko_saya = collect();
+        $penjualIds = [];
 
-        foreach ($pengajuan as $item) {
-            if ($item->penjual) {
-                $toko = $item->penjual;
-                $toko->status_pengajuan = $item->status;
+        foreach ($pengajuan as $penjual_id => $items) {
+
+            $latest = $items->first(); // ✅ ambil pengajuan terbaru
+
+            if ($latest->penjual) {
+
+                $toko = $latest->penjual;
+
+                // inject attribute tambahan
+                $toko->status_pengajuan = $latest->status;
+                $toko->reject_reason = $latest->reject_reason;
+                $toko->pengajuan_history = $items;
+
                 $toko_saya->push($toko);
+                $penjualIds[] = $penjual_id;
             }
         }
 
+        // toko yang belum pernah di-join
         $toko_lainnya = Penjual::whereNotIn('penjual_id', $penjualIds)->get();
 
         foreach ($toko_lainnya as $toko) {
             $toko->status_pengajuan = 'not_joined';
         }
 
-        return view('layouts.penitip.daftar_toko',
-            compact('toko_saya','toko_lainnya'));
+        return view(
+            'layouts.penitip.daftar_toko',
+            compact('toko_saya','toko_lainnya')
+        );
     }
 
     public function detail_toko(string $penjual_id): View
     {
-
         $penitip_id = 1; // sementara hardcode login
 
         $toko = Penjual::findOrFail($penjual_id);
 
-        // Produk toko yang sudah approved
+        /* =========================
+        PRODUK TOKO APPROVED
+        ========================= */
         $produk = Produk::whereHas('approval', function ($query) use ($penjual_id) {
-            $query->where('penjual_id', $penjual_id)
-                ->where('status', 'approved');
-        })
-        ->where('is_active', true)
-        ->get();
+                $query->where('penjual_id', $penjual_id)
+                    ->where('status', 'approved');
+            })
+            ->where('is_active', true)
+            ->get();
 
-        // Produk milik penitip (untuk diajukan)
-        $produk_penitip = Produk::where('penitip_id',$penitip_id)
-                            ->where('is_active',true)
-                            ->get();
+        /* =========================
+        PRODUK MILIK PENITIP
+        ========================= */
+        $produk_penitip = Produk::where('penitip_id', $penitip_id)
+            ->where('is_active', true)
+            ->get();
 
-        // ambil data pengajuan terakhir
-        $pengajuan = DB::table('tbl_pengajuan')
-            ->where('penitip_id',$penitip_id)
-            ->where('penjual_id',$penjual_id)
-            ->orderBy('created_at','desc')
-            ->first();
+        /* =========================
+        HISTORY PENGAJUAN
+        ========================= */
+        $pengajuan_history = DB::table('tbl_pengajuan')
+            ->where('penitip_id', $penitip_id)
+            ->where('penjual_id', $penjual_id)
+            ->orderByDesc('created_at')
+            ->get();
 
-        // status pengajuan
-        $status_pengajuan = $pengajuan->status ?? 'not_joined';
+        /* =========================
+        STATUS TERAKHIR
+        ========================= */
+        $latest_pengajuan = $pengajuan_history->first();
+        $status_pengajuan = strtolower($latest_pengajuan->status ?? 'not_joined');
+        $reject_reason    = $latest_pengajuan->reject_reason ?? null;
 
         return view(
             'layouts.penitip.detail_toko',
@@ -104,10 +128,11 @@ class PenitipController extends Controller
                 'produk',
                 'produk_penitip',
                 'status_pengajuan',
-                'pengajuan'
+                'reject_reason',
+                'pengajuan_history',
+                'latest_pengajuan' // ✅ INI YANG KURANG
             )
         );
-
     }
     public function join_penitip(Request $request)
     {
@@ -419,6 +444,7 @@ class PenitipController extends Controller
             'produk_description' => $request->produk_description,
             'harga_modal' => $request->harga_modal,
             'harga_jual' => $request->harga_jual,
+            'is_active' => $request->has('is_active'),
             'updated_at' => now()
         ];
 
