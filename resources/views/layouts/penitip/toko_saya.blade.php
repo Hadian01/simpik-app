@@ -1,554 +1,606 @@
-@extends('layouts.app')
+    @extends('layouts.app')
 
-@section('content')
-    <div class="container-fluid">
+    @section('content')
+        <div class="container-fluid">
 
-        {{-- Header --}}
-        <h2 class="mb-4">{{ $toko->nama_toko }}</h2>
+            {{-- Header --}}
+            <h2 class="mb-4">{{ $toko->nama_toko }}</h2>
 
-        {{-- TAB Navigation --}}
-        <ul class="nav nav-tabs mb-4" id="tokoTab" role="tablist" style="border-bottom: 2px solid #ddd;">
-            <li class="nav-item">
-                <a class="nav-link active" id="detail-tab" data-toggle="tab" href="#detail" role="tab"
-                    style="color: #333; font-weight: 500;">
-                    Detail Toko
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" id="dashboard-tab" data-toggle="tab" href="#dashboard" role="tab"
-                    style="color: #333; font-weight: 500;">
-                    Dashboard Pendapatan
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" id="riwayat-tab" data-toggle="tab" href="#riwayat" role="tab"
-                    style="color: #333; font-weight: 500;">
-                    Riwayat Penjualan
-                </a>
-            </li>
-            {{-- <li class="nav-item">
-                <a class="nav-link" id="produk-tab" data-toggle="tab" href="#produk" role="tab"
-                    style="color: #333; font-weight: 500;">
-                    Produk
-                </a>
-            </li> --}}
-        </ul>
+            {{-- TAB Navigation --}}
+            <ul class="nav nav-tabs mb-4" id="tokoTab" role="tablist" style="border-bottom: 2px solid #ddd;">
+                <li class="nav-item">
+                    <a class="nav-link active" id="detail-tab" data-toggle="tab" href="#detail" role="tab"
+                        style="color: #333; font-weight: 500;">
+                        Detail Toko
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="dashboard-tab" data-toggle="tab" href="#dashboard" role="tab"
+                        style="color: #333; font-weight: 500;">
+                        Dashboard Pendapatan
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="riwayat-tab" data-toggle="tab" href="#riwayat" role="tab"
+                        style="color: #333; font-weight: 500;">
+                        Riwayat Penjualan
+                    </a>
+                </li>
+                {{-- <li class="nav-item">
+                    <a class="nav-link" id="produk-tab" data-toggle="tab" href="#produk" role="tab"
+                        style="color: #333; font-weight: 500;">
+                        Produk
+                    </a>
+                </li> --}}
+            </ul>
 
-        {{-- ALERT SUCCESS --}}
-        @if (session('success'))
-            <div id="successAlert" class="alert alert-success alert-dismissible fade show" role="alert">
+            {{-- ALERT SUCCESS --}}
+            @if (session('success'))
+                <div id="successAlert" class="alert alert-success alert-dismissible fade show" role="alert">
 
-                {{ session('success') }}
+                    {{ session('success') }}
 
-                <button type="button" class="close" data-dismiss="alert">
-                    <span>&times;</span>
-                </button>
+                    <button type="button" class="close" data-dismiss="alert">
+                        <span>&times;</span>
+                    </button>
 
-            </div>
-        @endif
+                </div>
+            @endif
 
-        {{-- TAB Content --}}
-        <div class="tab-content" id="tokoTabContent">
+            {{-- TAB Content --}}
+            <div class="tab-content" id="tokoTabContent">
 
-            {{-- TAB 1: Detail Toko --}}
-            <div class="tab-pane fade show active" id="detail" role="tabpanel">
+                {{-- TAB 1: Detail Toko --}}
+                <div class="tab-pane fade show active" id="detail" role="tabpanel">
 
-                {{-- Banner Toko --}}
-                @include('components.penitip.banner_toko', [
-                    'id' => $toko->penjual_id,
-                    'banner' => $toko->banner ?? null,
-                    'nama_toko' => $toko->nama_toko,
-                    'is_active' => $toko->is_active ?? true,
-                ])
+                    {{-- Banner Toko --}}
+                    @include('components.penitip.banner_toko', [
+                        'id' => $toko->penjual_id,
+                        'banner' => $toko->banner ?? null,
+                        'nama_toko' => $toko->nama_toko,
+                        'is_active' => $toko->is_active ?? true,
+                    ])
 
-                <div class="row">
+                    <div class="row">
 
-                    {{-- KIRI: Info Toko --}}
-                    <div class="col-md-6 mb-4">
-                        @include('components.penitip.detail_toko', [
-                            'id' => $toko->penjual_id,
-                            'nama_toko' => $toko->nama_toko,
-                            'pemilik' => $toko->nama_pemilik,
-                            'alamat' => $toko->alamat_toko,
-                            'no_hp' => $toko->no_hp,
-                            'email' => optional($toko->user)->email ?? '-',
-                            'start_operasional' => $toko->tanggal_join,
-                            'jam_operasional' =>
-                                $toko->jam_buka && $toko->jam_tutup
-                                    ? $toko->jam_buka->format('H:i') . ' - ' . $toko->jam_tutup->format('H:i')
-                                    : '-',
-                            'deskripsi' => $toko->deskripsi_toko,
-                            'is_active' => $toko->is_active ?? true,
-                        ])
-                    </div>
+                        {{-- KIRI: Info Toko --}}
+                        <div class="col-md-6 mb-4">
+                            @include('components.penitip.detail_toko', [
+                                'id' => $toko->penjual_id,
+                                'nama_toko' => $toko->nama_toko,
+                                'pemilik' => $toko->nama_pemilik,
+                                'alamat' => $toko->alamat_toko,
+                                'no_hp' => $toko->no_hp,
+                                'email' => optional($toko->user)->email ?? '-',
+                                'start_operasional' => $toko->tanggal_join,
+                                'jam_operasional' =>
+                                    $toko->jam_buka && $toko->jam_tutup
+                                        ? $toko->jam_buka->format('H:i') . ' - ' . $toko->jam_tutup->format('H:i')
+                                        : '-',
+                                'deskripsi' => $toko->deskripsi_toko,
+                                'is_active' => $toko->is_active ?? true,
+                            ])
+                        </div>
 
-                    {{-- KANAN: Produk Toko --}}
-                    <div class="col-md-6">
-                        <div class="card" style="border: 1px solid #ddd; border-radius: 8px; padding: 20px;">
-                            <h5 class="mb-3">Produk {{ $toko['nama_toko'] }}</h5>
+                        {{-- KANAN: Produk Toko --}}
+                        <div class="col-md-6">
+                            <div class="card" style="border: 1px solid #ddd; border-radius: 8px; padding: 20px;">
+                                <h5 class="mb-3">Produk {{ $toko['nama_toko'] }}</h5>
 
-                            <div class="row">
-                                @foreach ($produk_toko as $produk)
-                                    @include('components.penitip.list_produk', [
-                                        'id' => $produk->produk_id,
-                                        'nama' => $produk->produk_name,
-                                        'gambar' => $produk->foto_produk,
-                                        'harga' => $produk->harga_jual,
-                                    ])
-                                @endforeach
+                                <div class="row">
+                                    @foreach ($produk_toko as $produk)
+                                        @include('components.penitip.list_produk', [
+                                            'id' => $produk->produk_id,
+                                            'nama' => $produk->produk_name,
+                                            'gambar' => $produk->foto_produk,
+                                            'harga' => $produk->harga_jual,
+                                        ])
+                                    @endforeach
 
+                                </div>
                             </div>
                         </div>
+
+                    </div>
+                </div>
+
+                {{-- TAB 2: Dashboard Pendapatan --}}
+                <div class="tab-pane fade" id="dashboard" role="tabpanel">
+
+                    {{-- Header Dashboard --}}
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h4>Dashboard Pendapatan</h4>
+                        <small class="text-muted">Periode: {{ $dashboard['bulan'] }}</small>
                     </div>
 
-                </div>
-            </div>
+                    {{-- Card Statistik Dashboard --}}
+                    <div class="row mb-4">
+                        @foreach ($statistik as $stat)
+                            @include('components.penitip.card_dashboard', $stat)
+                        @endforeach
+                    </div>
 
-            {{-- TAB 2: Dashboard Pendapatan --}}
-            <div class="tab-pane fade" id="dashboard" role="tabpanel">
-
-                {{-- Header Dashboard --}}
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h4>Dashboard Pendapatan</h4>
-                    <small class="text-muted">Periode: {{ $dashboard['bulan'] }}</small>
-                </div>
-
-                {{-- Search & Filter --}}
-                @include('components.penitip.search_filter')
-
-                {{-- Card Statistik Dashboard --}}
-                <div class="row mb-4">
-                    @foreach ($statistik as $stat)
-                        @include('components.penitip.card_dashboard', $stat)
-                    @endforeach
-                </div>
-
-                {{-- Tabel Riwayat Detail --}}
-                <div class="card" style="border: 1px solid #ddd; border-radius: 8px; overflow: hidden;padding:8px;">
-                    <div class="table-responsive">
-                        <table class="table table-hover mb-0" id="tableRiwayat">
-                            <thead style="background: #CFC7FF;">
-                                <tr>
-                                    <th style="width: 50px;">NO</th>
-                                    <th>SUBMISSION DATE</th>
-                                    <th>NAME</th>
-                                    <th>NAMA TOKO</th>
-                                    <th>STOCK</th>
-                                    <th>STOCK TERJUAL</th>
-                                    <th>COGS</th>
-                                    <th>PENDAPATAN</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($riwayat_list as $item)
+                    {{-- Tabel Riwayat Detail --}}
+                    <div class="card" style="border: 1px solid #ddd; border-radius: 8px; overflow: hidden;padding:8px;">
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0" id="tableRiwayat">
+                                <thead style="background: #CFC7FF;">
                                     <tr>
-                                        <td>{{ $item['no'] }}</td>
-                                        <td>{{ $item['submission_date'] }}</td>
-                                        <td>{{ $item['name'] }}</td>
-                                        <td>{{ $item['nama_toko'] }}</td>
-                                        <td>{{ $item['stock'] }}</td>
-                                        <td>{{ $item['stock_terjual'] }}</td>
-                                        <td>{{ $item['cogs'] }}</td>
-                                        <td>{{ $item['pendapatan'] }}</td>
+                                        <th style="width: 50px;">NO</th>
+                                        <th>SUBMISSION DATE</th>
+                                        <th>NAME</th>
+                                        <th>NAMA TOKO</th>
+                                        <th>STOCK</th>
+                                        <th>STOCK TERJUAL</th>
+                                        <th>COGS</th>
+                                        <th>PENDAPATAN</th>
                                     </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-            </div>
-
-            {{-- TAB 3: Riwayat Penjualan --}}
-            <div class="tab-pane fade" id="riwayat" role="tabpanel">
-
-                {{-- Header --}}
-                <div class="d-flex justify-content-between align-items-center mb-4">
-
-                    <h4>Riwayat Pengajuan {{ $toko->nama_toko }}</h4>
-
-                    <div class="d-flex gap-2">
-
-                        <button class="btn btn-outline-secondary" data-toggle="modal" data-target="#modalFilterRiwayat">
-
-                            <i class="bi bi-funnel"></i> Filter
-
-                        </button>
-
-                        <button class="btn text-white" style="background:#9B8CFF" data-toggle="modal"
-                            data-target="#modalAddJumlahProduk">
-
-                            <i class="bi bi-plus-lg"></i> Add
-
-                        </button>
-
-                    </div>
-
-                </div>
-
-
-                {{-- Card hanya untuk tabel --}}
-                <div class="">
-
-                    <div class="table-responsive">
-
-                        <table class="table table-bordered table-hover mb-0 w-100" id="tableRiwayatPengajuan">
-
-                            <thead class="text-center" style="background:#CFC7FF">
-
-                                <tr>
-                                    <th style="width:60px">NO</th>
-                                    <th>SUBMISSION DATE</th>
-                                    <th>NAME PRODUK</th>
-                                    <th>HARGA JUAL</th>
-                                    <th>COGS</th>
-                                    <th>STOCK</th>
-                                    <th>VALIDASI STOCK</th>
-                                    <th>VALIDASI FOTO</th>
-                                    <th>SISA STOCK</th>
-                                    <th>SISA FOTO</th>
-                                    <th>PENDAPATAN</th>
-                                </tr>
-
-                            </thead>
-
-                            <tbody>
-
-                                @forelse($riwayat_penjualan_list as $item)
-                                    <tr>
-
-                                        <td class="text-center">{{ $item['no'] }}</td>
-                                        <td>{{ $item['submission_date'] }}</td>
-                                        <td>{{ $item['name_produk'] }}</td>
-
-                                        <td class="text-right">
-                                            Rp {{ number_format($item['harga_jual'], 0, ',', '.') }}
-                                        </td>
-
-                                        <td class="text-right">
-                                            Rp {{ number_format($item['cogs'], 0, ',', '.') }}
-                                        </td>
-
-                                        <td class="text-center">{{ $item['sistem'] }}</td>
-                                        <td class="text-center">{{ $item['validasi_stock'] ?? '-' }}</td>
-                                        <td>
-                                            @if ($item['validasi_foto'])
-                                                <a href="javascript:void(0)" class="text-primary btn-view-foto"
-                                                    data-foto="{{ asset('storage/stok_validasi/' . $item['validasi_foto']) }}"
-                                                    data-title="Foto Validasi Stock">
-                                                    Lihat Foto
-                                                </a>
-                                            @else
-                                                <span class="text-muted">-</span>
-                                            @endif
-                                        </td>
-
-                                        <td class="text-center">{{ $item['sisa_stock'] ?? '-' }}</td>
-                                        <td>
-
-                                            @if ($item['sisa_foto'])
-                                                <a href="javascript:void(0)" class="text-primary btn-view-foto"
-                                                    data-foto="{{ asset('storage/stok_sisa/' . $item['sisa_foto']) }}"
-                                                    data-title="Foto Sisa Stock">
-
-                                                    Lihat Foto
-
-                                                </a>
-                                            @else
-                                                <span class="text-muted">-</span>
-                                            @endif
-
-                                        </td>
-
-                                        <td class="text-right">
-                                            Rp {{ number_format($item['pendapatan'], 0, ',', '.') }}
-                                        </td>
-
-                                    </tr>
-
-                                @empty
-
-                                    <tr>
-                                        <td colspan="9" class="text-center text-muted py-4">
-                                            Belum ada data riwayat
-                                        </td>
-                                    </tr>
-                                @endforelse
-
-                            </tbody>
-
-                        </table>
-
-                    </div>
-                </div>
-
-            </div>
-            {{-- TAB PRODUK --}}
-            <div class="tab-pane fade" id="produk">
-
-                {{-- HEADER --}}
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h4>Produk Toko</h4>
-                    <button class="btn" style="background:#9B8CFF;color:white" data-toggle="modal"
-                        data-target="#modalAddProdukToko">
-                        <i class="bi bi-plus-lg"></i> Tambah Produk
-                    </button>
-                </div>
-
-                {{-- PRODUK APPROVED --}}
-                <h5 class="mb-3">Produk Aktif</h5>
-
-                <div class="row mb-5">
-                    @forelse($produk_toko as $produk)
-                        @if ($produk->status === 'approved')
-                            @include('components.penitip.card_produk', [
-                                'id' => $produk->produk_id,
-                                'nama' => $produk->produk_name,
-                                'harga_jual' => $produk->harga_jual,
-                            ])
-                        @endif
-
-                    @empty
-                        <div class="col-12">
-                            <p class="text-muted">Belum ada produk aktif.</p>
+                                </thead>
+                                <tbody>
+                                    @foreach ($riwayat_list as $item)
+                                        <tr>
+                                            <td>{{ $item['no'] }}</td>
+                                            <td>{{ $item['submission_date'] }}</td>
+                                            <td>{{ $item['name'] }}</td>
+                                            <td>{{ $item['nama_toko'] }}</td>
+                                            <td>{{ $item['stock'] }}</td>
+                                            <td>{{ $item['stock_terjual'] }}</td>
+                                            <td>{{ $item['cogs'] }}</td>
+                                            <td>{{ $item['pendapatan'] }}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
                         </div>
-                    @endforelse
-                </div>
-
-                {{-- PRODUK PENGAJUAN --}}
-                <h5 class="mb-3">Produk Pengajuan</h5>
-
-                <div class="row">
-
-                    @forelse($produk_toko as $produk)
-                        @if (in_array($produk->status, ['pending', 'rejected']))
-                            @include('components.penitip.card_produk_pengajuan', [
-                                'id' => $produk->produk_id,
-                                'nama' => $produk->produk_name,
-                                'harga_jual' => $produk->harga_jual,
-                                'status' => $produk->status,
-                            ])
-                        @endif
-
-                    @empty
-
-                        <div class="col-12">
-                            <p class="text-muted">Tidak ada produk pengajuan.</p>
-                        </div>
-                    @endforelse
+                    </div>
 
                 </div>
 
-            </div>
-            <div class="modal fade" id="modalViewFoto" tabindex="-1">
-                <div class="modal-dialog modal-dialog-centered modal-lg">
+                {{-- TAB 3: Riwayat Penjualan --}}
+                <div class="tab-pane fade" id="riwayat" role="tabpanel">
 
-                    <div class="modal-content" style="border-radius:12px;">
+                    {{-- Header --}}
+                    <div class="d-flex justify-content-between align-items-center mb-4">
 
-                        <div class="modal-header">
+                        <h4>Riwayat Pengajuan {{ $toko->nama_toko }}</h4>
 
-                            <h5 class="modal-title" id="modalFotoTitle">Foto</h5>
+                        <div class="d-flex gap-2">
 
-                            <button type="button" class="close" data-dismiss="modal">
-                                <span>&times;</span>
+                            <button class="btn btn-outline-secondary" data-toggle="modal" data-target="#modalFilterRiwayat">
+
+                                <i class="bi bi-funnel"></i> Filter
+
+                            </button>
+
+                            <button class="btn text-white" style="background:#9B8CFF" data-toggle="modal"
+                                data-target="#modalAddJumlahProduk">
+
+                                <i class="bi bi-plus-lg"></i> Add
+
                             </button>
 
                         </div>
 
-                        <div class="modal-body text-center">
+                    </div>
 
-                            <img id="modalFotoImage" src="" class="img-fluid rounded"
-                                style="max-height:500px; border:1px solid #ddd;">
+
+                    {{-- Card hanya untuk tabel --}}
+                    <div class="">
+
+                        <div class="table-responsive">
+
+                            <table class="table table-bordered table-hover mb-0 w-100" id="tableRiwayatPengajuan">
+
+                                <thead class="text-center" style="background:#CFC7FF">
+
+                                    <tr>
+                                        <th style="width:60px">NO</th>
+                                        <th>SUBMISSION DATE</th>
+                                        <th>NAME PRODUK</th>
+                                        <th>HARGA JUAL</th>
+                                        <th>COGS</th>
+                                        <th>STOCK</th>
+                                        <th>VALIDASI STOCK</th>
+                                        <th>VALIDASI FOTO</th>
+                                        <th>SISA STOCK</th>
+                                        <th>SISA FOTO</th>
+                                        <th>PENDAPATAN</th>
+                                    </tr>
+
+                                </thead>
+
+                                <tbody>
+
+                                    @forelse($riwayat_penjualan_list as $item)
+                                        <tr>
+
+                                            <td class="text-center">{{ $item['no'] }}</td>
+                                            <td>{{ $item['submission_date'] }}</td>
+                                            <td>{{ $item['name_produk'] }}</td>
+
+                                            <td class="text-right">
+                                                Rp {{ number_format($item['harga_jual'], 0, ',', '.') }}
+                                            </td>
+
+                                            <td class="text-right">
+                                                Rp {{ number_format($item['cogs'], 0, ',', '.') }}
+                                            </td>
+
+                                            <td class="text-center">{{ $item['sistem'] }}</td>
+                                            <td class="text-center">{{ $item['validasi_stock'] ?? '-' }}</td>
+                                            <td>
+                                                @if ($item['validasi_foto'])
+                                                    <a href="javascript:void(0)" class="text-primary btn-view-foto"
+                                                        data-foto="{{ asset('storage/stok_validasi/' . $item['validasi_foto']) }}"
+                                                        data-title="Foto Validasi Stock">
+                                                        Lihat Foto
+                                                    </a>
+                                                @else
+                                                    <span class="text-muted">-</span>
+                                                @endif
+                                            </td>
+
+                                            <td class="text-center">{{ $item['sisa_stock'] ?? '-' }}</td>
+                                            <td>
+
+                                                @if ($item['sisa_foto'])
+                                                    <a href="javascript:void(0)" class="text-primary btn-view-foto"
+                                                        data-foto="{{ asset('storage/stok_sisa/' . $item['sisa_foto']) }}"
+                                                        data-title="Foto Sisa Stock">
+
+                                                        Lihat Foto
+
+                                                    </a>
+                                                @else
+                                                    <span class="text-muted">-</span>
+                                                @endif
+
+                                            </td>
+
+                                            <td class="text-right">
+                                                Rp {{ number_format($item['pendapatan'], 0, ',', '.') }}
+                                            </td>
+
+                                        </tr>
+
+                                    @empty
+
+                                        <tr>
+                                            <td colspan="9" class="text-center text-muted py-4">
+                                                Belum ada data riwayat
+                                            </td>
+                                        </tr>
+                                    @endforelse
+
+                                </tbody>
+
+                            </table>
 
                         </div>
+                    </div>
+
+                </div>
+                {{-- TAB PRODUK --}}
+                <div class="tab-pane fade" id="produk">
+
+                    {{-- HEADER --}}
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h4>Produk Toko</h4>
+                        <button class="btn" style="background:#9B8CFF;color:white" data-toggle="modal"
+                            data-target="#modalAddProdukToko">
+                            <i class="bi bi-plus-lg"></i> Tambah Produk
+                        </button>
+                    </div>
+
+                    {{-- PRODUK APPROVED --}}
+                    <h5 class="mb-3">Produk Aktif</h5>
+
+                    <div class="row mb-5">
+                        @forelse($produk_toko as $produk)
+                            @if ($produk->status === 'approved')
+                                @include('components.penitip.card_produk', [
+                                    'id' => $produk->produk_id,
+                                    'nama' => $produk->produk_name,
+                                    'harga_jual' => $produk->harga_jual,
+                                ])
+                            @endif
+
+                        @empty
+                            <div class="col-12">
+                                <p class="text-muted">Belum ada produk aktif.</p>
+                            </div>
+                        @endforelse
+                    </div>
+
+                    {{-- PRODUK PENGAJUAN --}}
+                    <h5 class="mb-3">Produk Pengajuan</h5>
+
+                    <div class="row">
+
+                        @forelse($produk_toko as $produk)
+                            @if (in_array($produk->status, ['pending', 'rejected']))
+                                @include('components.penitip.card_produk_pengajuan', [
+                                    'id' => $produk->produk_id,
+                                    'nama' => $produk->produk_name,
+                                    'harga_jual' => $produk->harga_jual,
+                                    'status' => $produk->status,
+                                ])
+                            @endif
+
+                        @empty
+
+                            <div class="col-12">
+                                <p class="text-muted">Tidak ada produk pengajuan.</p>
+                            </div>
+                        @endforelse
 
                     </div>
+
                 </div>
-            </div>
+                <div class="modal fade" id="modalViewFoto" tabindex="-1">
+                    <div class="modal-dialog modal-dialog-centered modal-lg">
 
+                        <div class="modal-content" style="border-radius:12px;">
 
+                            <div class="modal-header">
 
-            {{-- INCLUDE MODAL ADD PRODUK --}}
-            @include('components.penitip.add_new_produk')
+                                <h5 class="modal-title" id="modalFotoTitle">Foto</h5>
 
-            {{-- INCLUDE MODAL ADD JUMLAH PRODUK --}}
-            @include('components.penitip.modal_add_jumlah_produk')
+                                <button type="button" class="close" data-dismiss="modal">
+                                    <span>&times;</span>
+                                </button>
 
-            {{-- INCLUDE MODAL FILTER RIWAYAT --}}
-            @include('components.penitip.modal_filter_riwayat')
+                            </div>
 
-            {{-- MODAL FILTER --}}
-            @include('components.penitip.modal_filter')
+                            <div class="modal-body text-center">
 
+                                <img id="modalFotoImage" src="" class="img-fluid rounded"
+                                    style="max-height:500px; border:1px solid #ddd;">
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+
+
+                {{-- INCLUDE MODAL ADD PRODUK --}}
+                @include('components.penitip.add_new_produk')
+
+                {{-- INCLUDE MODAL ADD JUMLAH PRODUK --}}
+                @include('components.penitip.modal_add_jumlah_produk')
+
+                {{-- INCLUDE MODAL FILTER RIWAYAT --}}
+                @include('components.penitip.modal_filter_riwayat')
 
-            {{-- CSS TAB ACTIVE --}}
-            <style>
-                table.dataTable {
-                    width: 100% !important;
-                }
+                {{-- MODAL FILTER --}}
+                @include('components.penitip.modal_filter', [
+                    'produk_toko' => $produk_toko,
+                ])
 
-                table.dataTable thead th {
-                    white-space: nowrap;
-                }
 
-                .dataTables_wrapper .dataTables_filter {
-                    float: right;
-                }
+                {{-- CSS TAB ACTIVE --}}
+                <style>
+                    table.dataTable {
+                        width: 100% !important;
+                    }
 
-                .dataTables_wrapper .dataTables_paginate {
-                    float: right;
-                }
+                    table.dataTable thead th {
+                        white-space: nowrap;
+                    }
 
-                .nav-tabs .nav-link.active {
-                    color: #9B8CFF !important;
-                    border-bottom: 3px solid #9B8CFF !important;
-                    font-weight: 600;
-                }
+                    .dataTables_wrapper .dataTables_filter {
+                        float: right;
+                    }
 
-                .nav-tabs .nav-link:hover {
-                    color: #9B8CFF !important;
-                }
-            </style>
-        @endsection
+                    .dataTables_wrapper .dataTables_paginate {
+                        float: right;
+                    }
 
+                    .nav-tabs .nav-link.active {
+                        color: #9B8CFF !important;
+                        border-bottom: 3px solid #9B8CFF !important;
+                        font-weight: 600;
+                    }
 
-@push('scripts')
-<script>
+                    .nav-tabs .nav-link:hover {
+                        color: #9B8CFF !important;
+                    }
+                </style>
+            @endsection
 
-$(document).ready(function(){
+            @push('scripts')
+                <script>
+                    $(document).ready(function() {
 
-let tableDashboard = $('#tableRiwayat').DataTable();
-let tableRiwayat = $('#tableRiwayatPengajuan').DataTable();
+                        /*
+                        ================================
+                        INIT DATATABLE
+                        ================================
+                        */
 
+                        let tableRiwayat = $('#tableRiwayat').DataTable({
+                            responsive: true,
+                            dom: "<'row mb-2'<'col-md-6'l><'col-md-6 d-flex justify-content-end align-items-center'fB>>" +
+                                "<'row'<'col-12'tr>>" +
+                                "<'row mt-2'<'col-md-5'i><'col-md-7'p>>",
+                            buttons: [{
+                                text: '<i class="bi bi-funnel"></i> Filter',
+                                className: 'btn btn-outline-secondary btn-sm ml-2',
+                                action: function() {
+                                    $('#modalFilter').modal('show');
+                                }
+                            }]
+                        });
 
+                        let tableRiwayatPengajuan = $('#tableRiwayatPengajuan').DataTable({
+                            responsive: true
+                        });
 
-/* ======================
-FILTER RIWAYAT
-====================== */
 
-$('#formFilterRiwayat').submit(function(e){
+                        /*
+                        ================================
+                        FILTER STATE
+                        ================================
+                        */
 
-e.preventDefault();
+                        let filterState = {
+                            tableRiwayat: {
+                                active: false,
+                                start: null,
+                                end: null,
+                                produk: null
+                            },
+                            tableRiwayatPengajuan: {
+                                active: false,
+                                start: null,
+                                end: null,
+                                produk: null
+                            }
+                        };
 
-let tanggalDari = $('input[name="tanggal_dari"]').val();
-let tanggalSampai = $('input[name="tanggal_sampai"]').val();
-let produk = $('select[name="produk"]').val();
 
-$.fn.dataTable.ext.search = [];
+                        /*
+                        ================================
+                        DATE PARSER
+                        ================================
+                        */
 
-$.fn.dataTable.ext.search.push(function(settings,data){
+                        function parseTanggal(str) {
 
-if(settings.nTable.id !== 'tableRiwayatPengajuan'){
-return true;
-}
+                            if (!str) return null;
 
-let tanggal = data[1];
-let namaProduk = data[2];
+                            if (str.includes('-')) {
 
-if(produk && !namaProduk.toLowerCase().includes(produk.toLowerCase())){
-return false;
-}
+                                let p = str.split('-');
 
-if(tanggalDari && new Date(tanggal) < new Date(tanggalDari)){
-return false;
-}
+                                if (p.length === 3) {
+                                    return new Date(
+                                        parseInt(p[2]),
+                                        parseInt(p[1]) - 1,
+                                        parseInt(p[0])
+                                    );
+                                }
+                            }
 
-if(tanggalSampai && new Date(tanggal) > new Date(tanggalSampai)){
-return false;
-}
+                            let fallback = new Date(str);
+                            return isNaN(fallback) ? null : fallback;
+                        }
 
-return true;
 
-});
+                        /*
+                        ================================
+                        GLOBAL FILTER ENGINE
+                        ================================
+                        */
 
-tableRiwayat.draw();
+                        $.fn.dataTable.ext.search.push(function(settings, data) {
 
-$('#modalFilterRiwayat').modal('hide');
+                            let tableId = settings.nTable.id;
 
-});
+                            if (!filterState[tableId]) return true;
 
+                            let state = filterState[tableId];
 
-/* ======================
-RESET RIWAYAT FILTER
-====================== */
+                            if (!state.active) return true;
 
-$('#resetFilterRiwayat').click(function(){
+                            let rowDate = parseTanggal(data[1]);
+                            let produk = data[2];
 
-$('#formFilterRiwayat')[0].reset();
+                            if (!rowDate) return true;
 
-$.fn.dataTable.ext.search = [];
+                            if (state.start && rowDate < state.start) return false;
 
-tableRiwayat.search('').columns().search('').draw();
+                            if (state.end && rowDate > state.end) return false;
 
-});
+                            if (state.produk &&
+                                produk.toLowerCase() !== state.produk.toLowerCase()) {
+                                return false;
+                            }
 
+                            return true;
+                        });
 
 
-/* ======================
-FILTER DASHBOARD
-====================== */
+                        /*
+                        ================================
+                        APPLY FILTER
+                        ================================
+                        */
 
-$('#formFilter').submit(function(e){
+                        function applyFilter(form) {
 
-e.preventDefault();
+                            let tableId = form.data('table');
 
-let tanggalDari = $('input[name="tanggal_dari"]').val();
-let tanggalSampai = $('input[name="tanggal_sampai"]').val();
+                            if (!tableId) return;
 
-$.fn.dataTable.ext.search.push(function(settings,data){
+                            let dari = form.find('[name="tanggal_dari"]').val();
+                            let sampai = form.find('[name="tanggal_sampai"]').val();
+                            let produk = form.find('[name="produk"]').val();
 
-if(settings.nTable.id !== 'tableRiwayat'){
-return true;
-}
+                            filterState[tableId] = {
+                                active: true,
+                                start: dari ? new Date(dari) : null,
+                                end: sampai ? new Date(sampai) : null,
+                                produk: produk
+                            };
 
-let tanggal = data[1];
+                            $('#' + tableId).DataTable().draw();
 
-if(tanggalDari && new Date(tanggal) < new Date(tanggalDari)){
-return false;
-}
+                            form.closest('.modal').modal('hide');
+                        }
 
-if(tanggalSampai && new Date(tanggal) > new Date(tanggalSampai)){
-return false;
-}
 
-return true;
+                        /*
+                        ================================
+                        RESET FILTER
+                        ================================
+                        */
 
-});
+                        function resetFilter(form) {
 
-tableDashboard.draw();
+                            let tableId = form.data('table');
 
-$('#modalFilter').modal('hide');
+                            filterState[tableId] = {
+                                active: false,
+                                start: null,
+                                end: null,
+                                produk: null
+                            };
 
-});
+                            form[0].reset();
 
+                            $('#' + tableId).DataTable().draw();
+                        }
 
-/* ======================
-RESET DASHBOARD FILTER
-====================== */
 
-$('#resetFilterDashboard').click(function(){
+                        /*
+                        ================================
+                        FORM SUBMIT
+                        ================================
+                        */
 
-$('#formFilter')[0].reset();
+                        $('#formFilter,#formFilterRiwayat').on('submit', function(e) {
+                            e.preventDefault();
+                            applyFilter($(this));
+                        });
 
-$.fn.dataTable.ext.search = [];
 
-tableDashboard.search('').columns().search('').draw();
+                        /*
+                        ================================
+                        RESET BUTTON
+                        ================================
+                        */
 
-});
+                        $('#resetFilterDashboard').click(function() {
+                            resetFilter($('#formFilter'));
+                        });
 
+                        $('#resetFilterRiwayat').click(function() {
+                            resetFilter($('#formFilterRiwayat'));
+                        });
 
-
-/* ======================
-FIX DATATABLE TAB
-====================== */
-
-$('a[data-toggle="tab"]').on('shown.bs.tab', function () {
-
-$($.fn.dataTable.tables(true)).DataTable().columns.adjust();
-
-});
-
-});
-
-</script>
-@endpush
+                    });
+                </script>
+            @endpush

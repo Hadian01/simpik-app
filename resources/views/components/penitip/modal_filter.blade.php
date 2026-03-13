@@ -1,9 +1,8 @@
-{{-- MODAL FILTER --}}
-<div class="modal fade" id="modalFilter" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content" style="border-radius: 12px;">
+<div class="modal fade" id="modalFilter" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content" style="border-radius:12px;">
 
-            <div class="modal-header" style="border-bottom: 1px solid #ddd;">
+            <div class="modal-header">
                 <h5 class="modal-title">Filter Riwayat</h5>
                 <button type="button" class="close" data-dismiss="modal">
                     <span>&times;</span>
@@ -11,86 +10,58 @@
             </div>
 
             <div class="modal-body">
-                <form id="formFilter">
 
-                    {{-- Filter Tanggal --}}
+                {{-- IMPORTANT: data-table --}}
+                <form id="formFilter" data-table="tableRiwayat">
+
+                    {{-- FILTER TANGGAL --}}
                     <div class="form-group">
                         <label>Tanggal</label>
                         <div class="row">
                             <div class="col-6">
-                                <input type="date" name="tanggal_dari" class="form-control" placeholder="Dari">
+                                <input type="date" name="tanggal_dari" class="form-control">
                             </div>
                             <div class="col-6">
-                                <input type="date" name="tanggal_sampai" class="form-control" placeholder="Sampai">
+                                <input type="date" name="tanggal_sampai" class="form-control">
                             </div>
                         </div>
                     </div>
 
-                    {{-- Filter Toko --}}
-                    <div class="form-group">
-                        <label>Toko</label>
-                        <select name="toko" class="form-control">
-                            <option value="">Semua Toko</option>
-                            <option value="toko_maju">Toko Maju</option>
-                            <option value="toko_sederhana">Toko Sederhana</option>
-                        </select>
-                    </div>
-
-                    {{-- Filter Produk --}}
+                    {{-- FILTER PRODUK --}}
                     <div class="form-group">
                         <label>Produk</label>
                         <select name="produk" class="form-control">
+
                             <option value="">Semua Produk</option>
-                            <option value="risol">Risol</option>
-                            <option value="tahu">Tahu</option>
+
+                            @foreach ($produk_toko as $produk)
+                                <option value="{{ strtolower($produk->produk_name) }}">
+                                    {{ $produk->produk_name }}
+                                </option>
+                            @endforeach
+
                         </select>
                     </div>
 
-                    {{-- Tombol --}}
-                    <div class="d-flex justify-content-end gap-2">
-                        <button type="button" id="resetFilterDashboard" class="btn btn-light">
+                    <div class="d-flex justify-content-end align-items-center">
+
+                        <button type="button" id="resetFilterDashboard" class="btn btn-light mr-2">
                             Reset
                         </button>
 
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                        <button type="button" class="btn btn-secondary mr-2" data-dismiss="modal">
                             Batal
                         </button>
 
-                        <button type="submit" class="btn" style="background-color: #9B8CFF; color: white;">
+                        <button type="submit" class="btn text-white" style="background:#9B8CFF;">
                             Terapkan Filter
                         </button>
-                    </div>
+
+                    </div>  
 
                 </form>
-            </div>
 
+            </div>
         </div>
     </div>
 </div>
-
-<script>
-    $(document).ready(function() {
-        $('#formFilter').submit(function(e) {
-            e.preventDefault();
-
-            // Ambil data filter
-            const filterData = $(this).serialize();
-            console.log('Filter data:', filterData);
-
-            // NANTI: Kirim AJAX request ke backend
-            /*
-            $.ajax({
-                url: '/penitip/riwayat/filter',
-                method: 'GET',
-                data: filterData,
-                success: function(response) {
-                    // Update tabel dengan data filtered
-                }
-            });
-            */
-
-            alert('Filter diterapkan! (Dummy)');
-            $('#modalFilter').modal('hide');
-        });
-    });
-</script>

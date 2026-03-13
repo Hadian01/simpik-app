@@ -47,6 +47,11 @@ $role = $userType ?? 'penitip';
 
 <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap4.min.js"></script>
 
+<link rel="stylesheet"
+href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css">
+
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+
 <script src="{{ asset('js/sidebar.js') }}"></script>
 
 @stack('scripts')

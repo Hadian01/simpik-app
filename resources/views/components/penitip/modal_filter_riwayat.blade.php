@@ -11,8 +11,7 @@
             </div>
 
             <div class="modal-body">
-                <form id="formFilterRiwayat">
-
+                    <form id="formFilterRiwayat" data-table="tableRiwayatPengajuan">
                     {{-- Filter Tanggal --}}
                     <div class="form-group">
                         <label>Tanggal Pengajuan</label>
