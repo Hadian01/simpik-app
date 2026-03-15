@@ -434,6 +434,7 @@
                             }]
                         });
 
+
                         let tableRiwayatPengajuan = $('#tableRiwayatPengajuan').DataTable({
                             responsive: true
                         });
@@ -446,24 +447,28 @@
                         */
 
                         let filterState = {
+
                             tableRiwayat: {
                                 active: false,
                                 start: null,
                                 end: null,
                                 produk: null
                             },
+
                             tableRiwayatPengajuan: {
                                 active: false,
                                 start: null,
                                 end: null,
                                 produk: null
                             }
+
                         };
 
 
                         /*
                         ================================
                         DATE PARSER
+                        FORMAT TABLE: dd-mm-yyyy
                         ================================
                         */
 
@@ -476,15 +481,19 @@
                                 let p = str.split('-');
 
                                 if (p.length === 3) {
+
+                                    // gunakan jam 12 supaya aman timezone
                                     return new Date(
                                         parseInt(p[2]),
                                         parseInt(p[1]) - 1,
-                                        parseInt(p[0])
+                                        parseInt(p[0]),
+                                        12, 0, 0
                                     );
                                 }
                             }
 
                             let fallback = new Date(str);
+
                             return isNaN(fallback) ? null : fallback;
                         }
 
@@ -499,27 +508,32 @@
 
                             let tableId = settings.nTable.id;
 
-                            if (!filterState[tableId]) return true;
+                            if (!filterState[tableId])
+                                return true;
 
                             let state = filterState[tableId];
 
-                            if (!state.active) return true;
+                            if (!state.active)
+                                return true;
 
                             let rowDate = parseTanggal(data[1]);
                             let produk = data[2];
 
-                            if (!rowDate) return true;
+                            if (!rowDate)
+                                return true;
 
-                            if (state.start && rowDate < state.start) return false;
+                            if (state.start && rowDate < state.start)
+                                return false;
 
-                            if (state.end && rowDate > state.end) return false;
+                            if (state.end && rowDate > state.end)
+                                return false;
 
                             if (state.produk &&
-                                produk.toLowerCase() !== state.produk.toLowerCase()) {
+                                produk.toLowerCase() !== state.produk.toLowerCase())
                                 return false;
-                            }
 
                             return true;
+
                         });
 
 
@@ -540,15 +554,25 @@
                             let produk = form.find('[name="produk"]').val();
 
                             filterState[tableId] = {
+
                                 active: true,
-                                start: dari ? new Date(dari) : null,
-                                end: sampai ? new Date(sampai) : null,
+
+                                start: dari ?
+                                    new Date(dari + 'T00:00:00') :
+                                    null,
+
+                                end: sampai ?
+                                    new Date(sampai + 'T23:59:59') :
+                                    null,
+
                                 produk: produk
+
                             };
 
                             $('#' + tableId).DataTable().draw();
 
                             form.closest('.modal').modal('hide');
+
                         }
 
 
@@ -563,15 +587,18 @@
                             let tableId = form.data('table');
 
                             filterState[tableId] = {
+
                                 active: false,
                                 start: null,
                                 end: null,
                                 produk: null
+
                             };
 
                             form[0].reset();
 
                             $('#' + tableId).DataTable().draw();
+
                         }
 
 
@@ -582,8 +609,11 @@
                         */
 
                         $('#formFilter,#formFilterRiwayat').on('submit', function(e) {
+
                             e.preventDefault();
+
                             applyFilter($(this));
+
                         });
 
 
@@ -594,11 +624,16 @@
                         */
 
                         $('#resetFilterDashboard').click(function() {
+
                             resetFilter($('#formFilter'));
+
                         });
 
+
                         $('#resetFilterRiwayat').click(function() {
+
                             resetFilter($('#formFilterRiwayat'));
+
                         });
 
                     });

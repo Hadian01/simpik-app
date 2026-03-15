@@ -21,7 +21,7 @@ class PenjualController extends Controller
                     $query->where('status', 'Approved');
                 }
             ])
-            ->orderBy('created_at', 'desc') // ⭐ terbaru di atas
+            ->orderBy('created_at', 'desc')
             ->get();
 
         return view('layouts.penjual.list_penitip', compact('pengajuan'));
