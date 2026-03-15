@@ -4,25 +4,26 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\User;
-use App\Models\UserManual;
-use App\Models\Produk;
-use App\Models\Penjual;
 use App\Models\Pengajuan;
 use App\Models\PengajuanDetail;
 use App\Models\StockHarian;
 use Illuminate\View\View;
-use Illuminate\Support\Facades\DB;
+// use Illuminate\Support\Facades\DB;
 
 class PenjualController extends Controller
 {
     public function show(): View
     {
         $pengajuan = Pengajuan::with('penitip')
-        ->withCount('detail')
-        ->withCount(['detail as approved_count' => function ($query) {
-            $query->where('status', 'Approved');
-        }])->get();
+            ->withCount('detail')
+            ->withCount([
+                'detail as approved_count' => function ($query) {
+                    $query->where('status', 'Approved');
+                }
+            ])
+            ->orderBy('created_at', 'desc') // ⭐ terbaru di atas
+            ->get();
+
         return view('layouts.penjual.list_penitip', compact('pengajuan'));
     }
     public function getDetailPengajuan($id)
@@ -102,16 +103,20 @@ class PenjualController extends Controller
 
         return view('layouts.penjual.list_penitip_approved', compact('penitip_approved'));
     }
-      public function show_detail_penitip_approved($penjual_id): View
+    public function show_detail_penitip_approved($penjual_id): View
     {
-        $detail_penitip_approved = StockHarian::
-            where('penjual_id', $penjual_id)
-            ->with('penjual.user', 'produk')
+        $detail_penitip_approved = StockHarian::where('penjual_id', $penjual_id)
+            ->with('produk')
             ->get();
 
-        return view('layouts.penjual.detail_penitip_approved', compact('detail_penitip_approved'));
-    }
+        // ambil nama dari created_by
+        $penitipName = $detail_penitip_approved->first()?->created_by;
 
+        return view(
+            'layouts.penjual.detail_penitip_approved',
+            compact('detail_penitip_approved', 'penitipName')
+        );
+    }
     public function updateValidatedStock(Request $request)
     {
         try {

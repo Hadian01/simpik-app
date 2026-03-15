@@ -26,7 +26,7 @@
                     </div>
 
                     {{-- Filter Produk --}}
-                    <div class="form-group">
+                    {{-- <div class="form-group">
                         <label>Produk</label>
                         <select name="produk" class="form-control">
                             <option value="">Semua Produk</option>
@@ -34,7 +34,7 @@
                             <option value="tahu">TAHU ISI</option>
                             <option value="donat">DONAT</option>
                         </select>
-                    </div>
+                    </div> --}}
 
                     {{-- Tombol --}}
                     <div class="d-flex justify-content-end gap-2">

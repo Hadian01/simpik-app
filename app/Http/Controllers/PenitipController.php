@@ -215,14 +215,15 @@ class PenitipController extends Controller
         | DASHBOARD DATA
         |--------------------------------
         */
-        $dashboard_data = DB::table('tbl_stock_harian')
-            ->where('penitip_id', $penitip_id)
-            ->where('penjual_id', $id)
-            ->whereRaw("DATE_TRUNC('month', date) = DATE_TRUNC('month', CURRENT_DATE)")
+        $dashboard_data = DB::table('tbl_stock_harian as sh')
+            ->join('tbl_produk as p', 'sh.produk_id', '=', 'p.produk_id')
+            ->where('p.penitip_id', $penitip_id)
+            ->where('sh.penjual_id', $id)
+            ->whereRaw("DATE_TRUNC('month', sh.date) = DATE_TRUNC('month', CURRENT_DATE)")
             ->selectRaw('
-                COALESCE(SUM(stock::int),0) as total_dititip,
-                COALESCE(SUM(stock::int - sisa_stock::int),0) as total_terjual,
-                COALESCE(SUM(pendapatan::int),0) as total_pendapatan
+                COALESCE(SUM(sh.stock::int),0) as total_dititip,
+                COALESCE(SUM(sh.stock::int - sh.sisa_stock::int),0) as total_terjual,
+                COALESCE(SUM(sh.pendapatan::int),0) as total_pendapatan
             ')
             ->first();
 
@@ -272,7 +273,7 @@ class PenitipController extends Controller
         $riwayat = DB::table('tbl_stock_harian as sh')
             ->join('tbl_produk as p', 'sh.produk_id', '=', 'p.produk_id')
             ->join('tbl_penjual as pj', 'sh.penjual_id', '=', 'pj.penjual_id')
-            ->where('sh.penitip_id', $penitip_id)
+            ->where('p.penitip_id', $penitip_id)
             ->where('sh.penjual_id', $id)
             ->whereRaw("DATE_TRUNC('month', sh.date) = DATE_TRUNC('month', CURRENT_DATE)")
             ->selectRaw('
@@ -289,7 +290,6 @@ class PenitipController extends Controller
 
 
         $riwayat_list = [];
-
         $no_dashboard = 1;
 
         foreach ($riwayat as $r) {
@@ -316,8 +316,8 @@ class PenitipController extends Controller
         */
         $riwayat_penjualan = DB::table('tbl_stock_harian as sh')
             ->join('tbl_produk as p', 'sh.produk_id', '=', 'p.produk_id')
+            ->where('p.penitip_id', $penitip_id)
             ->where('sh.penjual_id', $id)
-            ->where('sh.penitip_id', $penitip_id)
             ->selectRaw('
                 sh.created_at,
                 p.produk_name,
@@ -335,7 +335,6 @@ class PenitipController extends Controller
 
 
         $riwayat_penjualan_list = [];
-
         $no_riwayat = 1;
 
         foreach ($riwayat_penjualan as $r) {
@@ -528,7 +527,6 @@ class PenitipController extends Controller
 
             'produk_id'  => $request->produk_id,
             'penjual_id' => $id,
-            'penitip_id' => $penitip_id,
 
             // jumlah stok
             'stock_qty'  => $request->jumlah,

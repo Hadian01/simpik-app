@@ -20,11 +20,11 @@
                 <i class="bi bi-people-fill"></i> Penitip Approved
             </a>
         </li>
-        <li class="mb-3">
+        {{-- <li class="mb-3">
             <a href="{{ route('penjual.stok_harian') }}" class="sidebar-link" style="display: block; padding: 12px 20px; color: #333; text-decoration: none; font-weight: 500;">
                 <i class="bi bi-box-seam"></i> Stok Harian
             </a>
-        </li>
+        </li> --}}
     </ul>
 </div>
 

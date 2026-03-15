@@ -7,58 +7,44 @@
     {{-- Header --}}
     <h2 class="mb-4">Penitip</h2>
 
-    {{-- Search & Filter --}}
-    @include('components.penitip.search_filter')
 
     {{-- Tabel Penitip --}}
     <div class="card" style="border: 1px solid #ddd; border-radius: 8px; overflow: hidden;">
-        <div class="table-responsive">
+        <div class="table-responsive" style="padding:10px">
             <table class="table table-hover mb-0" id="tablePenitipApproved">
                 <thead style="background: #CFC7FF;">
                     <tr>
-                        <th style="width: 50px;">NO</th>
+                        <th style="width:50px;">NO</th>
                         <th>NAME</th>
                         <th>EMAIL</th>
                         <th>JOIN DATE</th>
-                        <th style="width: 80px; text-align: center;">DETAIL</th>
+                        <th style="width:80px;text-align:center;">DETAIL</th>
                     </tr>
                 </thead>
+
                 <tbody>
                     @foreach($penitip_approved as $index => $penitip)
                     <tr>
                         <td>{{ $index + 1 }}</td>
                         <td>{{ $penitip->penitip->name }}</td>
                         <td>{{ $penitip->penitip->user?->email ?? '-' }}</td>
-                        <td>{{ $penitip->created_at->format('Y-m-d') }}</td>
+                        <td>{{ $penitip->updated_at->format('d-m-Y') }}</td>
+
                         <td class="text-center">
-                            <a href="{{ route('penjual.detail_pengajuan_penitip', ['penjual_id' => $penitip->penjual_id]) }}" class="btn btn-sm btn-link p-0">
-                                <i class="bi bi-eye" style="font-size: 18px; color: #666;"></i>
+                            <a href="{{ route('penjual.detail_pengajuan_penitip',
+                                ['penjual_id' => $penitip->penjual_id]) }}"
+                               class="btn btn-sm btn-link p-0">
+
+                                <i class="bi bi-eye"
+                                   style="font-size:18px;color:#666;"></i>
+
                             </a>
                         </td>
                     </tr>
                     @endforeach
                 </tbody>
+
             </table>
-        </div>
-
-        {{-- Pagination --}}
-        <div class="card-footer" style="background: white; border-top: 1px solid #ddd;">
-            <div class="d-flex justify-content-between align-items-center">
-                <small class="text-muted">Showing 1 to {{ count($penitip_approved) }} of 20 entries</small>
-
-                <nav>
-                    <ul class="pagination mb-0">
-                        <li class="page-item"><a class="page-link" href="#" style="background: #9B8CFF; color: white; border: none;">1</a></li>
-                        <li class="page-item"><a class="page-link" href="#">2</a></li>
-                        <li class="page-item"><a class="page-link" href="#">3</a></li>
-                        <li class="page-item"><a class="page-link" href="#">4</a></li>
-                        <li class="page-item"><a class="page-link" href="#">5</a></li>
-                        <li class="page-item disabled"><a class="page-link" href="#">...</a></li>
-                        <li class="page-item"><a class="page-link" href="#">10</a></li>
-                        <li class="page-item"><a class="page-link" href="#">Next</a></li>
-                    </ul>
-                </nav>
-            </div>
         </div>
     </div>
 
@@ -66,18 +52,149 @@
 
 @endsection
 
-{{-- Script Search --}}
 @push('scripts')
 <script>
 $(document).ready(function() {
-    // Live Search
-    $('#searchInput').on('keyup', function() {
-        const value = $(this).val().toLowerCase();
 
-        $('#tablePenitipApproved tbody tr').filter(function() {
-            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
-        });
+    /*
+    ================================
+    INIT DATATABLE
+    ================================
+    */
+
+    let tablePenitip = $('#tablePenitipApproved').DataTable({
+        responsive: true,
+        dom:
+            "<'row mb-3'<'col-md-6'><'col-md-6 d-flex justify-content-end align-items-center'f>>" +
+            "<'row'<'col-12'tr>>" +
+            "<'row mt-2'<'col-md-5'i><'col-md-7'p>>"
     });
+
+    /*
+    ================================
+    MOVE SEARCH INPUT
+    ================================
+    */
+
+    $('#searchInput').on('keyup', function () {
+        tablePenitip.search(this.value).draw();
+    });
+
+
+    /*
+    ================================
+    FILTER STATE
+    ================================
+    */
+
+    let filterState = {
+        active: false,
+        start: null,
+        end: null
+    };
+
+
+    /*
+    ================================
+    DATE PARSER
+    ================================
+    */
+
+    function parseTanggal(str) {
+
+        if (!str) return null;
+
+        if (str.includes('-')) {
+
+            let p = str.split('-');
+
+            if (p.length === 3) {
+
+                return new Date(
+                    parseInt(p[2]),
+                    parseInt(p[1]) - 1,
+                    parseInt(p[0])
+                );
+            }
+        }
+
+        let fallback = new Date(str);
+
+        return isNaN(fallback) ? null : fallback;
+    }
+
+
+    /*
+    ================================
+    GLOBAL FILTER ENGINE
+    ================================
+    */
+
+    $.fn.dataTable.ext.search.push(function(settings, data) {
+
+        if (settings.nTable.id !== 'tablePenitipApproved') return true;
+
+        if (!filterState.active) return true;
+
+        let rowDate = parseTanggal(data[3]);
+
+        if (!rowDate) return true;
+
+        if (filterState.start && rowDate < filterState.start) return false;
+
+        if (filterState.end && rowDate > filterState.end) return false;
+
+        return true;
+
+    });
+
+
+    /*
+    ================================
+    APPLY FILTER
+    ================================
+    */
+
+    $('#formFilter').on('submit', function(e) {
+
+        e.preventDefault();
+
+        let dari   = $('#tanggal_dari').val();
+        let sampai = $('#tanggal_sampai').val();
+
+        filterState = {
+            active: true,
+            start: dari ? new Date(dari) : null,
+            end: sampai ? new Date(sampai) : null
+        };
+
+        tablePenitip.draw();
+
+        $('#modalFilter').modal('hide');
+
+    });
+
+
+    /*
+    ================================
+    RESET FILTER
+    ================================
+    */
+
+    $('#resetFilter').click(function() {
+
+        filterState = {
+            active:false,
+            start:null,
+            end:null
+        };
+
+        $('#formFilter')[0].reset();
+
+        tablePenitip.draw();
+
+    });
+
 });
 </script>
 @endpush

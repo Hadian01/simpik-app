@@ -1,4 +1,3 @@
-
 {{-- MODAL DETAIL LIST PENGAJUAN --}}
 <div class="modal fade modal-right" id="modalDetailPengajuan" tabindex="-1">
     <div class="modal-dialog">
@@ -6,10 +5,15 @@
 
             {{-- HEADER --}}
             <div class="modal-header">
-                <h5 class="modal-title font-weight-bold">Detail List Pengajuan</h5>
-                <!-- STATUS BADGE -->
-            <div class="px-4 pt-2" id="statusContainer"></div>
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h5 class="modal-title font-weight-bold">
+                    Detail List Pengajuan
+                </h5>
+
+                <div class="px-4 pt-2" id="statusContainer"></div>
+
+                <button type="button" class="close" data-dismiss="modal">
+                    &times;
+                </button>
             </div>
 
             {{-- BODY --}}
@@ -24,6 +28,18 @@
                     <tr><td>Alamat</td><td id="detailAlamat">-</td></tr>
                     <tr><td>No HP</td><td id="detailNoHP">-</td></tr>
                 </table>
+
+                {{-- REJECT REASON --}}
+                <div id="rejectReasonContainer" style="display:none;">
+                    <hr>
+                    <h6 class="font-weight-bold text-danger">
+                        Reject Reason
+                    </h6>
+
+                    <div class="alert alert-danger" id="detailRejectReason">
+                        -
+                    </div>
+                </div>
 
                 <hr>
 
@@ -40,7 +56,6 @@
                         </tr>
                     </thead>
 
-                    <!-- ✅ WAJIB ADA -->
                     <tbody id="produkContainer">
                         <tr>
                             <td colspan="4" class="text-center text-muted">
@@ -50,14 +65,37 @@
                     </tbody>
                 </table>
 
-                <!-- hidden id -->
+                {{-- HISTORY --}}
+                <hr>
+
+                <h6 class="font-weight-bold mb-3">History Pengajuan</h6>
+
+                <table class="table table-sm">
+                    <thead style="background:#F3F4F6;">
+                        <tr>
+                            <th width="130">Tanggal</th>
+                            <th>Status</th>
+                            <th>Reason</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="historyContainer">
+                        <tr>
+                            <td colspan="3" class="text-center text-muted">
+                                Belum ada riwayat
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
                 <input type="hidden" id="selectedPengajuanId">
                 <input type="hidden" id="selectedStatus">
+
             </div>
 
             {{-- FOOTER --}}
             <div class="modal-footer d-flex justify-content-between"
-                id="actionButtons">
+                 id="actionButtons">
 
                 <button class="btn btn-outline-danger" id="btnRejectOpen">
                     Reject
@@ -70,6 +108,7 @@
                 </button>
 
             </div>
+
         </div>
     </div>
 </div>
