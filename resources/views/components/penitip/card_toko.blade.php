@@ -1,13 +1,14 @@
-<div class="col-md-3 mb-4">
+@php
+    $status_clean = strtolower($status ?? 'not_joined');
+@endphp
+
+<div class="col-md-3 mb-4" data-status="{{ $status_clean }}">
     <div class="card position-relative" style="border:1px solid #ddd;border-radius:8px;">
 
         {{-- ================= STATUS BADGE ================= --}}
         <div style="position:absolute; top:10px; right:10px; z-index:10;">
-            @php
-                $status = strtolower($status ?? 'not_joined');
-            @endphp
 
-            @switch($status)
+            @switch($status_clean)
                 @case('approved')
                     <span class="badge badge-success px-3 py-1">Approved</span>
                     @break

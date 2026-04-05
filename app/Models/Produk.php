@@ -37,4 +37,15 @@ class Produk extends Model
     {
         return $this->hasMany(ProdukPenjual::class, 'produk_id');
     }
+
+    public function penitip()
+    {
+        return $this->belongsTo(Penitip::class, 'penitip_id');
+    }
+
+    // Accessor untuk compatibility dengan nama_produk
+    public function getNamaProdukAttribute()
+    {
+        return $this->produk_name;
+    }
 }

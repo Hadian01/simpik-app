@@ -1,4 +1,4 @@
-@extends('layouts.app', ['userType' => 'penjual'])
+@extends('layouts.app')
 
 @section('title', 'Dashboard')
 
@@ -8,7 +8,7 @@
     {{-- HEADER --}}
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="mb-0">Sistem Informasi Penitipan Kue</h2>
-        <button class="btn btn-outline-secondary" style="border-radius:8px">
+        <button class="btn btn-outline-secondary" style="border-radius:8px" data-toggle="modal" data-target="#modalFilterDashboard">
             <i class="bi bi-funnel"></i> Filter
         </button>
     </div>
@@ -19,7 +19,7 @@
             <div class="card stat-card h-100">
                 <div class="card-body text-center">
                     <h6 class="stat-title">Total Produk</h6>
-                    <h2 class="stat-value">70</h2>
+                    <h2 class="stat-value">{{ $totalProduk ?? 0 }}</h2>
                 </div>
             </div>
         </div>
@@ -27,7 +27,7 @@
             <div class="card stat-card h-100">
                 <div class="card-body text-center">
                     <h6 class="stat-title">Total Terjual</h6>
-                    <h2 class="stat-value">300</h2>
+                    <h2 class="stat-value">{{ $totalTerjual ?? 0 }}</h2>
                 </div>
             </div>
         </div>
@@ -35,7 +35,7 @@
             <div class="card stat-card h-100">
                 <div class="card-body text-center">
                     <h6 class="stat-title">Total Pendapatan</h6>
-                    <h2 class="stat-value" style="font-size:1.8rem;">Rp 1.500,00</h2>
+                    <h2 class="stat-value" style="font-size:1.8rem;">Rp {{ number_format($totalPendapatan ?? 0, 0, ',', '.') }}</h2>
                 </div>
             </div>
         </div>
@@ -43,7 +43,7 @@
             <div class="card stat-card h-100">
                 <div class="card-body text-center">
                     <h6 class="stat-title">Total Omset</h6>
-                    <h2 class="stat-value" style="font-size:1.8rem;">Rp 10.000.000</h2>
+                    <h2 class="stat-value" style="font-size:1.8rem;">Rp {{ number_format($totalOmset ?? 0, 0, ',', '.') }}</h2>
                 </div>
             </div>
         </div>
@@ -123,41 +123,92 @@
                 <div class="card-body p-4">
                     <h6 class="mb-4">Produk Margin Tertinggi</h6>
 
-                    @for($i = 0; $i < 3; $i++)
+                    @forelse($topProducts as $product)
                     <div class="margin-item">
                         <div class="d-flex align-items-start gap-4">
 
                             {{-- ICON + NAMA --}}
                             <div class="text-center margin-avatar">
                                 <i class="bi bi-person-circle fs-1 text-secondary"></i>
-                                <small class="text-muted d-block mt-1">Dian</small>
+                                <small class="text-muted d-block mt-1">{{ $product->created_by ?? 'N/A' }}</small>
                             </div>
 
                             {{-- DETAIL --}}
                             <div class="margin-detail">
                                 <div class="detail-row">
                                     <span class="label">Nama Produk</span>
-                                    <span class="value">Nasi Jemol Kua Rica</span>
+                                    <span class="value">{{ $product->produk->nama_produk ?? 'N/A' }}</span>
                                 </div>
                                 <div class="detail-row">
                                     <span class="label">Total Terjual</span>
-                                    <span class="value">250</span>
+                                    <span class="value">{{ number_format($product->total_terjual ?? 0) }}</span>
                                 </div>
                                 <div class="detail-row">
                                     <span class="label">Total Omset</span>
-                                    <span class="value">Rp 2.000.000</span>
+                                    <span class="value">Rp {{ number_format($product->total_omset ?? 0, 0, ',', '.') }}</span>
                                 </div>
                                 <div class="detail-row">
                                     <span class="label">Pemasukan</span>
-                                    <span class="value fw-semibold">Rp 300.000</span>
+                                    <span class="value fw-semibold">Rp {{ number_format($product->total_pendapatan ?? 0, 0, ',', '.') }}</span>
                                 </div>
                             </div>
 
                         </div>
                     </div>
-                    @endfor
+                    @empty
+                    <p class="text-center text-muted">Belum ada data produk</p>
+                    @endforelse
 
                 </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- Modal Filter Dashboard --}}
+    <div class="modal fade" id="modalFilterDashboard" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form method="GET" action="{{ route('penjual.dashboard') }}">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Filter Dashboard</h5>
+                        <button type="button" class="close" data-dismiss="modal">
+                            <span>&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label>Bulan</label>
+                            <select class="form-control" name="bulan">
+                                <option value="">Semua Bulan</option>
+                                <option value="1" {{ request('bulan') == '1' ? 'selected' : '' }}>Januari</option>
+                                <option value="2" {{ request('bulan') == '2' ? 'selected' : '' }}>Februari</option>
+                                <option value="3" {{ request('bulan') == '3' ? 'selected' : '' }}>Maret</option>
+                                <option value="4" {{ request('bulan') == '4' ? 'selected' : '' }}>April</option>
+                                <option value="5" {{ request('bulan') == '5' ? 'selected' : '' }}>Mei</option>
+                                <option value="6" {{ request('bulan') == '6' ? 'selected' : '' }}>Juni</option>
+                                <option value="7" {{ request('bulan') == '7' ? 'selected' : '' }}>Juli</option>
+                                <option value="8" {{ request('bulan') == '8' ? 'selected' : '' }}>Agustus</option>
+                                <option value="9" {{ request('bulan') == '9' ? 'selected' : '' }}>September</option>
+                                <option value="10" {{ request('bulan') == '10' ? 'selected' : '' }}>Oktober</option>
+                                <option value="11" {{ request('bulan') == '11' ? 'selected' : '' }}>November</option>
+                                <option value="12" {{ request('bulan') == '12' ? 'selected' : '' }}>Desember</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Tahun</label>
+                            <select class="form-control" name="tahun">
+                                <option value="">Tahun Ini</option>
+                                <option value="2026" {{ request('tahun') == '2026' ? 'selected' : '' }}>2026</option>
+                                <option value="2025" {{ request('tahun') == '2025' ? 'selected' : '' }}>2025</option>
+                                <option value="2024" {{ request('tahun') == '2024' ? 'selected' : '' }}>2024</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <a href="{{ route('penjual.dashboard') }}" class="btn btn-secondary">Reset</a>
+                        <button type="submit" class="btn" style="background:#9B8CFF;color:white;">Apply Filter</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -169,12 +220,20 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
 
 <script>
+// Data dari Controller
+const monthlyLabels = {!! json_encode($monthlyData->pluck('created_by')) !!};
+const monthlyValues = {!! json_encode($monthlyData->pluck('total_pendapatan')) !!};
+
+const yearlyLabels = {!! json_encode($yearlyData->pluck('month')) !!};
+const yearlyValues = {!! json_encode($yearlyData->pluck('pendapatan')) !!};
+
+// Chart Monthly (Per Penitip Bulan Ini)
 new Chart(document.getElementById('barChartMonthly'), {
     type: 'bar',
     data: {
-        labels: ['Dian','Eka','Ardia','Bella','Cici','Dodo'],
+        labels: monthlyLabels.length > 0 ? monthlyLabels : ['Tidak ada data'],
         datasets: [{
-            data: [100,150,75,125,90,180],
+            data: monthlyValues.length > 0 ? monthlyValues : [0],
             backgroundColor:'#C7D2FE',
             borderRadius:6
         }]
@@ -185,12 +244,13 @@ new Chart(document.getElementById('barChartMonthly'), {
     }
 });
 
+// Chart Yearly (Per Bulan Tahun Ini)
 new Chart(document.getElementById('barChartYearly'), {
     type: 'bar',
     data: {
-        labels: ['Jan','Feb','Mar','Apr','Mei','Jun'],
+        labels: yearlyLabels,
         datasets: [{
-            data: [600,750,500,800,700,900],
+            data: yearlyValues,
             backgroundColor:'#A5B4FC',
             borderRadius:6
         }]

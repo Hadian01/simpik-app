@@ -23,36 +23,64 @@
 
                 <h4 class="text-center mb-4"><strong>Register</strong></h4>
 
-                <form method="POST" action="{{ route('register') }}">
+                @if($errors->any())
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        @foreach($errors->all() as $error)
+                            <div>{{ $error }}</div>
+                        @endforeach
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                @endif
+
+                <form method="POST" action="{{ route('register.post') }}">
                     @csrf
 
                     <div class="form-group">
-                        <select name="type" class="form-control">
-                            <option value="">Pilih Type</option>
-                            <option value="user">Penjual</option>
-                            <option value="admin">Penitip</option>
+                        <label>Tipe Akun</label>
+                        <select name="user_type" class="form-control @error('user_type') is-invalid @enderror" required>
+                            <option value="">Pilih Tipe</option>
+                            <option value="penjual" {{ old('user_type') == 'penjual' ? 'selected' : '' }}>Penjual</option>
+                            <option value="penitip" {{ old('user_type') == 'penitip' ? 'selected' : '' }}>Penitip</option>
                         </select>
+                        @error('user_type')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
 
                     <div class="form-group">
+                        <label>Email</label>
                         <input type="email"
                                name="email"
-                               class="form-control"
-                               placeholder="Email">
+                               class="form-control @error('email') is-invalid @enderror"
+                               placeholder="Email"
+                               value="{{ old('email') }}"
+                               required>
+                        @error('email')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
 
                     <div class="form-group">
+                        <label>Password</label>
                         <input type="password"
                                name="password"
-                               class="form-control"
-                               placeholder="Password">
+                               class="form-control @error('password') is-invalid @enderror"
+                               placeholder="Minimal 4 karakter"
+                               required>
+                        @error('password')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
 
                     <div class="form-group">
+                        <label>Konfirmasi Password</label>
                         <input type="password"
                                name="password_confirmation"
                                class="form-control"
-                               placeholder="Password Confirmation">
+                               placeholder="Password Confirmation"
+                               required>
                     </div>
 
                     <div class="text-right">
@@ -64,6 +92,10 @@
                     </div>
 
                 </form>
+
+                <div class="text-center mt-3">
+                    <small>Sudah punya akun? <a href="{{ route('login') }}">Login</a></small>
+                </div>
 
             </div>
 

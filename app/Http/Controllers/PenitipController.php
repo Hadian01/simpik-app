@@ -7,16 +7,39 @@ use Illuminate\Http\Request;
 use App\Models\Produk;
 use App\Models\Penjual;
 use App\Models\Pengajuan;
+use App\Models\Penitip;
+use App\Models\Notification;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class PenitipController extends Controller
 {
+    /**
+     * Get authenticated penitip
+     */
+    protected function getAuthPenitip()
+    {
+        $user = Auth::guard('usermanual')->user();
+        
+        if (!$user || $user->user_type !== 'penitip') {
+            abort(403, 'Unauthorized');
+        }
+        
+        $penitip = $user->penitip;
+        
+        if (!$penitip) {
+            abort(404, 'Data penitip tidak ditemukan');
+        }
+        
+        return $penitip;
+    }
 
     public function show(): View
     {
-        $produk = Produk::all();
+        $penitip = $this->getAuthPenitip();
+        $produk = Produk::where('penitip_id', $penitip->penitip_id)->get();
 
         $produk_types = DB::select("
             SELECT unnest(enum_range(NULL::produk_type)) AS type
@@ -39,7 +62,8 @@ class PenitipController extends Controller
 
     public function daftar_toko(): View
     {
-        $penitip_id = 1; // sementara hardcode
+        $penitip = $this->getAuthPenitip();
+        $penitip_id = $penitip->penitip_id;
 
         // ambil semua pengajuan + relasi toko
         $pengajuan = Pengajuan::with('penjual')
@@ -84,7 +108,8 @@ class PenitipController extends Controller
 
     public function detail_toko(string $penjual_id): View
     {
-        $penitip_id = 1; // sementara hardcode login
+        $penitip = $this->getAuthPenitip();
+        $penitip_id = $penitip->penitip_id;
 
         $toko = Penjual::findOrFail($penjual_id);
 
@@ -136,9 +161,9 @@ class PenitipController extends Controller
     }
     public function join_penitip(Request $request)
     {
-
+        $penitip = $this->getAuthPenitip();
+        
         $request->validate([
-            'penitip_id' => 'required',
             'penjual_id' => 'required',
             'produk' => 'required|array'
         ]);
@@ -148,11 +173,11 @@ class PenitipController extends Controller
         try{
 
             $pengajuan_id = DB::table('tbl_pengajuan')->insertGetId([
-                'penitip_id' => $request->penitip_id,
+                'penitip_id' => $penitip->penitip_id,
                 'penjual_id' => $request->penjual_id,
                 'alasan' => $request->alasan,
                 'status' => 'pending',
-                'created_by' => 1, // sementara hardcode
+                'created_by' => $penitip->penitip_id,
                 'created_at' => now()
             ], 'pengajuan_id');
 
@@ -172,7 +197,7 @@ class PenitipController extends Controller
 
                     'status' => 'Pending',
 
-                    'created_by' => 1,
+                    'created_by' => $penitip->name,
                     'created_at' => now()
 
                 ]);
@@ -180,6 +205,22 @@ class PenitipController extends Controller
             }
 
             DB::commit();
+
+            // 🔔 Notification: Pengajuan baru untuk penjual
+            $penjual = Penjual::find($request->penjual_id);
+            if ($penjual && $penjual->user_id) {
+                Notification::create([
+                    'user_id' => $penjual->user_id,
+                    'type' => 'pengajuan_baru',
+                    'title' => 'Pengajuan Baru',
+                    'message' => '🔔 ' . $penitip->name . ' mengajukan join ke toko Anda',
+                    'data' => [
+                        'pengajuan_id' => $pengajuan_id,
+                        'penitip_id' => $penitip->penitip_id,
+                        'penitip_name' => $penitip->name
+                    ]
+                ]);
+            }
 
             return response()->json([
                 'message' => 'Pengajuan berhasil dikirim'
@@ -198,7 +239,8 @@ class PenitipController extends Controller
 
     public function toko_saya($id)
     {
-        $penitip_id = 1; // sementara hardcode login
+        $penitip = $this->getAuthPenitip();
+        $penitip_id = $penitip->penitip_id;
 
         $toko = Penjual::findOrFail($id);
 
@@ -388,6 +430,8 @@ class PenitipController extends Controller
 
     public function add_produk(Request $request)
     {
+        $penitip = $this->getAuthPenitip();
+        
         $request->validate([
             'produk_type'   => 'required',
             'produk_name'   => 'required',
@@ -398,7 +442,7 @@ class PenitipController extends Controller
         ]);
 
         $produk = Produk::create([
-            'penitip_id' => $request->penitip_id,
+            'penitip_id' => $penitip->penitip_id,
             'produk_type' => $request->produk_type,
             'produk_name' => $request->produk_name,
             'produk_description' => $request->produk_description,
@@ -410,6 +454,28 @@ class PenitipController extends Controller
                 : null,
             'created_at' => now()
         ]);
+
+        // 🔔 Notification: Produk baru ke penjual yang sudah approved
+        $approved_penjuals = Pengajuan::where('penitip_id', $penitip->penitip_id)
+            ->where('status', 'Approved')
+            ->with('penjual')
+            ->get();
+        
+        foreach ($approved_penjuals as $pengajuan) {
+            if ($pengajuan->penjual && $pengajuan->penjual->user_id) {
+                Notification::create([
+                    'user_id' => $pengajuan->penjual->user_id,
+                    'type' => 'produk_baru',
+                    'title' => 'Produk Baru',
+                    'message' => '✨ ' . $penitip->name . ' menambahkan produk baru: ' . $request->produk_name,
+                    'data' => [
+                        'produk_id' => $produk->produk_id,
+                        'produk_name' => $request->produk_name,
+                        'penitip_id' => $penitip->penitip_id
+                    ]
+                ]);
+            }
+        }
 
         return response()->json([
             'message' => 'Produk berhasil ditambahkan',
@@ -512,7 +578,8 @@ class PenitipController extends Controller
             'keterangan' => 'nullable|string'
         ]);
 
-        $penitip_id = 1; // sementara hardcode login
+        $penitip = $this->getAuthPenitip();
+        $penitip_id = $penitip->penitip_id;
 
         // ambil data produk
         $produk = DB::table('tbl_produk')
@@ -553,4 +620,95 @@ class PenitipController extends Controller
             ->with('success', 'Stok produk berhasil ditambahkan')
             ->with('active_tab','riwayat');
     }
+
+    /**
+     * Show data diri form
+     */
+    public function dataDiri()
+    {
+        $penitip = $this->getAuthPenitip();
+        return view('layouts.penitip.data_diri', compact('penitip'));
+    }
+
+    /**
+     * Update data diri
+     */
+    public function updateDataDiri(Request $request)
+    {
+        $penitip = $this->getAuthPenitip();
+
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'no_hp' => 'required|string|max:20',
+            'alamat' => 'required|string',
+            'foto_profile' => 'nullable|image|mimes:jpeg,png,jpg|max:2048'
+        ]);
+
+        // Handle foto profile
+        if ($request->hasFile('foto_profile')) {
+            // Delete old photo if exists
+            if ($penitip->foto_profile && $penitip->foto_profile !== 'default.jpg') {
+                Storage::disk('public')->delete($penitip->foto_profile);
+            }
+
+            $foto = $request->file('foto_profile');
+            $filename = 'profile_' . $penitip->penitip_id . '_' . time() . '.' . $foto->getClientOriginalExtension();
+            $foto->storeAs('public/profiles', $filename);
+            $penitip->foto_profile = 'profiles/' . $filename;
+        }
+
+        // Update data
+        $penitip->name = $request->name;
+        $penitip->no_hp = $request->no_hp;
+        $penitip->alamat = $request->alamat;
+        $penitip->save();
+
+        return redirect()->route('penitip.data_diri')->with('success', 'Data berhasil diperbarui');
+    }
+
+    /**
+     * Show edit password form
+     */
+    public function editPassword()
+    {
+        $penitip = $this->getAuthPenitip();
+        return view('layouts.penitip.edit_password', compact('penitip'));
+    }
+
+    /**
+     * Update password
+     */
+    public function updatePassword(Request $request)
+    {
+        $user = Auth::guard('usermanual')->user();
+
+        $request->validate([
+            'current_password' => 'required',
+            'new_password' => 'required|min:4|confirmed'
+        ], [
+            'current_password.required' => 'Password saat ini wajib diisi',
+            'new_password.required' => 'Password baru wajib diisi',
+            'new_password.min' => 'Password baru minimal 4 karakter',
+            'new_password.confirmed' => 'Konfirmasi password tidak cocok'
+        ]);
+
+        // Check current password (support both plain text and hashed)
+        $currentPasswordValid = false;
+        if ($user->password === $request->current_password) {
+            $currentPasswordValid = true;
+        } elseif (\Hash::check($request->current_password, $user->password)) {
+            $currentPasswordValid = true;
+        }
+
+        if (!$currentPasswordValid) {
+            return back()->withErrors(['current_password' => 'Password saat ini tidak sesuai']);
+        }
+
+        // Update password with hash
+        $user->password = \Hash::make($request->new_password);
+        $user->save();
+
+        return redirect()->route('penitip.edit_password')->with('success', 'Password berhasil diubah');
+    }
 }
+

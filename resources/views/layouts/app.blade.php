@@ -20,7 +20,8 @@
 <body class="bg-light">
 
 @php
-$role = $userType ?? 'penitip';
+$user = Auth::guard('usermanual')->user();
+$role = $user->user_type ?? 'penitip';
 @endphp
 
 @include('components.navbar')
@@ -53,6 +54,9 @@ href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css">
 <script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
 
 <script src="{{ asset('js/sidebar.js') }}"></script>
+
+<!-- NOTIFICATION SYSTEM -->
+<script src="{{ asset('js/notifications.js') }}"></script>
 
 @stack('scripts')
 

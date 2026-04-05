@@ -10,8 +10,19 @@ class Penitip extends Model
     use HasFactory;
 
     protected $table = 'tbl_penitip';
-
     protected $primaryKey = 'penitip_id';
+    public $timestamps = false;
+
+    protected $fillable = [
+        'user_id',
+        'name',
+        'no_hp',
+        'alamat',
+        'foto_profile',
+        'is_active',
+        'created_at',
+        'update_at',
+    ];
 
      public function pengajuan()
     {

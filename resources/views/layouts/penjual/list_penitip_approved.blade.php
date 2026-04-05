@@ -28,7 +28,7 @@
                         <td>{{ $index + 1 }}</td>
                         <td>{{ $penitip->penitip->name }}</td>
                         <td>{{ $penitip->penitip->user?->email ?? '-' }}</td>
-                        <td>{{ $penitip->updated_at->format('d-m-Y') }}</td>
+                        <td>{{ $penitip->created_at ? $penitip->created_at->format('d-m-Y') : '-' }}</td>
 
                         <td class="text-center">
                             <a href="{{ route('penjual.detail_pengajuan_penitip',
@@ -45,6 +45,36 @@
                 </tbody>
 
             </table>
+        </div>
+    </div>
+
+    {{-- Modal Filter --}}
+    <div class="modal fade" id="modalFilter" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form id="formFilter">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Filter Data</h5>
+                        <button type="button" class="close" data-dismiss="modal">
+                            <span>&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label>Tanggal Dari</label>
+                            <input type="date" class="form-control" id="tanggal_dari" name="tanggal_dari">
+                        </div>
+                        <div class="form-group">
+                            <label>Tanggal Sampai</label>
+                            <input type="date" class="form-control" id="tanggal_sampai" name="tanggal_sampai">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" id="resetFilter" data-dismiss="modal">Reset</button>
+                        <button type="submit" class="btn" style="background:#9B8CFF;color:white;">Apply Filter</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 
@@ -65,9 +95,16 @@ $(document).ready(function() {
     let tablePenitip = $('#tablePenitipApproved').DataTable({
         responsive: true,
         dom:
-            "<'row mb-3'<'col-md-6'><'col-md-6 d-flex justify-content-end align-items-center'f>>" +
+            "<'row mb-3'<'col-md-6'><'col-md-6 d-flex justify-content-end align-items-center'fB>>" +
             "<'row'<'col-12'tr>>" +
-            "<'row mt-2'<'col-md-5'i><'col-md-7'p>>"
+            "<'row mt-2'<'col-md-5'i><'col-md-7'p>>",
+        buttons: [{
+            text: '<i class="bi bi-funnel"></i>',
+            className: 'btn btn-outline-secondary btn-sm ml-2',
+            action: function() {
+                $('#modalFilter').modal('show');
+            }
+        }]
     });
 
     /*

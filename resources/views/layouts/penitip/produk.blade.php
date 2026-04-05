@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.app', ['userType' => 'penitip'])
 
 @section('title', 'Daftar Produk')
 
@@ -6,13 +6,17 @@
 
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h4 class="mb-0">Daftar Produk</h4>
-    <button class="btn btn-primary" onclick="openTambahProduk()">
-    Tambah Produk
-</button>
-
+    <div>
+        <button class="btn btn-outline-secondary" data-toggle="modal" data-target="#modalFilterProduk">
+            <i class="bi bi-funnel"></i> Filter
+        </button>
+        <button class="btn btn-primary ml-2" onclick="openTambahProduk()">
+            <i class="bi bi-plus-circle"></i> Tambah Produk
+        </button>
+    </div>
 </div>
 
-<div class="row">
+<div class="row" id="produkContainer">
     @foreach($produk as $item)
         @include('components.penitip.card_produk', [
             'id' => $item->produk_id,
@@ -30,10 +34,86 @@
     @endforeach
 </div>
 
+{{-- Modal Filter --}}
+<div class="modal fade" id="modalFilterProduk" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="formFilterProduk">
+                <div class="modal-header">
+                    <h5 class="modal-title">Filter Produk</h5>
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Jenis Produk</label>
+                        <select class="form-control" name="produk_type">
+                            <option value="">Semua Jenis</option>
+                            @foreach($produk_types as $type)
+                                <option value="{{ $type->type }}">{{ ucfirst($type->type) }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Status</label>
+                        <select class="form-control" name="is_active">
+                            <option value="">Semua Status</option>
+                            <option value="1">Aktif</option>
+                            <option value="0">Tidak Aktif</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="resetFilterProduk">Reset</button>
+                    <button type="submit" class="btn" style="background:#9B8CFF;color:white;">Apply Filter</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 @include('layouts.penitip.add_produk')
 
 @endsection
 
 @push('scripts')
 <script src="{{ asset('js/penitip/produk.js') }}"></script>
+<script>
+$(document).ready(function() {
+    // Filter functionality
+    $('#formFilterProduk').on('submit', function(e) {
+        e.preventDefault();
+        
+        const produkType = $('[name="produk_type"]').val();
+        const isActive = $('[name="is_active"]').val();
+        
+        $('.col-md-4').each(function() {
+            const card = $(this);
+            let show = true;
+            
+            // Filter by type
+            if (produkType && card.data('type') !== produkType) {
+                show = false;
+            }
+            
+            // Filter by status
+            if (isActive !== '' && card.data('active') != isActive) {
+                show = false;
+            }
+            
+            card.toggle(show);
+        });
+        
+        $('#modalFilterProduk').modal('hide');
+    });
+    
+    // Reset filter
+    $('#resetFilterProduk').on('click', function() {
+        $('#formFilterProduk')[0].reset();
+        $('.col-md-4').show();
+        $('#modalFilterProduk').modal('hide');
+    });
+});
+</script>
 @endpush

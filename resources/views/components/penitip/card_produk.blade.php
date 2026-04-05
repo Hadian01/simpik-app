@@ -1,4 +1,4 @@
-<div class="col-md-4 mb-4">
+<div class="col-md-4 mb-4" data-type="{{ $produk_type ?? '' }}" data-active="{{ $is_active ? '1' : '0' }}">
     <div class="card position-relative">
 
         {{-- TOGGLE (OPSIONAL) --}}

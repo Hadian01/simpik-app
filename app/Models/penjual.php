@@ -8,12 +8,10 @@ use App\Models\User;
 class Penjual extends Model
 {
     protected $table = 'tbl_penjual';
-
     protected $primaryKey = 'penjual_id';
-
     public $incrementing = true;
-
     protected $keyType = 'int';
+    public $timestamps = false;
 
     protected $fillable = [
         'user_id',
@@ -24,7 +22,11 @@ class Penjual extends Model
         'jam_buka',
         'jam_tutup',
         'nama_pemilik',
-        'alamat_toko'
+        'alamat_toko',
+        'banner',
+        'email',
+        'created_at',
+        'updated_at',
     ];
 
     // Ini buat memastikan untuk  mengubah format tanggal dan waktu saat diambil dari database
