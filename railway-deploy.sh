@@ -2,18 +2,16 @@
 
 echo "Running post-deployment tasks..."
 
-# Generate app key if not set
-php artisan key:generate --force
-
 # Run migrations
 php artisan migrate --force
 
-# Cache config
-php artisan config:cache
-php artisan route:cache
-php artisan view:cache
+# Clear all cache
+php artisan config:clear
+php artisan route:clear
+php artisan view:clear
+php artisan cache:clear
 
-# Create storage link
-php artisan storage:link
+# Create storage link (ignore if exists)
+php artisan storage:link || true
 
 echo "Deployment tasks completed!"
