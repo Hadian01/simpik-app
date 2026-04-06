@@ -8,7 +8,7 @@
     {{-- HEADER --}}
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="mb-0">Sistem Informasi Penitipan Kue</h2>
-        <button class="btn btn-outline-secondary" style="border-radius:8px" data-toggle="modal" data-target="#modalFilterDashboard">
+        <button class="btn btn-outline-purple" style="border-radius:8px" data-toggle="modal" data-target="#modalFilterDashboard">
             <i class="bi bi-funnel"></i> Filter
         </button>
     </div>
@@ -205,8 +205,8 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <a href="{{ route('penjual.dashboard') }}" class="btn btn-secondary">Reset</a>
-                        <button type="submit" class="btn" style="background:#9B8CFF;color:white;">Apply Filter</button>
+                        <a href="{{ route('penjual.dashboard') }}" class="btn btn-outline-purple">Reset</a>
+                        <button type="submit" class="btn btn-purple">Apply Filter</button>
                     </div>
                 </form>
             </div>

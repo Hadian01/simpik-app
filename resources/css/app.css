@@ -92,6 +92,29 @@ body {
     border-radius: 50%;
 }
 
+/* ========== CUSTOM BUTTON STYLES ========== */
+.btn-purple {
+    background-color: #9B8CFF !important;
+    color: white !important;
+    border: none !important;
+}
+
+.btn-purple:hover {
+    background-color: #8B7BEF !important;
+    color: white !important;
+}
+
+.btn-outline-purple {
+    background-color: transparent !important;
+    color: #9B8CFF !important;
+    border: 1px solid #9B8CFF !important;
+}
+
+.btn-outline-purple:hover {
+    background-color: #9B8CFF !important;
+    color: white !important;
+}
+
 input:checked + .slider {
     background-color: #4CAF50;
 }

@@ -19,13 +19,14 @@
 
         {{-- GAMBAR --}}
         <div style="height:200px; overflow:hidden;">
-            @if($gambar)
+            @if($gambar && $gambar !== 'default.jpg' && file_exists(public_path('storage/'.$gambar)))
                 <img src="{{ asset('storage/'.$gambar) }}"
                     class="w-100 h-100"
-                    style="object-fit:cover;">
+                    style="object-fit:cover;"
+                    alt="{{ $nama }}">
             @else
                 <div class="bg-light d-flex align-items-center justify-content-center h-100">
-                    <strong>No Image {{ $gambar }}</strong>
+                    <i class="bi bi-image" style="font-size:48px;color:#ccc;"></i>
                 </div>
             @endif
         </div>

@@ -7,29 +7,7 @@
 
     <h2 class="mb-4">Edit Data Toko</h2>
 
-    @if(session('success'))
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            {{ session('success') }}
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-    @endif
-
-    @if($errors->any())
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            <ul class="mb-0">
-                @foreach($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-    @endif
-
-    <form method="POST" action="{{ route('penjual.update_toko') }}" enctype="multipart/form-data">
+    <form method="POST" action="{{ route('penjual.update_toko') }}\" enctype=\"multipart/form-data\">
         @csrf
         @method('PUT')
 
@@ -71,22 +49,22 @@
                         <h5 class="mb-3">Detail Toko</h5>
 
                         <div class="form-group">
-                            <label>Nama Toko</label>
+                            <label>Nama Toko <span class="text-danger">*</span></label>
                             <input type="text" class="form-control" name="nama_toko" value="{{ old('nama_toko', $penjual->nama_toko) }}" required>
                         </div>
 
                         <div class="form-group">
-                            <label>Nama Pemilik</label>
+                            <label>Nama Pemilik <span class="text-danger">*</span></label>
                             <input type="text" class="form-control" name="pemilik" value="{{ old('pemilik', $penjual->nama_pemilik) }}" required>
                         </div>
 
                         <div class="form-group">
-                            <label>Email</label>
+                            <label>Email <span class="text-danger">*</span></label>
                             <input type="email" class="form-control" name="email" value="{{ old('email', $penjual->email ?? Auth::guard('usermanual')->user()->email) }}" required>
                         </div>
 
                         <div class="form-group">
-                            <label>No. HP</label>
+                            <label>No. HP <span class="text-danger">*</span></label>
                             <input type="text" class="form-control" name="no_hp" value="{{ old('no_hp', $penjual->no_hp) }}" required>
                         </div>
                     </div>
@@ -154,10 +132,8 @@
             ACTION
         ========================== --}}
         <div class="text-right">
-            <a href="{{ route('penjual.dashboard') }}" class="btn btn-secondary px-5">Batal</a>
-            <button type="submit"
-                    class="btn px-5"
-                    style="background:#9B8CFF;color:white;">
+            <a href="{{ route('penjual.dashboard') }}" class="btn btn-outline-purple px-5">Batal</a>
+            <button type="submit" class="btn btn-purple px-5">
                 Simpan Perubahan
             </button>
         </div>

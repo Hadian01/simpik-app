@@ -166,13 +166,13 @@
 
                         <div class="d-flex gap-2">
 
-                            <button class="btn btn-outline-secondary" data-toggle="modal" data-target="#modalFilterRiwayat">
+                            <button class="btn btn-outline-purple" data-toggle="modal" data-target="#modalFilterRiwayat">
 
                                 <i class="bi bi-funnel"></i> Filter
 
                             </button>
 
-                            <button class="btn text-white" style="background:#9B8CFF" data-toggle="modal"
+                            <button class="btn btn-purple" data-toggle="modal"
                                 data-target="#modalAddJumlahProduk">
 
                                 <i class="bi bi-plus-lg"></i> Add

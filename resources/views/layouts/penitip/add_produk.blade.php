@@ -124,7 +124,7 @@ MODAL PRODUK
                     <!-- BUTTON -->
                     <div class="text-center mt-4">
                         <button type="submit"
-                                class="btn btn-primary px-5"
+                                class="btn btn-purple px-5"
                                 id="btnSubmitProduk">
                             Simpan
                         </button>
@@ -186,6 +186,12 @@ $(document).ready(function(){
         formData.append('harga_modal', hargaModal);
         formData.append('harga_jual', hargaJual);
         formData.append('penitip_id', penitipId);
+        
+        // Status produk (checkbox)
+        let isActive = $('#statusProduk').is(':checked') ? 1 : 0;
+        if (isActive) {
+            formData.append('is_active', '1');
+        }
 
         // =============================
         // FILE FOTO
@@ -212,7 +218,13 @@ $(document).ready(function(){
 
             success: function(res){
 
-                alert('✅ Data berhasil disimpan');
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Berhasil!',
+                    text: res.message,
+                    confirmButtonColor: '#9B8CFF',
+                    timer: 2000
+                });
 
                 $('#modalTambahProduk').modal('hide');
                 $('#formProduk')[0].reset();
@@ -220,12 +232,28 @@ $(document).ready(function(){
 
                 $('#btnSubmitProduk').text('Simpan');
 
-                location.reload();
+                setTimeout(function(){
+                    location.reload();
+                }, 1500);
             },
 
             error: function(err){
                 console.log(err.responseText);
-                alert('❌ Terjadi error!');
+                
+                let errorMsg = 'Terjadi error!';
+                if (err.responseJSON && err.responseJSON.message) {
+                    errorMsg = err.responseJSON.message;
+                } else if (err.responseJSON && err.responseJSON.errors) {
+                    errorMsg = Object.values(err.responseJSON.errors).flat().join('<br>');
+                }
+                
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Gagal!',
+                    html: errorMsg,
+                    confirmButtonColor: '#9B8CFF'
+                });
+                
                 $('#btnSubmitProduk').text('Simpan');
             }
 
@@ -298,32 +326,44 @@ function openEditProduk(data){
 // ===============================
 function hapusProduk(id)
 {
-
-    if(confirm("Yakin ingin menghapus produk ini?"))
-    {
-
-        fetch('/penitip/delete_produk/' + id, {
-
-            method: 'DELETE',
-
-            headers: {
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-            }
-
-        })
-
-        .then(res => res.json())
-
-        .then(data => {
-
-            alert(data.message);
-
-            window.location.href = "/penitip/produk";
-
-        });
-
-    }
-
+    Swal.fire({
+        title: 'Hapus Produk?',
+        text: 'Produk yang dihapus tidak dapat dikembalikan!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#dc3545',
+        cancelButtonColor: '#9B8CFF',
+        confirmButtonText: 'Ya, Hapus!',
+        cancelButtonText: 'Batal'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            fetch('/penitip/delete_produk/' + id, {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                }
+            })
+            .then(res => res.json())
+            .then(data => {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Berhasil!',
+                    text: data.message,
+                    confirmButtonColor: '#9B8CFF'
+                }).then(() => {
+                    window.location.href = "/penitip/produk";
+                });
+            })
+            .catch(err => {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Gagal!',
+                    text: 'Terjadi kesalahan saat menghapus produk',
+                    confirmButtonColor: '#9B8CFF'
+                });
+            });
+        }
+    });
 }
 
 </script>

@@ -148,9 +148,7 @@
             ACTION
         ========================== --}}
         <div class="text-right">
-            <button type="submit"
-                    class="btn px-5"
-                    style="background:#9B8CFF;color:white;">
+            <button type="submit" class="btn btn-purple px-5">
                 Simpan Data Toko
             </button>
         </div>

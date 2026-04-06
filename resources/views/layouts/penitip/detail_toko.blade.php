@@ -12,7 +12,7 @@
 {{-- STATUS ACTION --}}
 @if($status_pengajuan === 'not_joined')
 
-<button class="btn btn-primary" data-toggle="modal" data-target="#modalJoin">
+<button class="btn btn-purple" data-toggle="modal" data-target="#modalJoin">
 Join Sebagai Penitip
 </button>
 
@@ -140,18 +140,36 @@ headers:{
 
 success:function(res){
 
-alert(res.message);
+Swal.fire({
+    icon: 'success',
+    title: 'Berhasil!',
+    text: res.message,
+    confirmButtonColor: '#9B8CFF'
+});
 
 $('#modalJoin').modal('hide');
 
 setTimeout(function(){
 location.reload();
-},500);
+},1500);
 
 },
 
-error:function(){
-alert('Terjadi kesalahan');
+error:function(xhr){
+    let errorMsg = 'Terjadi kesalahan';
+    
+    if (xhr.responseJSON && xhr.responseJSON.message) {
+        errorMsg = xhr.responseJSON.message;
+    } else if (xhr.responseJSON && xhr.responseJSON.errors) {
+        errorMsg = Object.values(xhr.responseJSON.errors).flat().join('<br>');
+    }
+    
+    Swal.fire({
+        icon: 'error',
+        title: 'Gagal!',
+        html: errorMsg,
+        confirmButtonColor: '#9B8CFF'
+    });
 }
 
 });

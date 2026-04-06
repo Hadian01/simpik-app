@@ -14,6 +14,9 @@
 <!-- DATATABLE CSS -->
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap4.min.css">
 
+<!-- SWEETALERT2 -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
 @stack('styles')
 
 </head>
@@ -53,10 +56,54 @@ href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css">
 
 <script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
 
+<!-- SWEETALERT2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <script src="{{ asset('js/sidebar.js') }}"></script>
 
 <!-- NOTIFICATION SYSTEM -->
 <script src="{{ asset('js/notifications.js') }}"></script>
+
+<!-- SESSION ALERTS -->
+<script>
+@if(session('success'))
+    Swal.fire({
+        icon: 'success',
+        title: 'Berhasil!',
+        text: '{{ session('success') }}',
+        confirmButtonColor: '#9B8CFF',
+        timer: 3000,
+        timerProgressBar: true
+    });
+@endif
+
+@if(session('error'))
+    Swal.fire({
+        icon: 'error',
+        title: 'Gagal!',
+        text: '{{ session('error') }}',
+        confirmButtonColor: '#9B8CFF'
+    });
+@endif
+
+@if(session('info'))
+    Swal.fire({
+        icon: 'info',
+        title: 'Informasi',
+        text: '{{ session('info') }}',
+        confirmButtonColor: '#9B8CFF'
+    });
+@endif
+
+@if($errors->any())
+    Swal.fire({
+        icon: 'error',
+        title: 'Terjadi Kesalahan',
+        html: '<ul style="text-align:left;">@foreach($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul>',
+        confirmButtonColor: '#9B8CFF'
+    });
+@endif
+</script>
 
 @stack('scripts')
 

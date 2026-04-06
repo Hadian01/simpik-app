@@ -79,18 +79,18 @@ $produk = [
                 <div class="mt-4">
 
                     @if($produk['status'] === 'approved')
-                        <button class="btn btn-warning">Edit Produk</button>
+                        <button class="btn btn-purple">Edit Produk</button>
                         <button class="btn btn-danger">Hapus Produk</button>
 
                     @else
-                        <button class="btn btn-outline-primary"
+                        <button class="btn btn-outline-purple"
                                 data-toggle="modal"
                                 data-target="#modalStatusProduk">
                             Lihat Status
                         </button>
                     @endif
 
-                    <a href="{{ route('penitip.produk') }}" class="btn btn-secondary">Kembali</a>
+                    <a href="{{ route('penitip.produk') }}" class="btn btn-outline-purple">Kembali</a>
                 </div>
             </div>
 

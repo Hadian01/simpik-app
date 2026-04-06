@@ -228,11 +228,11 @@
 
                 <div class="modal-footer">
 
-                    <button class="btn btn-light" data-dismiss="modal">
+                    <button class="btn btn-outline-purple" data-dismiss="modal">
                         Batal
                     </button>
 
-                    <button class="btn" id="btnSubmitStock" style="background:#9B8CFF;color:white;">
+                    <button class="btn btn-purple" id="btnSubmitStock">
                         Submit
                     </button>
 

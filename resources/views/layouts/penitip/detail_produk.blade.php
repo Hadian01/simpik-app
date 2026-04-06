@@ -62,7 +62,7 @@
                 {{-- Tombol --}}
                 <div class="mt-4">
                      {{-- EDIT --}}
-                    <button class="btn btn-warning"
+                    <button class="btn btn-purple"
                         onclick="openEditProduk({
                             produk_id: {{ $detail_produk->produk_id }},
                             produk_type: '{{ $detail_produk->produk_type }}',
@@ -81,7 +81,7 @@
                         onclick="hapusProduk({{ $detail_produk->produk_id }})">
                         Hapus Produk
                     </button>
-                    <a href="{{ route('penitip.produk') }}" class="btn btn-secondary">Kembali</a>
+                    <a href="{{ route('penitip.produk') }}" class="btn btn-outline-purple">Kembali</a>
                 </div>
             </div>
 

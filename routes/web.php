@@ -85,10 +85,6 @@ Route::prefix('penjual')->name('penjual.')->middleware(['auth:usermanual', 'role
     Route::post('/stock/update-sisa',
         [PenjualController::class, 'updateSisaStock']
     )->name('update_sisa_stock');
-
-    Route::get('/stok-harian', function () {
-        return view('layouts.penjual.stok_harian');
-    })->name('stok_harian');
 });
 
 // ========== AUTHENTICATION ROUTES ==========

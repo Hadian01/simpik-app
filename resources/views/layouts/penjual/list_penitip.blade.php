@@ -156,13 +156,13 @@ MODAL FILTER
 
                     <div class="modal-footer">
 
-                        <button type="button" class="btn btn-secondary" id="resetFilterPengajuan">
+                        <button type="button" class="btn btn-outline-purple" id="resetFilterPengajuan">
 
                             Reset
 
                         </button>
 
-                        <button type="submit" class="btn btn-primary">
+                        <button type="submit" class="btn btn-purple">
 
                             Apply Filter
 

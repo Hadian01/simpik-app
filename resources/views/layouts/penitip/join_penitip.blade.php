@@ -20,18 +20,6 @@
 <input type="hidden" name="penjual_id" value="{{ $toko->penjual_id }}">
 <input type="hidden" name="penitip_id" value="1">
 
-{{-- ALASAN --}}
-<div class="mb-4">
-
-<label class="small mb-1">Alasan</label>
-
-<textarea class="form-control"
-name="alasan"
-rows="3"
-required></textarea>
-
-</div>
-
 
 {{-- PILIH PRODUK --}}
 <h6 class="mb-3">Pilih Produk Yang Akan Dititipkan</h6>
@@ -88,11 +76,25 @@ value="{{ $item->produk_id }}">
 </div>
 
 
+{{-- ALASAN --}}
+<div class="mb-4 mt-4">
+
+<label class="small mb-1">Alasan Bergabung</label>
+
+<textarea class="form-control"
+name="alasan"
+rows="3"
+placeholder="Tuliskan alasan Anda ingin bergabung dengan toko ini..."
+required></textarea>
+
+</div>
+
+
 <div class="text-center mt-4">
 
 <button type="submit"
-class="btn"
-style="background:#9B8CFF;color:white;padding:8px 30px;border-radius:8px">
+class="btn btn-purple"
+style="padding:8px 30px;border-radius:8px">
 
 Submit
 
