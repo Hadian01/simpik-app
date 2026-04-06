@@ -7,7 +7,17 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\NotificationController;
 
 Route::get('/', function () {
-    return view('welcome');
+    // Redirect ke dashboard sesuai role user yang login
+    if (Auth::guard('usermanual')->check()) {
+        $user = Auth::guard('usermanual')->user();
+        if ($user->user_type === 'penjual') {
+            return redirect()->route('penjual.dashboard');
+        } else {
+            return redirect()->route('penitip.produk');
+        }
+    }
+    // Kalau belum login, redirect ke login
+    return redirect()->route('login');
 });
 
 // ========== ROUTE PENITIP ==========
