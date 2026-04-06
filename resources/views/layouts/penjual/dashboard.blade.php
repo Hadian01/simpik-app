@@ -227,19 +227,26 @@ const monthlyValues = {!! json_encode($monthlyData->pluck('total_pendapatan')) !
 const yearlyLabels = {!! json_encode($yearlyData->pluck('month')) !!};
 const yearlyValues = {!! json_encode($yearlyData->pluck('pendapatan')) !!};
 
+// Cek apakah semua data kosong
+const hasMonthlyData = monthlyValues.some(val => val > 0);
+const hasYearlyData = yearlyValues.some(val => val > 0);
+
 // Chart Monthly (Per Penitip Bulan Ini)
 new Chart(document.getElementById('barChartMonthly'), {
     type: 'bar',
     data: {
-        labels: monthlyLabels.length > 0 ? monthlyLabels : ['Tidak ada data'],
+        labels: hasMonthlyData ? monthlyLabels : [],
         datasets: [{
-            data: monthlyValues.length > 0 ? monthlyValues : [0],
+            data: hasMonthlyData ? monthlyValues : [],
             backgroundColor:'#C7D2FE',
             borderRadius:6
         }]
     },
     options:{
-        plugins:{legend:{display:false}},
+        plugins:{
+            legend:{display:false},
+            tooltip: { enabled: hasMonthlyData }
+        },
         scales:{y:{beginAtZero:true}}
     }
 });
@@ -248,15 +255,18 @@ new Chart(document.getElementById('barChartMonthly'), {
 new Chart(document.getElementById('barChartYearly'), {
     type: 'bar',
     data: {
-        labels: yearlyLabels,
+        labels: hasYearlyData ? yearlyLabels : [],
         datasets: [{
-            data: yearlyValues,
+            data: hasYearlyData ? yearlyValues : [],
             backgroundColor:'#A5B4FC',
             borderRadius:6
         }]
     },
     options:{
-        plugins:{legend:{display:false}},
+        plugins:{
+            legend:{display:false},
+            tooltip: { enabled: hasYearlyData }
+        },
         scales:{y:{beginAtZero:true}}
     }
 });

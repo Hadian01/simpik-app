@@ -50,11 +50,7 @@ class AuthController extends Controller
                 
                 // Redirect berdasarkan user_type
                 if ($user->user_type === 'penjual') {
-                    // Cek apakah data toko sudah lengkap
-                    $penjual = $user->penjual;
-                    if ($penjual && ($penjual->nama_pemilik === '-' || $penjual->deskripsi_toko === '-')) {
-                        return redirect()->route('penjual.register_toko')->with('info', 'Silakan lengkapi data toko Anda terlebih dahulu.');
-                    }
+                    // Langsung ke dashboard, tidak cek kelengkapan data
                     return redirect()->route('penjual.dashboard')->with('success', 'Login berhasil!');
                 } else if ($user->user_type === 'penitip') {
                     return redirect()->route('penitip.daftar_toko')->with('success', 'Login berhasil!');

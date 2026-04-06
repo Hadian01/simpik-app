@@ -7,7 +7,11 @@
     if ($user) {
         if ($role === 'penjual') {
             $penjual = $user->penjual;
-            $profileName = $penjual->nama_pemilik ?? $penjual->nama_toko ?? $user->email;
+            // Pakai nama_toko, kalau kosong atau "-" pakai email
+            $profileName = $penjual->nama_toko ?? $user->email;
+            if ($profileName === '-' || empty($profileName)) {
+                $profileName = $user->email;
+            }
             // Generate avatar dengan nama
             $avatarName = urlencode($profileName);
             $profilePhoto = "https://ui-avatars.com/api/?name={$avatarName}&background=9B8CFF&color=fff&size=128";
