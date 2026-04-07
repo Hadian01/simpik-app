@@ -235,10 +235,10 @@
 <script>
 // Data dari Controller
 const monthlyLabels = {!! json_encode($monthlyData->pluck('created_by')) !!};
-const monthlyValues = {!! json_encode($monthlyData->pluck('total_pendapatan')) !!};
+const monthlyValues = {!! json_encode($monthlyData->pluck('total_terjual')) !!};
 
 const yearlyLabels = {!! json_encode($yearlyData->pluck('month')) !!};
-const yearlyValues = {!! json_encode($yearlyData->pluck('pendapatan')) !!};
+const yearlyValues = {!! json_encode($yearlyData->pluck('terjual')) !!};
 
 // Cek apakah semua data kosong
 const hasMonthlyData = monthlyValues.some(val => val > 0);

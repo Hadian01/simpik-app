@@ -629,8 +629,7 @@ class PenitipController extends Controller
 
         return redirect()
             ->back()
-            ->with('success', 'Stok produk berhasil ditambahkan')
-            ->with('active_tab','riwayat');
+            ->with('success', 'Stok produk berhasil ditambahkan');
     }
 
     /**

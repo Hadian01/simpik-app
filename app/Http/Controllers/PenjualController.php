@@ -50,8 +50,9 @@ class PenjualController extends Controller
             $query->where('penjual_id', $penjual->penjual_id);
         })->where('status', 'Approved')->count();
         
-        // Data dari Stock Harian dengan filter
-        $stockQuery = StockHarian::where('penjual_id', $penjual->penjual_id);
+        // Data dari Stock Harian dengan filter (hanya yang sudah divalidasi)
+        $stockQuery = StockHarian::where('penjual_id', $penjual->penjual_id)
+            ->whereNotNull('sisa_stock'); // Hanya yang sudah validasi stock
         
         // Jika ada filter bulan
         if ($request->filled('bulan')) {
@@ -86,28 +87,31 @@ class PenjualController extends Controller
             $totalOmset += ($terjual * $hargaJual);
         }
         
-        // Data Penitip - Monthly (untuk bar chart)
-        $monthlyQuery = StockHarian::select('created_by', \DB::raw('SUM(CAST(pendapatan AS DECIMAL)) as total_pendapatan'))
+        // Data Penitip - Monthly (untuk bar chart) - Jumlah Produk Terjual
+        $monthlyQuery = StockHarian::select('created_by', 
+                \DB::raw('SUM(CAST(stock AS INTEGER) - COALESCE(CAST(sisa_stock AS INTEGER), 0)) as total_terjual'))
             ->where('penjual_id', $penjual->penjual_id)
+            ->whereNotNull('sisa_stock')
             ->whereMonth('date', $bulan)
             ->whereYear('date', $tahun)
             ->groupBy('created_by')
-            ->orderBy('total_pendapatan', 'desc')
+            ->orderBy('total_terjual', 'desc')
             ->limit(6);
         
         $monthlyData = $monthlyQuery->get();
         
-        // Data Pendapatan - Yearly (per bulan dalam tahun ini)
+        // Data Produk Terjual - Yearly (per bulan dalam tahun ini)
         $yearlyData = collect();
         for ($month = 1; $month <= 12; $month++) {
-            $pendapatan = StockHarian::where('penjual_id', $penjual->penjual_id)
+            $terjual = StockHarian::where('penjual_id', $penjual->penjual_id)
+                ->whereNotNull('sisa_stock')
                 ->whereMonth('date', $month)
                 ->whereYear('date', $tahun)
-                ->sum(\DB::raw('CAST(pendapatan AS DECIMAL)'));
+                ->sum(\DB::raw('CAST(stock AS INTEGER) - COALESCE(CAST(sisa_stock AS INTEGER), 0)'));
             
             $yearlyData->push([
                 'month' => date('M', mktime(0, 0, 0, $month, 1)),
-                'pendapatan' => $pendapatan ?? 0
+                'terjual' => $terjual ?? 0
             ]);
         }
         
@@ -118,7 +122,8 @@ class PenjualController extends Controller
                 \DB::raw('SUM(CAST(pendapatan AS DECIMAL)) as total_pendapatan'),
                 \DB::raw('SUM((CAST(stock AS INTEGER) - COALESCE(CAST(sisa_stock AS INTEGER), 0)) * CAST(harga_jual AS DECIMAL)) as total_omset')
             )
-            ->where('penjual_id', $penjual->penjual_id);
+            ->where('penjual_id', $penjual->penjual_id)
+            ->whereNotNull('sisa_stock');
         
         if ($request->filled('bulan')) {
             $topProductsQuery->whereMonth('date', $bulan);
@@ -411,8 +416,10 @@ class PenjualController extends Controller
             // Update sisa stock
             $stock->sisa_stock = $request->sisa_stock;
 
-            // Hitung dan update pendapatan: (stock - sisa_stock) x harga_modal
-            $stock->pendapatan = ($stock->stock - $request->sisa_stock) * $stock->harga_modal;
+            // Hitung dan update pendapatan: (stock - sisa_stock) x (harga_jual - harga_modal)
+            $jumlah_terjual = $stock->stock - $request->sisa_stock;
+            $margin = $stock->harga_jual - $stock->harga_modal;
+            $stock->pendapatan = $jumlah_terjual * $margin;
 
             // Handle file upload
             if ($request->hasFile('foto')) {
