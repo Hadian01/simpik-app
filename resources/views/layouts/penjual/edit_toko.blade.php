@@ -78,7 +78,7 @@
                         <h5 class="mb-3">Operasional & Alamat</h5>
 
                         <div class="form-group">
-                            <label>Alamat</label>
+                            <label>Alamat <span class="text-danger">*</span></label>
                             <input type="text" class="form-control" name="alamat" value="{{ old('alamat', $penjual->alamat_toko) }}" required>
                         </div>
 
@@ -88,7 +88,7 @@
                         @endphp
 
                         <div class="form-group">
-                            <label>Start Jam Operasional</label>
+                            <label>Start Jam Operasional <span class="text-danger">*</span></label>
                             <input type="time"
                                    class="form-control"
                                    name="jam_operasional_buka"
@@ -96,7 +96,7 @@
                                    required>
                         </div>
                         <div class="form-group">
-                            <label>End Jam Operasional</label>
+                            <label>End Jam Operasional <span class="text-danger">*</span></label>
                             <input type="time"
                                    class="form-control"
                                    name="jam_operasional_tutup"
@@ -105,7 +105,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label>Tanggal Berdiri</label>
+                            <label>Tanggal Berdiri <span class="text-danger">*</span></label>
                             <input type="date" class="form-control" name="tgl_berdiri" value="{{ old('tgl_berdiri', $penjual->tanggal_join ? $penjual->tanggal_join->format('Y-m-d') : '') }}" required>
                         </div>
                     </div>
@@ -132,8 +132,8 @@
             ACTION
         ========================== --}}
         <div class="text-right">
-            <a href="{{ route('penjual.dashboard') }}" class="btn btn-outline-purple px-5">Batal</a>
-            <button type="submit" class="btn btn-purple px-5">
+            <a href="{{ route('penjual.dashboard') }}" class="btn btn-sm px-5" style="background:transparent;color:#9B8CFF;border:1px solid #9B8CFF;">Batal</a>
+            <button type="submit" class="btn btn-sm px-5" style="background:#9B8CFF;color:white;">
                 Simpan Perubahan
             </button>
         </div>

@@ -42,11 +42,11 @@
                             Reset
                         </button>
 
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                        <button type="button" class="btn btn-sm" style="background:transparent;color:#9B8CFF;border:1px solid #9B8CFF;" data-dismiss="modal">
                             Batal
                         </button>
 
-                        <button type="submit" class="btn" style="background-color: #9B8CFF; color: white;">
+                        <button type="submit" class="btn btn-sm" style="background:#9B8CFF;color:white;">
                             Terapkan Filter
                         </button>
                     </div>
@@ -67,7 +67,12 @@
             console.log('Filter:', filterData);
 
             // NANTI: AJAX request
-            alert('Filter diterapkan! (Dummy)');
+            Swal.fire({
+                icon: 'info',
+                title: 'Filter Diterapkan',
+                text: 'Filter berhasil diterapkan',
+                confirmButtonColor: '#9B8CFF'
+            });
             $('#modalFilterRiwayat').modal('hide');
         });
     });

@@ -55,8 +55,8 @@
                         </div>
 
                         <div class="text-right mt-4">
-                            <a href="{{ route('penjual.dashboard') }}" class="btn btn-outline-purple px-4">Batal</a>
-                            <button type="submit" class="btn btn-purple px-4">
+                            <a href="{{ route('penjual.dashboard') }}" class="btn btn-sm px-4" style="background:transparent;color:#9B8CFF;border:1px solid #9B8CFF;">Batal</a>
+                            <button type="submit" class="btn btn-sm px-4" style="background:#9B8CFF;color:white;">
                                 Ubah Password
                             </button>
                         </div>

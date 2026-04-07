@@ -69,9 +69,7 @@
                 }
             @endphp
 
-            <a href="{{ $route }}"
-               class="btn btn-block mt-3"
-               style="background:#9B8CFF;color:white;">
+            <a href="{{ $route }}" class="btn btn-sm btn-block mt-3" style="background:#9B8CFF;color:white;">
                 {{ $text }}
             </a>
 

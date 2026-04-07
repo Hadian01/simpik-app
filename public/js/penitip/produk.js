@@ -15,9 +15,22 @@ $(document).ready(function () {
             },
             success: function(response){
                 console.log(response.message);
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Berhasil!',
+                    text: response.message,
+                    confirmButtonColor: '#9B8CFF',
+                    timer: 1500,
+                    showConfirmButton: false
+                });
             },
             error: function(){
-                alert('Gagal update status');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Gagal!',
+                    text: 'Gagal update status',
+                    confirmButtonColor: '#9B8CFF'
+                });
             }
         });
 

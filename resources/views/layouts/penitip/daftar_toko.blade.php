@@ -6,7 +6,7 @@
 
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="mb-0">Daftar Toko</h2>
-        <button class="btn btn-outline-purple" data-toggle="modal" data-target="#modalFilterToko">
+        <button class="btn btn-sm" style="background:transparent;color:#9B8CFF;border:1px solid #9B8CFF;" data-toggle="modal" data-target="#modalFilterToko">
             <i class="bi bi-funnel"></i> Filter
         </button>
     </div>
@@ -86,8 +86,8 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-outline-purple" id="resetFilterToko">Reset</button>
-                        <button type="submit" class="btn btn-purple">Apply Filter</button>
+                        <button type="button" class="btn btn-sm" style="background:transparent;color:#9B8CFF;border:1px solid #9B8CFF;" id="resetFilterToko">Reset</button>
+                        <button type="submit" class="btn btn-sm" style="background:#9B8CFF;color:white;">Apply Filter</button>
                     </div>
                 </form>
             </div>

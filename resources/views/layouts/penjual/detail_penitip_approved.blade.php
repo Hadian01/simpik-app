@@ -228,11 +228,11 @@
 
                 <div class="modal-footer">
 
-                    <button class="btn btn-outline-purple" data-dismiss="modal">
+                    <button class="btn btn-sm" style="background:transparent;color:#9B8CFF;border:1px solid #9B8CFF;" data-dismiss="modal">
                         Batal
                     </button>
 
-                    <button class="btn btn-purple" id="btnSubmitStock">
+                    <button class="btn btn-sm" style="background:#9B8CFF;color:white;" id="btnSubmitStock">
                         Submit
                     </button>
 
@@ -329,13 +329,23 @@
                 if (file) {
 
                     if (file.size > 2 * 1024 * 1024) {
-                        alert('Ukuran file maksimal 2MB');
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'File Terlalu Besar',
+                            text: 'Ukuran file maksimal 2MB',
+                            confirmButtonColor: '#9B8CFF'
+                        });
                         $(this).val('');
                         return;
                     }
 
                     if (!file.type.match('image.*')) {
-                        alert('File harus berupa gambar');
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Format Salah',
+                            text: 'File harus berupa gambar',
+                            confirmButtonColor: '#9B8CFF'
+                        });
                         $(this).val('');
                         return;
                     }
@@ -375,12 +385,22 @@
                 const foto = $('#uploadFoto')[0].files[0];
 
                 if (!stockId) {
-                    alert('Stock ID tidak ditemukan');
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Stock ID tidak ditemukan',
+                        confirmButtonColor: '#9B8CFF'
+                    });
                     return;
                 }
 
                 if (!jumlahStock) {
-                    alert('Silakan input jumlah stock');
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Data Belum Lengkap',
+                        text: 'Silakan input jumlah stock',
+                        confirmButtonColor: '#9B8CFF'
+                    });
                     return;
                 }
 
@@ -414,11 +434,15 @@
 
                     success: function(response) {
 
-                        alert(response.message);
-
-                        $('#modalValidasiStock').modal('hide');
-
-                        location.reload();
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil!',
+                            text: response.message,
+                            confirmButtonColor: '#9B8CFF'
+                        }).then(() => {
+                            $('#modalValidasiStock').modal('hide');
+                            location.reload();
+                        });
 
                     },
 
@@ -426,7 +450,12 @@
 
                         console.error(xhr);
 
-                        alert('Gagal menyimpan data');
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Gagal!',
+                            text: 'Gagal menyimpan data',
+                            confirmButtonColor: '#9B8CFF'
+                        });
 
                     }
 

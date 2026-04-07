@@ -1,8 +1,7 @@
 {{-- KOMPONEN BUTTON JOIN PENITIP --}}
 <button
     type="button"
-    class="btn {{ $class ?? '' }}"
-    style="background-color: #9B8CFF; color: white; padding: 8px 20px; border-radius: 8px; border: none; transition: all 0.3s ease;"
+    class="btn btn-sm {{ $class ?? '' }}" style="background:#9B8CFF;color:white;"
     @if(isset($dataToggle))
         data-toggle="{{ $dataToggle }}"
     @endif

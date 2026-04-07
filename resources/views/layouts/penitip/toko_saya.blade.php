@@ -166,13 +166,13 @@
 
                         <div class="d-flex gap-2">
 
-                            <button class="btn btn-outline-purple" data-toggle="modal" data-target="#modalFilterRiwayat">
+                            <button class="btn btn-sm" style="background:transparent;color:#9B8CFF;border:1px solid #9B8CFF;" data-toggle="modal" data-target="#modalFilterRiwayat">
 
                                 <i class="bi bi-funnel"></i> Filter
 
                             </button>
 
-                            <button class="btn btn-purple" data-toggle="modal"
+                            <button class="btn btn-sm" style="background:#9B8CFF;color:white;" data-toggle="modal"
                                 data-target="#modalAddJumlahProduk">
 
                                 <i class="bi bi-plus-lg"></i> Add
@@ -286,7 +286,7 @@
                     {{-- HEADER --}}
                     <div class="d-flex justify-content-between align-items-center mb-4">
                         <h4>Produk Toko</h4>
-                        <button class="btn" style="background:#9B8CFF;color:white" data-toggle="modal"
+                        <button class="btn btn-sm" style="background:#9B8CFF;color:white;" data-toggle="modal"
                             data-target="#modalAddProdukToko">
                             <i class="bi bi-plus-lg"></i> Tambah Produk
                         </button>

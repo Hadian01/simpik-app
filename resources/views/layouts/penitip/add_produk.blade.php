@@ -26,7 +26,7 @@ MODAL PRODUK
 
                     <!-- TIPE -->
                     <div class="form-group">
-                        <label>Tipe Produk</label>
+                        <label>Tipe Produk <span class="text-danger">*</span></label>
                         <select class="form-control"
                                 id="tipeProduk"
                                 name="produk_type"
@@ -45,7 +45,7 @@ MODAL PRODUK
 
                     <!-- NAMA -->
                     <div class="form-group">
-                        <label>Nama Produk</label>
+                        <label>Nama Produk <span class="text-danger">*</span></label>
                         <input type="text"
                                class="form-control"
                                id="namaProduk"
@@ -55,7 +55,7 @@ MODAL PRODUK
 
                     <!-- DESKRIPSI -->
                     <div class="form-group">
-                        <label>Deskripsi Produk</label>
+                        <label>Deskripsi Produk <span class="text-danger">*</span></label>
                         <textarea class="form-control"
                                   id="deskripsiProduk"
                                   name="produk_description"
@@ -67,7 +67,7 @@ MODAL PRODUK
                     <div class="form-row">
 
                         <div class="form-group col">
-                            <label>Harga Modal</label>
+                            <label>Harga Modal <span class="text-danger">*</span></label>
                             <input type="text"
                                    class="form-control"
                                    id="hargaModal"
@@ -77,7 +77,7 @@ MODAL PRODUK
                         </div>
 
                         <div class="form-group col">
-                            <label>Harga Jual</label>
+                            <label>Harga Jual <span class="text-danger">*</span></label>
                             <input type="text"
                                    class="form-control"
                                    id="hargaJual"
@@ -124,7 +124,7 @@ MODAL PRODUK
                     <!-- BUTTON -->
                     <div class="text-center mt-4">
                         <button type="submit"
-                                class="btn btn-purple px-5"
+                                class="btn btn-sm px-5" style="background:#9B8CFF;color:white;"
                                 id="btnSubmitProduk">
                             Simpan
                         </button>

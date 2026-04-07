@@ -79,7 +79,7 @@ value="{{ $item->produk_id }}">
 {{-- ALASAN --}}
 <div class="mb-4 mt-4">
 
-<label class="small mb-1">Alasan Bergabung</label>
+<label class="small mb-1">Alasan Bergabung <span class="text-danger">*</span></label>
 
 <textarea class="form-control"
 name="alasan"
@@ -92,10 +92,7 @@ required></textarea>
 
 <div class="text-center mt-4">
 
-<button type="submit"
-class="btn btn-purple"
-style="padding:8px 30px;border-radius:8px">
-
+<button type="submit" class="btn btn-sm px-4" style="background:#9B8CFF;color:white;">
 Submit
 
 </button>

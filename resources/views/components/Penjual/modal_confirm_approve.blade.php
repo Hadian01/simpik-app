@@ -14,12 +14,10 @@
             </div>
 
             <div class="modal-footer justify-content-center">
-                <button class="btn btn-outline-secondary btn-sm" data-dismiss="modal">
+                <button class="btn btn-sm" style="background:transparent;color:#9B8CFF;border:1px solid #9B8CFF;" data-dismiss="modal">
                     Batal
                 </button>
-                <button class="btn btn-sm"
-                        style="background:#9B8CFF;color:white"
-                        id="btnConfirmApprove">
+                <button class="btn btn-sm" style="background:#9B8CFF;color:white;" id="btnConfirmApprove">
                     Ya, Setujui
                 </button>
             </div>

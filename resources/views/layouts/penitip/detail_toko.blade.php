@@ -12,7 +12,7 @@
 {{-- STATUS ACTION --}}
 @if($status_pengajuan === 'not_joined')
 
-<button class="btn btn-purple" data-toggle="modal" data-target="#modalJoin">
+<button class="btn btn-sm" style="background:#9B8CFF;color:white;" data-toggle="modal" data-target="#modalJoin">
 Join Sebagai Penitip
 </button>
 

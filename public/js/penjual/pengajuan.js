@@ -186,7 +186,12 @@ $(document).ready(function () {
     $('#btnApproveSelected').click(function () {
 
         if ($('.produk-check:checked').length === 0) {
-            alert('Pilih minimal 1 produk.');
+            Swal.fire({
+                icon: 'warning',
+                title: 'Pilih Produk',
+                text: 'Pilih minimal 1 produk untuk disetujui',
+                confirmButtonColor: '#9B8CFF'
+            });
             return;
         }
 
@@ -208,16 +213,26 @@ $(document).ready(function () {
 
             success: function (res) {
 
-                alert(res.message);
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Berhasil!',
+                    text: res.message,
+                    confirmButtonColor: '#9B8CFF'
+                }).then(() => {
+                    $('#modalDetailPengajuan').modal('hide');
+                    location.reload();
+                });
 
-                $('#modalDetailPengajuan').modal('hide');
-
-                location.reload();
             },
 
             error: function (xhr) {
                 console.log(xhr.responseText);
-                alert('Gagal approve');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Gagal!',
+                    text: 'Gagal approve pengajuan',
+                    confirmButtonColor: '#9B8CFF'
+                });
             }
         });
     });
@@ -239,7 +254,12 @@ $(document).ready(function () {
         const reason = $('#rejectReason').val().trim();
 
         if (!reason) {
-            alert('Alasan wajib diisi.');
+            Swal.fire({
+                icon: 'warning',
+                title: 'Alasan Wajib Diisi',
+                text: 'Silakan masukkan alasan penolakan',
+                confirmButtonColor: '#9B8CFF'
+            });
             return;
         }
 
@@ -254,16 +274,26 @@ $(document).ready(function () {
 
             success: function (res) {
 
-                alert(res.message);
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Berhasil!',
+                    text: res.message,
+                    confirmButtonColor: '#9B8CFF'
+                }).then(() => {
+                    $('.modal').modal('hide');
+                    location.reload();
+                });
 
-                $('.modal').modal('hide');
-
-                location.reload();
             },
 
             error: function (xhr) {
                 console.log(xhr.responseText);
-                alert('Gagal reject');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Gagal!',
+                    text: 'Gagal reject pengajuan',
+                    confirmButtonColor: '#9B8CFF'
+                });
             }
         });
     });

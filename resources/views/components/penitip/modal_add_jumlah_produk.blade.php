@@ -90,11 +90,7 @@
                         >
                             Batal
                         </button>
-                        <button
-                            type="submit"
-                            class="btn"
-                            style="background:#9B8CFF;color:#fff;padding:8px 24px;border-radius:8px;"
-                        >
+                        <button type="submit" class="btn btn-sm" style="background:#9B8CFF;color:white;">
                             Ajukan
                         </button>
                     </div>

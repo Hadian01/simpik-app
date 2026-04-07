@@ -7,10 +7,15 @@
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h4 class="mb-0">Daftar Produk</h4>
     <div>
-        <button class="btn btn-outline-purple" data-toggle="modal" data-target="#modalFilterProduk">
+        <button class="btn btn-sm" 
+                style="background:transparent;color:#9B8CFF;border:1px solid #9B8CFF;" 
+                data-toggle="modal" 
+                data-target="#modalFilterProduk">
             <i class="bi bi-funnel"></i> Filter
         </button>
-        <button class="btn btn-purple ml-2" onclick="openTambahProduk()">
+        <button class="btn btn-sm ml-2" 
+                style="background:#9B8CFF;color:white;" 
+                onclick="openTambahProduk()">
             <i class="bi bi-plus-circle"></i> Tambah Produk
         </button>
     </div>
@@ -65,8 +70,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-purple" id="resetFilterProduk">Reset</button>
-                    <button type="submit" class="btn btn-purple">Apply Filter</button>
+                    <button type="button" class="btn btn-sm" style="background:transparent;color:#9B8CFF;border:1px solid #9B8CFF;" id="resetFilterProduk">Reset</button>
+                    <button type="submit" class="btn btn-sm" style="background:#9B8CFF;color:white;">Apply Filter</button>
                 </div>
             </form>
         </div>

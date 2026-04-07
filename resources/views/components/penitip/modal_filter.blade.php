@@ -49,11 +49,11 @@
                             Reset
                         </button>
 
-                        <button type="button" class="btn btn-secondary mr-2" data-dismiss="modal">
+                        <button type="button" class="btn btn-sm mr-2" style="background:transparent;color:#9B8CFF;border:1px solid #9B8CFF;" data-dismiss="modal">
                             Batal
                         </button>
 
-                        <button type="submit" class="btn text-white" style="background:#9B8CFF;">
+                        <button type="submit" class="btn btn-sm" style="background:#9B8CFF;color:white;">
                             Terapkan Filter
                         </button>
 

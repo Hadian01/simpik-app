@@ -70,8 +70,8 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-outline-purple" id="resetFilter" data-dismiss="modal">Reset</button>
-                        <button type="submit" class="btn btn-purple">Apply Filter</button>
+                        <button type="button" class="btn btn-sm" style="background:transparent;color:#9B8CFF;border:1px solid #9B8CFF;" id="resetFilter" data-dismiss="modal">Reset</button>
+                        <button type="submit" class="btn btn-sm" style="background:#9B8CFF;color:white;">Apply Filter</button>
                     </div>
                 </form>
             </div>

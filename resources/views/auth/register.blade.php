@@ -38,7 +38,7 @@
                     @csrf
 
                     <div class="form-group">
-                        <label>Tipe Akun</label>
+                        <label>Tipe Akun <span class="text-danger">*</span></label>
                         <select name="user_type" class="form-control @error('user_type') is-invalid @enderror" required>
                             <option value="">Pilih Tipe</option>
                             <option value="penjual" {{ old('user_type') == 'penjual' ? 'selected' : '' }}>Penjual</option>
@@ -50,7 +50,7 @@
                     </div>
 
                     <div class="form-group">
-                        <label>Email</label>
+                        <label>Email <span class="text-danger">*</span></label>
                         <input type="email"
                                name="email"
                                class="form-control @error('email') is-invalid @enderror"
@@ -63,8 +63,9 @@
                     </div>
 
                     <div class="form-group">
-                        <label>Password</label>
+                        <label>Password <span class="text-danger">*</span></label>
                         <input type="password"
+                               id="password"
                                name="password"
                                class="form-control @error('password') is-invalid @enderror"
                                placeholder="Minimal 4 karakter"
@@ -75,12 +76,16 @@
                     </div>
 
                     <div class="form-group">
-                        <label>Konfirmasi Password</label>
+                        <label>Konfirmasi Password <span class="text-danger">*</span></label>
                         <input type="password"
+                               id="password_confirmation"
                                name="password_confirmation"
                                class="form-control"
                                placeholder="Password Confirmation"
                                required>
+                        <small id="confirmPasswordHelpBlock" class="form-text text-muted d-none">
+                            Password tidak cocok
+                        </small>
                     </div>
 
                     <div class="text-right">
@@ -104,3 +109,31 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+// Password confirmation validation
+document.getElementById('password_confirmation').addEventListener('input', function() {
+    const password = document.getElementById('password').value;
+    const confirmation = this.value;
+    const helpBlock = document.getElementById('confirmPasswordHelpBlock');
+    
+    if (confirmation && password !== confirmation) {
+        this.classList.add('is-invalid');
+        helpBlock.classList.remove('d-none');
+        helpBlock.classList.add('text-danger');
+    } else {
+        this.classList.remove('is-invalid');
+        helpBlock.classList.add('d-none');
+    }
+});
+
+// Also check when password field changes
+document.getElementById('password').addEventListener('input', function() {
+    const confirmation = document.getElementById('password_confirmation');
+    if (confirmation.value) {
+        confirmation.dispatchEvent(new Event('input'));
+    }
+});
+</script>
+@endpush

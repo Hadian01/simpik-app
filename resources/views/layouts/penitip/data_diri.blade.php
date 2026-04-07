@@ -68,7 +68,7 @@
                         <h5 class="mb-3">Informasi Pribadi</h5>
 
                         <div class="form-group">
-                            <label>Nama Lengkap</label>
+                            <label>Nama Lengkap <span class="text-danger">*</span></label>
                             <input type="text" class="form-control" name="name" value="{{ old('name', $penitip->name) }}" required>
                         </div>
 
@@ -79,7 +79,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label>No. HP</label>
+                            <label>No. HP <span class="text-danger">*</span></label>
                             <input type="text" class="form-control" name="no_hp" value="{{ old('no_hp', $penitip->no_hp) }}" required>
                         </div>
 
@@ -94,7 +94,7 @@
                         <h5 class="mb-3">Alamat</h5>
 
                         <div class="form-group">
-                            <label>Alamat Lengkap</label>
+                            <label>Alamat Lengkap <span class="text-danger">*</span></label>
                             <textarea class="form-control" name="alamat" rows="5" required>{{ old('alamat', $penitip->alamat) }}</textarea>
                         </div>
                     </div>
@@ -147,7 +147,7 @@
         ========================== --}}
         <div class="text-right">
             <button type="submit"
-                    class="btn btn-purple px-5">
+                    class="btn btn-sm px-5" style="background:#9B8CFF;color:white;">
                 Simpan Perubahan
             </button>
         </div>

@@ -29,10 +29,10 @@
                     </div>
 
                     <div class="text-right mt-4">
-                        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">
+                        <button type="button" class="btn btn-sm" style="background:transparent;color:#9B8CFF;border:1px solid #9B8CFF;" data-dismiss="modal">
                             Batal
                         </button>
-                        <button type="submit" class="btn" style="background:#9B8CFF;color:white">
+                        <button type="submit" class="btn btn-sm" style="background:#9B8CFF;color:white;">
                             Ajukan Produk
                         </button>
                     </div>
@@ -49,7 +49,12 @@
 $(document).ready(function(){
     $('#formAddProdukToko').submit(function(e){
         e.preventDefault();
-        alert('Produk berhasil diajukan (dummy)');
+        Swal.fire({
+            icon: 'success',
+            title: 'Berhasil!',
+            text: 'Produk berhasil diajukan',
+            confirmButtonColor: '#9B8CFF'
+        });
         $('#modalAddProdukToko').modal('hide');
     });
 });

@@ -69,22 +69,22 @@
                         <h5 class="mb-3">Detail Toko</h5>
 
                         <div class="form-group">
-                            <label>Nama Toko</label>
+                            <label>Nama Toko <span class="text-danger">*</span></label>
                             <input type="text" class="form-control" name="nama_toko" value="{{ old('nama_toko', $penjual->nama_toko ?? '') }}" required>
                         </div>
 
                         <div class="form-group">
-                            <label>Nama Pemilik</label>
+                            <label>Nama Pemilik <span class="text-danger">*</span></label>
                             <input type="text" class="form-control" name="pemilik" value="{{ old('pemilik', $penjual->nama_pemilik ?? '') }}" required>
                         </div>
 
                         <div class="form-group">
-                            <label>Email</label>
+                            <label>Email <span class="text-danger">*</span></label>
                             <input type="email" class="form-control" name="email" value="{{ old('email', $penjual->email ?? Auth::guard('usermanual')->user()->email) }}" required>
                         </div>
 
                         <div class="form-group">
-                            <label>No. HP</label>
+                            <label>No. HP <span class="text-danger">*</span></label>
                             <input type="text" class="form-control" name="no_hp" value="{{ old('no_hp', $penjual->no_hp ?? '') }}" required>
                         </div>
                     </div>
@@ -98,7 +98,7 @@
                         <h5 class="mb-3">Operasional & Alamat</h5>
 
                         <div class="form-group">
-                            <label>Alamat</label>
+                            <label>Alamat <span class="text-danger">*</span></label>
                             <input type="text" class="form-control" name="alamat" value="{{ old('alamat', $penjual->alamat_toko ?? '') }}" required>
                         </div>
 
@@ -120,7 +120,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label>Tanggal Berdiri</label>
+                            <label>Tanggal Berdiri <span class="text-danger">*</span></label>
                             <input type="date" class="form-control" name="tgl_berdiri" value="{{ old('tgl_berdiri', $penjual->tanggal_join ? $penjual->tanggal_join->format('Y-m-d') : '') }}" required>
                         </div>
                     </div>
@@ -148,7 +148,7 @@
             ACTION
         ========================== --}}
         <div class="text-right">
-            <button type="submit" class="btn btn-purple px-5">
+            <button type="submit" class="btn btn-sm px-5" style="background:#9B8CFF;color:white;">
                 Simpan Data Toko
             </button>
         </div>

@@ -101,9 +101,7 @@
                     Reject
                 </button>
 
-                <button class="btn"
-                        style="background:#9B8CFF;color:white"
-                        id="btnApproveSelected">
+                <button class="btn btn-sm" style="background:#9B8CFF;color:white;" id="btnApproveSelected">
                     Setujui Produk Terpilih
                 </button>
 
