@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use App\Models\UserManual;
 use App\Models\Penitip;
 use App\Models\Penjual;
+use App\Mail\ResetPasswordMail;
 
 class AuthController extends Controller
 {
@@ -153,6 +155,18 @@ class AuthController extends Controller
             'email.exists' => 'Email tidak ditemukan dalam sistem'
         ]);
 
+        // Get user for name
+        $user = UserManual::where('email', $request->email)->first();
+        $userName = null;
+        
+        if ($user) {
+            if ($user->user_type === 'penitip' && $user->penitip) {
+                $userName = $user->penitip->name;
+            } elseif ($user->user_type === 'penjual' && $user->penjual) {
+                $userName = $user->penjual->nama_pemilik;
+            }
+        }
+
         // Generate reset token
         $token = \Str::random(60);
         
@@ -165,23 +179,21 @@ class AuthController extends Controller
             ]
         );
 
-        // TODO: Send email with reset link when email service is ready
-        // For now, we'll display the reset link or log it
-        
         // Generate reset URL
         $resetUrl = route('password.reset', ['token' => $token, 'email' => $request->email]);
         
-        // For testing: Return the link (In production with email, this would be sent via email)
-        return back()->with('status', 
-            'Link reset password telah dibuat. Untuk testing, gunakan link ini: ' . $resetUrl . 
-            ' (Dalam production, link akan dikirim via email)'
-        );
-        
-        // When email service is ready, uncomment this:
-        /*
-        Mail::to($request->email)->send(new ResetPasswordMail($resetUrl));
-        return back()->with('status', 'Link reset password telah dikirim ke email Anda');
-        */
+        // Send email
+        try {
+            Mail::to($request->email)->send(new ResetPasswordMail($resetUrl, $userName));
+            
+            return back()->with('status', 'Link reset password telah dikirim ke email Anda. Silakan cek inbox atau folder spam.');
+        } catch (\Exception $e) {
+            // If email fails, show link for testing
+            return back()->with('status', 
+                'Gagal mengirim email. Link reset password: ' . $resetUrl . 
+                ' (Error: ' . $e->getMessage() . ')'
+            );
+        }
     }
 
     /**
