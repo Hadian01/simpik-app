@@ -60,9 +60,9 @@
                 </table>
 
                 {{-- Tombol --}}
-                <div class="mt-4">
+                <div class="mt-4 d-flex gap-2" style="gap: 10px;">
                      {{-- EDIT --}}
-                    <button class="btn btn-sm" style="background:#9B8CFF;color:white;"
+                    <button class="btn btn-sm px-4" style="background:#9B8CFF;color:white;"
                         onclick="openEditProduk({
                             produk_id: {{ $detail_produk->produk_id }},
                             produk_type: '{{ $detail_produk->produk_type }}',
@@ -73,15 +73,19 @@
                             is_active: {{ $detail_produk->is_active ? 'true' : 'false' }},
                             foto_produk: '{{ $detail_produk->foto_produk }}'
                         })">
-                        Edit
+                        <i class="bi bi-pencil"></i> Edit
                     </button>
 
                     {{-- HAPUS --}}
-                    <button class="btn btn-danger"
+                    <button class="btn btn-sm px-4" style="background:#dc3545;color:white;"
                         onclick="hapusProduk({{ $detail_produk->produk_id }})">
-                        Hapus Produk
+                        <i class="bi bi-trash"></i> Hapus
                     </button>
-                    <a href="{{ route('penitip.produk') }}" class="btn btn-sm" style="background:transparent;color:#9B8CFF;border:1px solid #9B8CFF;">Kembali</a>
+                    
+                    {{-- KEMBALI --}}
+                    <a href="{{ route('penitip.produk') }}" class="btn btn-sm px-4" style="background:transparent;color:#9B8CFF;border:1px solid #9B8CFF;">
+                        <i class="bi bi-arrow-left"></i> Kembali
+                    </a>
                 </div>
             </div>
 

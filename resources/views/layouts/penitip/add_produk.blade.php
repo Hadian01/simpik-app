@@ -261,6 +261,28 @@ $(document).ready(function(){
 
     });
 
+    // =============================
+    // PREVIEW FOTO SAAT PILIH FILE
+    // =============================
+    $('#uploadFoto').change(function(e){
+        
+        let file = e.target.files[0];
+        
+        if(file){
+            let reader = new FileReader();
+            
+            reader.onload = function(e){
+                $('#previewFotoProduk')
+                    .attr('src', e.target.result)
+                    .show();
+            };
+            
+            reader.readAsDataURL(file);
+        } else {
+            $('#previewFotoProduk').hide();
+        }
+    });
+
 });
 
 
@@ -276,6 +298,7 @@ function openTambahProduk(){
 
     $('#formProduk')[0].reset();
     $('#produkId').val('');
+    $('#uploadFoto').val('');
 
     $('#previewFotoProduk').hide();
 
