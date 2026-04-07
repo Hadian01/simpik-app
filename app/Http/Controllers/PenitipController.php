@@ -641,9 +641,6 @@ class PenitipController extends Controller
             'name' => 'required|string|max:255',
             'no_hp' => 'required|string|max:20',
             'alamat' => 'required|string',
-            'nama_bank' => 'nullable|string|max:100',
-            'no_rekening' => 'nullable|string|max:50',
-            'atas_nama' => 'nullable|string|max:255',
             'foto_profile' => 'nullable|image|mimes:jpeg,png,jpg|max:2048'
         ]);
 
@@ -664,9 +661,6 @@ class PenitipController extends Controller
         $penitip->name = $request->name;
         $penitip->no_hp = $request->no_hp;
         $penitip->alamat = $request->alamat;
-        $penitip->nama_bank = $request->nama_bank;
-        $penitip->no_rekening = $request->no_rekening;
-        $penitip->atas_nama = $request->atas_nama;
         $penitip->save();
 
         return redirect()->route('penitip.data_diri')->with('success', 'Data berhasil diperbarui');

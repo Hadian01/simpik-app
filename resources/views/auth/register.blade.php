@@ -50,6 +50,19 @@
                     </div>
 
                     <div class="form-group">
+                        <label>Nama Lengkap <span class="text-danger">*</span></label>
+                        <input type="text"
+                               name="name"
+                               class="form-control @error('name') is-invalid @enderror"
+                               placeholder="Nama Lengkap"
+                               value="{{ old('name') }}"
+                               required>
+                        @error('name')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="form-group">
                         <label>Email <span class="text-danger">*</span></label>
                         <input type="email"
                                name="email"

@@ -79,9 +79,10 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         $request->validate([
+            'user_type' => 'required|in:penitip,penjual',
+            'name' => 'required|string|max:255',
             'email' => 'required|email|unique:tbl_user,email',
             'password' => 'required|min:4|confirmed',
-            'user_type' => 'required|in:penitip,penjual',
         ]);
 
         // Create user dengan hashed password
@@ -91,11 +92,11 @@ class AuthController extends Controller
             'user_type' => $request->user_type,
         ]);
 
-        // Create profile berdasarkan user_type dengan default values
+        // Create profile berdasarkan user_type dengan nama dari input
         if ($request->user_type === 'penitip') {
             Penitip::create([
                 'user_id' => $user->user_id,
-                'name' => $request->name ?? 'User' . $user->user_id,
+                'name' => $request->name,
                 'no_hp' => '-',
                 'alamat' => '-',
                 'foto_profile' => 'default.jpg',
@@ -105,13 +106,13 @@ class AuthController extends Controller
         } else if ($request->user_type === 'penjual') {
             Penjual::create([
                 'user_id' => $user->user_id,
-                'nama_toko' => $request->nama_toko ?? 'Toko' . $user->user_id,
+                'nama_toko' => 'Toko ' . $request->name,
+                'nama_pemilik' => $request->name,
                 'no_hp' => '-',
                 'tanggal_join' => now()->toDateString(),
                 'deskripsi_toko' => '-',
                 'jam_buka' => now()->startOfDay(),
                 'jam_tutup' => now()->endOfDay(),
-                'nama_pemilik' => '-',
                 'alamat_toko' => '-',
                 'created_at' => now(),
             ]);

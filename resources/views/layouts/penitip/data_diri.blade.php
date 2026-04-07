@@ -104,45 +104,6 @@
         </div>
 
         {{-- =========================
-            INFORMASI BANK
-        ========================== --}}
-        <div class="row">
-            
-            <div class="col-12 mb-4">
-                <div class="card" style="border-radius:12px;">
-                    <div class="card-body">
-                        <h5 class="mb-3">Informasi Bank</h5>
-
-                        <div class="row">
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label>Nama Bank</label>
-                                    <input type="text" class="form-control" name="nama_bank" value="{{ old('nama_bank', $penitip->nama_bank) }}" placeholder="Contoh: BCA, Mandiri, BNI">
-                                </div>
-                            </div>
-
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label>Nomor Rekening</label>
-                                    <input type="text" class="form-control" name="no_rekening" value="{{ old('no_rekening', $penitip->no_rekening) }}" placeholder="Contoh: 1234567890">
-                                </div>
-                            </div>
-
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label>Atas Nama</label>
-                                    <input type="text" class="form-control" name="atas_nama" value="{{ old('atas_nama', $penitip->atas_nama) }}" placeholder="Nama sesuai rekening">
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-
-        </div>
-
-        {{-- =========================
             ACTION
         ========================== --}}
         <div class="text-right">
