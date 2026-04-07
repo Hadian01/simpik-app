@@ -129,12 +129,16 @@ class PenitipController extends Controller
         }
 
         /* =========================
-        PRODUK TOKO APPROVED
+        PRODUK TOKO APPROVED (SEMUA PRODUK DARI SEMUA PENITIP)
         ========================= */
-        $produk = Produk::whereHas('approval', function ($query) use ($penjual_id) {
-                $query->where('penjual_id', $penjual_id)
-                    ->where('status', 'approved');
+        $approvedProdukIds = PengajuanDetail::whereHas('pengajuan', function ($query) use ($penjual_id) {
+                $query->where('penjual_id', $penjual_id);
             })
+            ->where('status', 'Approved')
+            ->pluck('produk_id')
+            ->unique();
+        
+        $produk = Produk::whereIn('produk_id', $approvedProdukIds)
             ->where('is_active', true)
             ->get();
 

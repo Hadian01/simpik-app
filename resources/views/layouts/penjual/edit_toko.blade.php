@@ -7,7 +7,7 @@
 
     <h2 class="mb-4">Edit Data Toko</h2>
 
-    <form method="POST" action="{{ route('penjual.update_toko') }}\" enctype=\"multipart/form-data\">
+    <form method="POST" action="{{ route('penjual.update_toko') }}" enctype="multipart/form-data">
         @csrf
         @method('PUT')
 

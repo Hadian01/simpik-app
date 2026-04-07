@@ -158,6 +158,12 @@ class AuthController extends Controller
             'email.exists' => 'Email tidak ditemukan dalam sistem'
         ]);
 
+        // Check if mail is configured
+        if (empty(config('mail.mailers.smtp.username')) || empty(config('mail.mailers.smtp.password'))) {
+            \Log::error('Mail not configured - MAIL_USERNAME or MAIL_PASSWORD missing');
+            return back()->withErrors(['email' => 'Layanan email belum dikonfigurasi. Silakan hubungi administrator.'])->withInput();
+        }
+
         // Get user for name
         $user = UserManual::where('email', $request->email)->first();
         $userName = null;
@@ -189,13 +195,17 @@ class AuthController extends Controller
         try {
             Mail::to($request->email)->send(new ResetPasswordMail($resetUrl, $userName));
             
+            \Log::info('Reset password email sent successfully to: ' . $request->email);
+            
             return back()->with('status', 'Link reset password telah dikirim ke email Anda. Silakan cek inbox atau folder spam.');
         } catch (\Exception $e) {
-            // If email fails, show link for testing
-            return back()->with('status', 
-                'Gagal mengirim email. Link reset password: ' . $resetUrl . 
-                ' (Error: ' . $e->getMessage() . ')'
-            );
+            \Log::error('Failed to send reset password email: ' . $e->getMessage());
+            \Log::error('Stack trace: ' . $e->getTraceAsString());
+            
+            // Return with error message but still show link for testing
+            return back()
+                ->withErrors(['email' => 'Gagal mengirim email. Silakan hubungi administrator.'])
+                ->withInput();
         }
     }
 

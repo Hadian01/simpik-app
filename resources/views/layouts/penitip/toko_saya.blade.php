@@ -636,6 +636,25 @@
 
                         });
 
+
+                        /*
+                        ================================
+                        VIEW FOTO HANDLER
+                        ================================
+                        */
+
+                        $(document).on('click', '.btn-view-foto', function() {
+
+                            const foto = $(this).data('foto');
+                            const title = $(this).data('title');
+
+                            $('#modalFotoTitle').text(title);
+                            $('#modalFotoImage').attr('src', foto);
+
+                            $('#modalViewFoto').modal('show');
+
+                        });
+
                     });
                 </script>
             @endpush
