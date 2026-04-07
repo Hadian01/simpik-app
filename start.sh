@@ -10,6 +10,10 @@ else
     echo "✅ APP_KEY already set"
 fi
 
+# Run migrations (production safe with --force)
+echo "🔄 Running migrations..."
+php artisan migrate --force
+
 # Cache optimization
 echo "📦 Caching configuration..."
 php artisan config:cache
