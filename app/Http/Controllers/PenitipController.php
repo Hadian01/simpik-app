@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Produk;
 use App\Models\Penjual;
 use App\Models\Pengajuan;
+use App\Models\PengajuanDetail;
 use App\Models\Penitip;
 use App\Models\Notification;
 use Illuminate\View\View;
@@ -383,9 +384,9 @@ class PenitipController extends Controller
                 sh.harga_jual::int as harga_jual,
                 sh.harga_modal::int as cogs,
                 sh.stock::int as sistem,
-                (sh.stock::int - COALESCE(sh.sisa_stock::int, 0)) as validasi_stock,
+                sh.validasi_stock::int as validasi_stock,
                 sh.sisa_stock::int as sisa_stock,
-                ((sh.stock::int - COALESCE(sh.sisa_stock::int, 0)) * (sh.harga_jual::int - sh.harga_modal::int)) as pendapatan,
+                ((COALESCE(sh.stock::int, 0) - COALESCE(sh.sisa_stock::int, 0)) * (sh.harga_jual::int - sh.harga_modal::int)) as pendapatan,
                 sh.validasi_foto,
                 sh.sisa_foto
             ')
