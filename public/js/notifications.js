@@ -97,6 +97,8 @@ function renderNotifications(notifications) {
             <div class="dropdown-item ${bgClass} py-2 px-3 notification-item" 
                  data-id="${notif.id}" 
                  data-read="${notif.is_read}"
+                 data-type="${notif.type}"
+                 data-notification='${JSON.stringify(notif)}'
                  style="cursor:pointer; border-bottom:1px solid #eee;">
                 <div class="d-flex align-items-start gap-2">
                     <div class="text-${getNotificationColor(notif.type)}" style="font-size:20px;">
@@ -121,14 +123,20 @@ function renderNotifications(notifications) {
     
     container.html(html);
     
-    // Add click handlers
+    // Add click handlers with redirect
     $('.notification-item').on('click', function() {
         const id = $(this).data('id');
         const isRead = $(this).data('read');
+        const type = $(this).data('type');
+        const notifData = JSON.parse($(this).attr('data-notification'));
         
+        // Mark as read first
         if (!isRead) {
             markAsRead(id);
         }
+        
+        // Redirect based on type
+        redirectToNotification(type, notifData);
     });
 }
 
@@ -227,6 +235,48 @@ function markAllAsRead() {
             console.error('Failed to mark all notifications as read:', xhr);
         }
     });
+}
+
+/**
+ * Redirect based on notification type and data
+ */
+function redirectToNotification(type, notification) {
+    const data = notification.data || {};
+    
+    // Redirect logic based on type
+    switch(type) {
+        case 'pengajuan_baru':
+            // Redirect to penitip list for penjual
+            window.location.href = '/penjual/penitip';
+            break;
+            
+        case 'pengajuan_approved':
+        case 'pengajuan_rejected':
+            // Redirect to daftar toko for penitip
+            window.location.href = '/penitip/daftar_toko';
+            break;
+            
+        case 'produk_baru':
+            // Redirect to penitip approved list for penjual
+            if (data.penitip_id) {
+                window.location.href = '/penjual/penitip-approved';
+            } else {
+                window.location.href = '/penjual/penitip';
+            }
+            break;
+            
+        case 'stock_validated':
+            // Redirect to toko saya for penitip
+            if (data.penjual_id) {
+                window.location.href = `/penitip/toko_saya/${data.penjual_id}`;
+            } else {
+                window.location.href = '/penitip/daftar_toko';
+            }
+            break;
+            
+        default:
+            console.log('No redirect defined for notification type:', type);
+    }
 }
 
 // Clean up interval on page unload

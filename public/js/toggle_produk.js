@@ -10,13 +10,12 @@ $(document).ready(function() {
         console.log('Produk ID:', produkId);
         console.log('Status:', isActive ? 'Active' : 'Inactive');
 
-        // NANTI PAS INTEGRASI: Uncomment code di bawah
-        /*
         $.ajax({
-            url: '/penitip/produk/toggle/' + produkId,
+            url: '/penitip/update_status_produk',
             method: 'POST',
             data: {
-                is_active: isActive,
+                produk_id: produkId,
+                is_active: isActive ? 1 : 0,
                 _token: $('meta[name="csrf-token"]').attr('content')
             },
             success: function(response) {
@@ -38,15 +37,6 @@ $(document).ready(function() {
                     confirmButtonColor: '#9B8CFF'
                 });
             }
-        });
-        */
-
-        // DUMMY: Alert sementara
-        Swal.fire({
-            icon: 'info',
-            title: 'Toggle Status',
-            text: 'Status produk ID ' + produkId + ' diubah menjadi: ' + (isActive ? 'Active' : 'Inactive'),
-            confirmButtonColor: '#9B8CFF'
         });
     });
 });

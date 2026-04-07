@@ -651,10 +651,9 @@ class PenitipController extends Controller
                 Storage::disk('public')->delete($penitip->foto_profile);
             }
 
-            $foto = $request->file('foto_profile');
-            $filename = 'profile_' . $penitip->penitip_id . '_' . time() . '.' . $foto->getClientOriginalExtension();
-            $foto->storeAs('public/profiles', $filename);
-            $penitip->foto_profile = 'profiles/' . $filename;
+            // Store new photo
+            $path = $request->file('foto_profile')->store('profiles', 'public');
+            $penitip->foto_profile = $path;
         }
 
         // Update data

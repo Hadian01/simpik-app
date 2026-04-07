@@ -118,10 +118,3 @@ document.getElementById('new_password').addEventListener('input', function() {
 });
 </script>
 @endpush
-                </div>
-            </div>
-        </div>
-    </div>
-
-</div>
-@endsection
