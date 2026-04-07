@@ -78,12 +78,13 @@ class PenjualController extends Controller
             
             $totalTerjual += $terjual;
             
-            // Pendapatan (untuk penjual)
-            $pendapatan = is_numeric($stock->pendapatan) ? (float)$stock->pendapatan : 0;
-            $totalPendapatan += $pendapatan;
+            // Pendapatan (untuk penjual) - HITUNG ULANG DARI MARGIN
+            $hargaJual = is_numeric($stock->harga_jual) ? (float)$stock->harga_jual : 0;
+            $hargaModal = is_numeric($stock->harga_modal) ? (float)$stock->harga_modal : 0;
+            $margin = $hargaJual - $hargaModal;
+            $totalPendapatan += ($terjual * $margin);
             
             // Omset (total penjualan)
-            $hargaJual = is_numeric($stock->harga_jual) ? (float)$stock->harga_jual : 0;
             $totalOmset += ($terjual * $hargaJual);
         }
         

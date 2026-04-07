@@ -280,8 +280,8 @@ class PenitipController extends Controller
             ->whereRaw("DATE_TRUNC('month', sh.date) = DATE_TRUNC('month', CURRENT_DATE)")
             ->selectRaw('
                 COALESCE(SUM(sh.stock::int),0) as total_dititip,
-                COALESCE(SUM(sh.stock::int - sh.sisa_stock::int),0) as total_terjual,
-                COALESCE(SUM(sh.pendapatan::int),0) as total_pendapatan
+                COALESCE(SUM(sh.stock::int - COALESCE(sh.sisa_stock::int, 0)),0) as total_terjual,
+                COALESCE(SUM((sh.stock::int - COALESCE(sh.sisa_stock::int, 0)) * (sh.harga_jual::int - sh.harga_modal::int)),0) as total_pendapatan
             ')
             ->first();
 
@@ -339,9 +339,10 @@ class PenitipController extends Controller
                 p.produk_name,
                 pj.nama_toko,
                 sh.stock::int as stock,
-                (sh.stock::int - sh.sisa_stock::int) as stock_terjual,
+                sh.harga_jual::int as harga_jual,
                 sh.harga_modal::int as cogs,
-                sh.pendapatan::int as pendapatan
+                (sh.stock::int - COALESCE(sh.sisa_stock::int, 0)) as stock_terjual,
+                ((sh.stock::int - COALESCE(sh.sisa_stock::int, 0)) * (sh.harga_jual::int - sh.harga_modal::int)) as pendapatan
             ')
             ->orderBy('sh.created_at', 'desc')
             ->get();
@@ -382,9 +383,9 @@ class PenitipController extends Controller
                 sh.harga_jual::int as harga_jual,
                 sh.harga_modal::int as cogs,
                 sh.stock::int as sistem,
-                (sh.stock::int - sh.sisa_stock::int) as validasi_stock,
+                (sh.stock::int - COALESCE(sh.sisa_stock::int, 0)) as validasi_stock,
                 sh.sisa_stock::int as sisa_stock,
-                sh.pendapatan::int as pendapatan,
+                ((sh.stock::int - COALESCE(sh.sisa_stock::int, 0)) * (sh.harga_jual::int - sh.harga_modal::int)) as pendapatan,
                 sh.validasi_foto,
                 sh.sisa_foto
             ')

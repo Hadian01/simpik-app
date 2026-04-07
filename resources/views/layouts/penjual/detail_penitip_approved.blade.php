@@ -131,8 +131,12 @@
                                 <td>
 
                                     @if ($item->stock && $item->sisa_stock !== null)
-                                        RP
-                                        {{ number_format(($item->stock - $item->sisa_stock) * $item->harga_modal, 0, ',', '.') }}
+                                        @php
+                                            $terjual = $item->stock - $item->sisa_stock;
+                                            $margin = $item->harga_jual - $item->harga_modal;
+                                            $pendapatan = $terjual * $margin;
+                                        @endphp
+                                        RP {{ number_format($pendapatan, 0, ',', '.') }}
                                     @else
                                         <span class="text-muted">-</span>
                                     @endif
