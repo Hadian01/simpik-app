@@ -106,16 +106,16 @@
                         <div class="col-5 small">
                             <p class="fw-semibold">Keterangan :</p>
                             <div class="d-flex align-items-center mb-2">
-                                <span class="legend red"></span> Kue Basah ({{ $jenisKueCounts['kue basah'] }})
+                                <span class="legend red"></span> Kue Basah ({{ $jenisKueCounts['kue basah'] ?? 0 }})
                             </div>
                             <div class="d-flex align-items-center mb-2">
-                                <span class="legend purple"></span> Kue Kering ({{ $jenisKueCounts['kue kering'] }})
+                                <span class="legend purple"></span> Kue Kering ({{ $jenisKueCounts['kue kering'] ?? 0 }})
                             </div>
                             <div class="d-flex align-items-center mb-2">
-                                <span class="legend pink"></span> Donat ({{ $jenisKueCounts['donat'] }})
+                                <span class="legend pink"></span> Donat ({{ $jenisKueCounts['donat'] ?? 0 }})
                             </div>
                             <div class="d-flex align-items-center">
-                                <span class="legend yellow"></span> Lainnya ({{ $jenisKueCounts['lainnya'] }})
+                                <span class="legend yellow"></span> Lainnya ({{ $jenisKueCounts['lainnya'] ?? 0 }})
                             </div>
                         </div>
                     </div>
@@ -290,10 +290,10 @@ new Chart(document.getElementById('donutChart'), {
     data: {
         datasets: [{
             data: [
-                {{ $jenisKueCounts['kue basah'] }},
-                {{ $jenisKueCounts['kue kering'] }},
-                {{ $jenisKueCounts['donat'] }},
-                {{ $jenisKueCounts['lainnya'] }}
+                {{ $jenisKueCounts['kue basah'] ?? 0 }},
+                {{ $jenisKueCounts['kue kering'] ?? 0 }},
+                {{ $jenisKueCounts['donat'] ?? 0 }},
+                {{ $jenisKueCounts['lainnya'] ?? 0 }}
             ],
             backgroundColor:['#ef4444','#d8b4fe','#ec4899','#eab308']
         }]

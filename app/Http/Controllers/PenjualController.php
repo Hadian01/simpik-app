@@ -167,15 +167,15 @@ class PenjualController extends Controller
         // Get all produk types from enum
         $produkTypes = DB::select("SELECT unnest(enum_range(NULL::produk_type)) AS type");
         
-        // Initialize counts for all types
+        // Initialize counts for all types (convert to lowercase for consistency)
         $jenisKueCounts = [];
         foreach ($produkTypes as $type) {
-            $jenisKueCounts[$type->type] = 0;
+            $jenisKueCounts[strtolower($type->type)] = 0;
         }
         
         // Map actual data to counts
         foreach ($jenisKueData as $item) {
-            $type = $item->produk_type;
+            $type = strtolower($item->produk_type);
             if (isset($jenisKueCounts[$type])) {
                 $jenisKueCounts[$type] = $item->count;
             }
