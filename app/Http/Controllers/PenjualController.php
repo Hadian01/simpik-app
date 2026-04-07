@@ -10,7 +10,7 @@ use App\Models\StockHarian;
 use App\Models\Penjual;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Auth;
-// use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\DB;
 
 class PenjualController extends Controller
 {
