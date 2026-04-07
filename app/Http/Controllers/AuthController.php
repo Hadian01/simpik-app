@@ -133,4 +133,112 @@ class AuthController extends Controller
 
         return redirect()->route('login')->with('success', 'Logout berhasil!');
     }
+
+    /**
+     * Show forgot password form
+     */
+    public function showForgotPassword()
+    {
+        return view('auth.forgot-password');
+    }
+
+    /**
+     * Handle forgot password request
+     */
+    public function sendResetLinkEmail(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email|exists:tbl_user_manual,email'
+        ], [
+            'email.exists' => 'Email tidak ditemukan dalam sistem'
+        ]);
+
+        // Generate reset token
+        $token = \Str::random(60);
+        
+        // Store in password_resets table
+        \DB::table('password_reset_tokens')->updateOrInsert(
+            ['email' => $request->email],
+            [
+                'token' => Hash::make($token),
+                'created_at' => now()
+            ]
+        );
+
+        // TODO: Send email with reset link when email service is ready
+        // For now, we'll display the reset link or log it
+        
+        // Generate reset URL
+        $resetUrl = route('password.reset', ['token' => $token, 'email' => $request->email]);
+        
+        // For testing: Return the link (In production with email, this would be sent via email)
+        return back()->with('status', 
+            'Link reset password telah dibuat. Untuk testing, gunakan link ini: ' . $resetUrl . 
+            ' (Dalam production, link akan dikirim via email)'
+        );
+        
+        // When email service is ready, uncomment this:
+        /*
+        Mail::to($request->email)->send(new ResetPasswordMail($resetUrl));
+        return back()->with('status', 'Link reset password telah dikirim ke email Anda');
+        */
+    }
+
+    /**
+     * Show reset password form
+     */
+    public function showResetPassword(Request $request, $token)
+    {
+        return view('auth.reset-password', [
+            'token' => $token,
+            'email' => $request->email
+        ]);
+    }
+
+    /**
+     * Handle reset password request
+     */
+    public function resetPassword(Request $request)
+    {
+        $request->validate([
+            'token' => 'required',
+            'email' => 'required|email|exists:tbl_user_manual,email',
+            'password' => 'required|min:4|confirmed'
+        ], [
+            'email.exists' => 'Email tidak ditemukan',
+            'password.min' => 'Password minimal 4 karakter',
+            'password.confirmed' => 'Konfirmasi password tidak cocok'
+        ]);
+
+        // Check if token exists and is valid
+        $reset = \DB::table('password_reset_tokens')
+            ->where('email', $request->email)
+            ->first();
+
+        if (!$reset) {
+            return back()->withErrors(['email' => 'Token reset tidak valid']);
+        }
+
+        // Check if token matches (token is hashed in database)
+        if (!Hash::check($request->token, $reset->token)) {
+            return back()->withErrors(['email' => 'Token reset tidak valid']);
+        }
+
+        // Check if token is not expired (24 hours)
+        $createdAt = \Carbon\Carbon::parse($reset->created_at);
+        if ($createdAt->addHours(24)->isPast()) {
+            return back()->withErrors(['email' => 'Token reset sudah expired. Silakan request ulang.']);
+        }
+
+        // Update user password
+        $user = UserManual::where('email', $request->email)->first();
+        $user->password = Hash::make($request->password);
+        $user->save();
+
+        // Delete used token
+        \DB::table('password_reset_tokens')->where('email', $request->email)->delete();
+
+        return redirect()->route('login')->with('success', 'Password berhasil direset! Silakan login dengan password baru.');
+    }
 }
+
