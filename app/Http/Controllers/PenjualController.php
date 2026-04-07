@@ -133,6 +133,33 @@ class PenjualController extends Controller
             ->limit(3)
             ->get();
         
+        // Data Jenis Kue (from produk types)
+        $jenisKueData = PengajuanDetail::whereHas('pengajuan', function($query) use ($penjual) {
+                $query->where('penjual_id', $penjual->penjual_id);
+            })
+            ->where('status', 'Approved')
+            ->join('tbl_produk', 'tbl_pengajuan_detail.produk_id', '=', 'tbl_produk.produk_id')
+            ->select('tbl_produk.produk_type', \DB::raw('COUNT(*) as count'))
+            ->groupBy('tbl_produk.produk_type')
+            ->get();
+        
+        // Map to jenis kue labels
+        $jenisKueCounts = [
+            'kue basah' => 0,
+            'kue kering' => 0,
+            'donat' => 0,
+            'lainnya' => 0
+        ];
+        
+        foreach ($jenisKueData as $item) {
+            $type = strtolower($item->produk_type);
+            if (isset($jenisKueCounts[$type])) {
+                $jenisKueCounts[$type] = $item->count;
+            } else {
+                $jenisKueCounts['lainnya'] += $item->count;
+            }
+        }
+        
         return view('layouts.penjual.dashboard', compact(
             'totalProduk',
             'totalTerjual', 
@@ -140,7 +167,8 @@ class PenjualController extends Controller
             'totalOmset',
             'monthlyData',
             'yearlyData',
-            'topProducts'
+            'topProducts',
+            'jenisKueCounts'
         ));
     }
     
@@ -180,16 +208,19 @@ class PenjualController extends Controller
     {
         $request->validate([
             'pengajuan_id' => 'required',
-            'produk_ids' => 'required|array'
+            'approved_data' => 'required|array',
+            'approved_data.*.detail_id' => 'required',
+            'approved_data.*.harga_jual' => 'required|numeric|min:0'
         ]);
 
-        // approve produk yg dicentang
-        PengajuanDetail::whereIn(
-            'pengajuan_detail_id',
-            $request->produk_ids
-        )->update([
-            'status' => 'Approved'
-        ]);
+        // approve produk yg dicentang dan update harga jual
+        foreach ($request->approved_data as $item) {
+            PengajuanDetail::where('pengajuan_detail_id', $item['detail_id'])
+                ->update([
+                    'status' => 'Approved',
+                    'harga_jual' => $item['harga_jual']
+                ]);
+        }
 
         // update status pengajuan utama
         $pengajuan = Pengajuan::findOrFail($request->pengajuan_id);
@@ -220,7 +251,7 @@ class PenjualController extends Controller
         }
 
         return response()->json([
-            'message' => 'Produk berhasil di-approve'
+            'message' => "Berhasil menyetujui {$approved} produk"
         ]);
     }
     public function reject(Request $request)
@@ -464,10 +495,14 @@ class PenjualController extends Controller
 
         // Handle file upload for banner
         if ($request->hasFile('banner')) {
-            $banner = $request->file('banner');
-            $filename = 'banner_' . $penjual->penjual_id . '_' . time() . '.' . $banner->getClientOriginalExtension();
-            $banner->storeAs('public/banners', $filename);
-            $penjual->banner = $filename;
+            // Delete old banner if exists
+            if ($penjual->banner && $penjual->banner !== 'default-banner.jpg') {
+                \Storage::disk('public')->delete('banners/' . $penjual->banner);
+            }
+            
+            // Store new banner
+            $path = $request->file('banner')->store('banners', 'public');
+            $penjual->banner = basename($path);
         }
 
         // Update data toko

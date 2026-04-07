@@ -93,6 +93,12 @@
             <div class="card h-100">
                 <div class="card-body p-4">
                     <h6 class="mb-4">Jenis Kue</h6>
+                    
+                    @php
+                        $totalJenisKue = array_sum($jenisKueCounts);
+                    @endphp
+                    
+                    @if($totalJenisKue > 0)
                     <div class="row align-items-center">
                         <div class="col-7 text-center">
                             <canvas id="donutChart" width="250" height="250"></canvas>
@@ -100,19 +106,26 @@
                         <div class="col-5 small">
                             <p class="fw-semibold">Keterangan :</p>
                             <div class="d-flex align-items-center mb-2">
-                                <span class="legend red"></span> Kue Basah
+                                <span class="legend red"></span> Kue Basah ({{ $jenisKueCounts['kue basah'] }})
                             </div>
                             <div class="d-flex align-items-center mb-2">
-                                <span class="legend purple"></span> Kue Kering
+                                <span class="legend purple"></span> Kue Kering ({{ $jenisKueCounts['kue kering'] }})
                             </div>
                             <div class="d-flex align-items-center mb-2">
-                                <span class="legend pink"></span> Donat
+                                <span class="legend pink"></span> Donat ({{ $jenisKueCounts['donat'] }})
                             </div>
                             <div class="d-flex align-items-center">
-                                <span class="legend yellow"></span> Lainnya
+                                <span class="legend yellow"></span> Lainnya ({{ $jenisKueCounts['lainnya'] }})
                             </div>
                         </div>
                     </div>
+                    @else
+                    <div class="text-center py-5">
+                        <i class="bi bi-pie-chart" style="font-size: 48px; color: #d1d5db;"></i>
+                        <p class="text-muted mt-3 mb-0">Belum ada data produk</p>
+                        <small class="text-muted">Data akan muncul setelah ada produk yang di-approve</small>
+                    </div>
+                    @endif
                 </div>
             </div>
         </div>
@@ -271,11 +284,17 @@ new Chart(document.getElementById('barChartYearly'), {
     }
 });
 
+@if($totalJenisKue > 0)
 new Chart(document.getElementById('donutChart'), {
     type: 'doughnut',
     data: {
         datasets: [{
-            data:[35,25,15,25],
+            data: [
+                {{ $jenisKueCounts['kue basah'] }},
+                {{ $jenisKueCounts['kue kering'] }},
+                {{ $jenisKueCounts['donat'] }},
+                {{ $jenisKueCounts['lainnya'] }}
+            ],
             backgroundColor:['#ef4444','#d8b4fe','#ec4899','#eab308']
         }]
     },
@@ -284,6 +303,7 @@ new Chart(document.getElementById('donutChart'), {
         cutout:'65%'
     }
 });
+@endif
 </script>
 @endpush
 

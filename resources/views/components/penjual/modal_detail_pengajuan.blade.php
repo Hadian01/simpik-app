@@ -49,7 +49,7 @@
                 <table class="table table-sm">
                     <thead style="background:#F3F4F6;">
                         <tr>
-                            <th width="40"></th>
+                            <th width="60" class="text-center">Pilih</th>
                             <th>Produk</th>
                             <th>Harga Modal</th>
                             <th>Harga Jual</th>

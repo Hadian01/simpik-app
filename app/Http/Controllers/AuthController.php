@@ -6,6 +6,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
+use Carbon\Carbon;
 use App\Models\UserManual;
 use App\Models\Penitip;
 use App\Models\Penjual;
@@ -168,10 +171,10 @@ class AuthController extends Controller
         }
 
         // Generate reset token
-        $token = \Str::random(60);
+        $token = Str::random(60);
         
         // Store in password_resets table
-        \DB::table('password_reset_tokens')->updateOrInsert(
+        DB::table('password_reset_tokens')->updateOrInsert(
             ['email' => $request->email],
             [
                 'token' => Hash::make($token),
@@ -223,7 +226,7 @@ class AuthController extends Controller
         ]);
 
         // Check if token exists and is valid
-        $reset = \DB::table('password_reset_tokens')
+        $reset = DB::table('password_reset_tokens')
             ->where('email', $request->email)
             ->first();
 
@@ -237,7 +240,7 @@ class AuthController extends Controller
         }
 
         // Check if token is not expired (24 hours)
-        $createdAt = \Carbon\Carbon::parse($reset->created_at);
+        $createdAt = Carbon::parse($reset->created_at);
         if ($createdAt->addHours(24)->isPast()) {
             return back()->withErrors(['email' => 'Token reset sudah expired. Silakan request ulang.']);
         }
@@ -248,7 +251,7 @@ class AuthController extends Controller
         $user->save();
 
         // Delete used token
-        \DB::table('password_reset_tokens')->where('email', $request->email)->delete();
+        DB::table('password_reset_tokens')->where('email', $request->email)->delete();
 
         return redirect()->route('login')->with('success', 'Password berhasil direset! Silakan login dengan password baru.');
     }
