@@ -11,9 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('tbl_stock_harian', function (Blueprint $table) {
-            $table->integer('stock')->nullable()->change();
-        });
+        DB::statement('ALTER TABLE tbl_stock_harian ALTER COLUMN stock TYPE integer USING stock::integer');
+        DB::statement('ALTER TABLE tbl_stock_harian ALTER COLUMN stock DROP NOT NULL');
     }
 
     /**
@@ -21,8 +20,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('tbl_stock_harian', function (Blueprint $table) {
-            $table->integer('stock')->nullable(false)->change();
-        });
+        DB::statement('ALTER TABLE tbl_stock_harian ALTER COLUMN stock SET NOT NULL');
     }
 };
