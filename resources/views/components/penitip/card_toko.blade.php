@@ -29,8 +29,14 @@
         {{-- ================= GAMBAR ================= --}}
         <div style="width:100%; height:180px; background:#f0f0f0;
                     display:flex; align-items:center; justify-content:center;
-                    border-bottom:1px solid #ddd;">
-            <strong style="color:#999;">Gambar</strong>
+                    border-bottom:1px solid #ddd; overflow:hidden;">
+            @if($gambar)
+                <img src="{{ asset('storage/banners/' . $gambar) }}" 
+                     alt="{{ $nama }}" 
+                     style="width:100%; height:100%; object-fit:cover;">
+            @else
+                <strong style="color:#999;">Gambar</strong>
+            @endif
         </div>
 
         {{-- ================= INFO ================= --}}

@@ -88,13 +88,15 @@ class PenjualController extends Controller
         }
         
         // Data Penitip - Monthly (untuk bar chart) - Jumlah Produk Terjual
-        $monthlyQuery = StockHarian::select('created_by', 
-                \DB::raw('SUM(CAST(stock AS INTEGER) - COALESCE(CAST(sisa_stock AS INTEGER), 0)) as total_terjual'))
-            ->where('penjual_id', $penjual->penjual_id)
-            ->whereNotNull('sisa_stock')
-            ->whereMonth('date', $bulan)
-            ->whereYear('date', $tahun)
-            ->groupBy('created_by')
+        $monthlyQuery = StockHarian::join('tbl_produk', 'tbl_stock_harian.produk_id', '=', 'tbl_produk.produk_id')
+            ->join('tbl_penitip', 'tbl_produk.penitip_id', '=', 'tbl_penitip.penitip_id')
+            ->select('tbl_penitip.name as penitip_name', 
+                \DB::raw('SUM(CAST(tbl_stock_harian.stock AS INTEGER) - COALESCE(CAST(tbl_stock_harian.sisa_stock AS INTEGER), 0)) as total_terjual'))
+            ->where('tbl_stock_harian.penjual_id', $penjual->penjual_id)
+            ->whereNotNull('tbl_stock_harian.sisa_stock')
+            ->whereMonth('tbl_stock_harian.date', $bulan)
+            ->whereYear('tbl_stock_harian.date', $tahun)
+            ->groupBy('tbl_penitip.name')
             ->orderBy('total_terjual', 'desc')
             ->limit(6);
         
@@ -138,30 +140,44 @@ class PenjualController extends Controller
             ->limit(3)
             ->get();
         
-        // Data Jenis Kue (from produk types)
-        $jenisKueData = PengajuanDetail::whereHas('pengajuan', function($query) use ($penjual) {
+        // Data Jenis Kue (from produk types) - filtered by date
+        $jenisKueQuery = PengajuanDetail::whereHas('pengajuan', function($query) use ($penjual) {
                 $query->where('penjual_id', $penjual->penjual_id);
             })
             ->where('status', 'Approved')
             ->join('tbl_produk', 'tbl_pengajuan_detail.produk_id', '=', 'tbl_produk.produk_id')
-            ->select('tbl_produk.produk_type', \DB::raw('COUNT(*) as count'))
+            ->join('tbl_stock_harian', function($join) {
+                $join->on('tbl_stock_harian.produk_id', '=', 'tbl_produk.produk_id')
+                     ->whereNotNull('tbl_stock_harian.sisa_stock');
+            });
+        
+        // Apply date filters to jenis kue
+        if ($request->filled('bulan')) {
+            $jenisKueQuery->whereMonth('tbl_stock_harian.date', $bulan);
+        }
+        
+        if ($request->filled('tahun')) {
+            $jenisKueQuery->whereYear('tbl_stock_harian.date', $tahun);
+        }
+        
+        $jenisKueData = $jenisKueQuery->select('tbl_produk.produk_type', \DB::raw('COUNT(DISTINCT tbl_produk.produk_id) as count'))
             ->groupBy('tbl_produk.produk_type')
             ->get();
         
-        // Map to jenis kue labels
-        $jenisKueCounts = [
-            'kue basah' => 0,
-            'kue kering' => 0,
-            'donat' => 0,
-            'lainnya' => 0
-        ];
+        // Get all produk types from enum
+        $produkTypes = DB::select("SELECT unnest(enum_range(NULL::produk_type)) AS type");
         
+        // Initialize counts for all types
+        $jenisKueCounts = [];
+        foreach ($produkTypes as $type) {
+            $jenisKueCounts[$type->type] = 0;
+        }
+        
+        // Map actual data to counts
         foreach ($jenisKueData as $item) {
-            $type = strtolower($item->produk_type);
+            $type = $item->produk_type;
             if (isset($jenisKueCounts[$type])) {
                 $jenisKueCounts[$type] = $item->count;
-            } else {
-                $jenisKueCounts['lainnya'] += $item->count;
             }
         }
         

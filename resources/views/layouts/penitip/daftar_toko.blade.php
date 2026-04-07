@@ -19,7 +19,7 @@
                     \Carbon\Carbon::parse($item->jam_buka)->format('H:i')
                     .' - '.
                     \Carbon\Carbon::parse($item->jam_tutup)->format('H:i'),
-                'gambar' => null,
+                'gambar' => $item->banner,
                 'status' => $item->status_pengajuan
             ])
         @empty
@@ -46,7 +46,7 @@
                     \Carbon\Carbon::parse($item->jam_buka)->format('H:i')
                     .' - '.
                     \Carbon\Carbon::parse($item->jam_tutup)->format('H:i'),
-                'gambar' => null,
+                'gambar' => $item->banner,
                 'status' => $item->status_pengajuan
             ])
         @empty

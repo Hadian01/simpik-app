@@ -7,8 +7,8 @@
     if ($user) {
         if ($role === 'penjual') {
             $penjual = $user->penjual;
-            // Pakai nama_toko, kalau kosong atau "-" pakai email
-            $profileName = $penjual->nama_toko ?? $user->email;
+            // Pakai nama_pemilik, kalau kosong atau "-" pakai email
+            $profileName = $penjual->nama_pemilik ?? $user->email;
             if ($profileName === '-' || empty($profileName)) {
                 $profileName = $user->email;
             }

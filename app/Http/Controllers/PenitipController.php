@@ -614,6 +614,7 @@ class PenitipController extends Controller
             // jumlah stok
             'stock_qty'  => $request->jumlah,
             'stock'      => $request->jumlah,
+            // validasi_stock NULL - akan diisi penjual saat validasi
 
             // harga dari tabel produk
             'harga_modal' => $produk->harga_modal,

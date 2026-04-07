@@ -143,7 +143,7 @@
                             {{-- ICON + NAMA --}}
                             <div class="text-center margin-avatar">
                                 <i class="bi bi-person-circle fs-1 text-secondary"></i>
-                                <small class="text-muted d-block mt-1">{{ $product->created_by ?? 'N/A' }}</small>
+                                <small class="text-muted d-block mt-1">{{ $product->produk->penitip->name ?? 'N/A' }}</small>
                             </div>
 
                             {{-- DETAIL --}}
@@ -234,7 +234,7 @@
 
 <script>
 // Data dari Controller
-const monthlyLabels = {!! json_encode($monthlyData->pluck('created_by')) !!};
+const monthlyLabels = {!! json_encode($monthlyData->pluck('penitip_name')) !!};
 const monthlyValues = {!! json_encode($monthlyData->pluck('total_terjual')) !!};
 
 const yearlyLabels = {!! json_encode($yearlyData->pluck('month')) !!};
