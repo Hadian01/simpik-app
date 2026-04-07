@@ -124,17 +124,17 @@ $(document).ready(function () {
                                 .toLocaleString('id-ID');
 
                         const disabled =
-                            response.status !== 'Pending'
+                            response.status && response.status.toLowerCase() !== 'pending'
                                 ? 'disabled'
                                 : '';
 
                         const readonly =
-                            response.status !== 'Pending'
+                            response.status && response.status.toLowerCase() !== 'pending'
                                 ? 'readonly'
                                 : '';
 
                         // Checkbox hanya tampil jika Pending
-                        const checkboxHTML = response.status === 'Pending'
+                        const checkboxHTML = response.status && response.status.toLowerCase() === 'pending'
                             ? `<input type="checkbox" class="produk-check" value="${item.pengajuan_detail_id}" style="cursor:pointer; width:18px; height:18px;">`
                             : '';
 

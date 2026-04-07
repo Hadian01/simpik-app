@@ -269,7 +269,7 @@ class PenjualController extends Controller
         ]);
 
         $pengajuan->status = 'Rejected';
-        $pengajuan->reject_reason = $request->reason;
+        $pengajuan->alasan = $request->reason;
         $pengajuan->save();
 
         // 🔔 Notification: Pengajuan rejected untuk penitip
@@ -282,7 +282,7 @@ class PenjualController extends Controller
                 'data' => [
                     'pengajuan_id' => $pengajuan->pengajuan_id,
                     'penjual_id' => $pengajuan->penjual_id,
-                    'reject_reason' => $request->reason
+                    'alasan' => $request->reason
                 ]
             ]);
         }

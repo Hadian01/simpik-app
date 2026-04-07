@@ -85,7 +85,7 @@ class PenitipController extends Controller
 
                 // inject attribute tambahan
                 $toko->status_pengajuan = $latest->status;
-                $toko->reject_reason = $latest->reject_reason;
+                $toko->reject_reason = $latest->alasan;
                 $toko->pengajuan_history = $items;
 
                 $toko_saya->push($toko);
@@ -144,7 +144,7 @@ class PenitipController extends Controller
         ========================= */
         $latest_pengajuan = $pengajuan_history->first();
         $status_pengajuan = strtolower($latest_pengajuan->status ?? 'not_joined');
-        $reject_reason    = $latest_pengajuan->reject_reason ?? null;
+        $reject_reason    = $latest_pengajuan->alasan ?? null;
 
         return view(
             'layouts.penitip.detail_toko',
@@ -176,7 +176,7 @@ class PenitipController extends Controller
                 'penitip_id' => $penitip->penitip_id,
                 'penjual_id' => $request->penjual_id,
                 'alasan' => $request->alasan,
-                'status' => 'pending',
+                'status' => 'Pending',
                 'created_by' => $penitip->penitip_id,
                 'created_at' => now()
             ], 'pengajuan_id');

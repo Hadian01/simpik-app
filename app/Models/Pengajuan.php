@@ -13,6 +13,7 @@ class Pengajuan extends Model
         'penitip_id',
         'penjual_id',
         'status',
+        'alasan',
         'created_by',
         'update_by'
     ];

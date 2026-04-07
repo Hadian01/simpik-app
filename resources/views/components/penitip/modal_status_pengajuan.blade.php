@@ -93,12 +93,8 @@ $status = $status_pengajuan;
 
 <strong>Catatan Admin:</strong><br>
 
-{{ $latest_pengajuan && $latest_pengajuan->reject_reason
-? $latest_pengajuan->reject_reason
-: 'Pengajuan ditolak oleh admin.' }}
-
-</div>
-
+            {{ $latest_pengajuan && $latest_pengajuan->alasan
+                ? $latest_pengajuan->alasan
 @endif
 
 {{-- ================= ACTION ================= --}}
