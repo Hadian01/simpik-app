@@ -10,6 +10,7 @@ use App\Models\Pengajuan;
 use App\Models\Penitip;
 use App\Models\Notification;
 use Illuminate\View\View;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -85,7 +86,7 @@ class PenitipController extends Controller
 
                 // inject attribute tambahan
                 $toko->status_pengajuan = $latest->status;
-                $toko->reject_reason = $latest->alasan;
+                $toko->alasan = $latest->alasan;
                 $toko->pengajuan_history = $items;
 
                 $toko_saya->push($toko);
@@ -106,12 +107,26 @@ class PenitipController extends Controller
         );
     }
 
-    public function detail_toko(string $penjual_id): View
+    public function detail_toko(string $penjual_id): View|RedirectResponse
     {
         $penitip = $this->getAuthPenitip();
         $penitip_id = $penitip->penitip_id;
 
         $toko = Penjual::findOrFail($penjual_id);
+
+        /* =========================
+        CEK STATUS PENGAJUAN
+        ========================= */
+        $latest_pengajuan = DB::table('tbl_pengajuan')
+            ->where('penitip_id', $penitip_id)
+            ->where('penjual_id', $penjual_id)
+            ->orderByDesc('created_at')
+            ->first();
+
+        // Redirect ke toko_saya jika sudah approved
+        if ($latest_pengajuan && strtolower($latest_pengajuan->status) === 'approved') {
+            return redirect()->route('penitip.toko_saya', ['id' => $penjual_id]);
+        }
 
         /* =========================
         PRODUK TOKO APPROVED
@@ -142,9 +157,7 @@ class PenitipController extends Controller
         /* =========================
         STATUS TERAKHIR
         ========================= */
-        $latest_pengajuan = $pengajuan_history->first();
         $status_pengajuan = strtolower($latest_pengajuan->status ?? 'not_joined');
-        $reject_reason    = $latest_pengajuan->alasan ?? null;
 
         return view(
             'layouts.penitip.detail_toko',
@@ -153,9 +166,8 @@ class PenitipController extends Controller
                 'produk',
                 'produk_penitip',
                 'status_pengajuan',
-                'reject_reason',
                 'pengajuan_history',
-                'latest_pengajuan' // ✅ INI YANG KURANG
+                'latest_pengajuan'
             )
         );
     }

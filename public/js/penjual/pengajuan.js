@@ -256,6 +256,16 @@ $(document).ready(function () {
 
                 success: function (res) {
 
+                    if (res.success === false) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Gagal!',
+                            text: res.message,
+                            confirmButtonColor: '#9B8CFF'
+                        });
+                        return;
+                    }
+
                     Swal.fire({
                         icon: 'success',
                         title: 'Berhasil!',
@@ -269,11 +279,19 @@ $(document).ready(function () {
                 },
 
                 error: function (xhr) {
-                    console.log(xhr.responseText);
+                    console.error('Approve error:', xhr);
+                    let errorMessage = 'Gagal approve pengajuan';
+                    
+                    if (xhr.responseJSON?.message) {
+                        errorMessage = xhr.responseJSON.message;
+                    } else if (xhr.responseJSON?.errors) {
+                        errorMessage = Object.values(xhr.responseJSON.errors).flat().join('\\n');
+                    }
+
                     Swal.fire({
                         icon: 'error',
                         title: 'Gagal!',
-                        text: xhr.responseJSON?.message || 'Gagal approve pengajuan',
+                        text: errorMessage,
                         confirmButtonColor: '#9B8CFF'
                     });
                 }
@@ -340,6 +358,16 @@ $(document).ready(function () {
                 },
 
                 success: function (res) {
+
+                    if (res.success === false) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Gagal!',
+                            text: res.message,
+                            confirmButtonColor: '#9B8CFF'
+                        });
+                        return;
+                    }
 
                     Swal.fire({
                         icon: 'success',

@@ -206,90 +206,130 @@ class PenjualController extends Controller
     }
     public function approve(Request $request)
     {
-        $request->validate([
-            'pengajuan_id' => 'required',
-            'approved_data' => 'required|array',
-            'approved_data.*.detail_id' => 'required',
-            'approved_data.*.harga_jual' => 'required|numeric|min:0'
-        ]);
-
-        // approve produk yg dicentang dan update harga jual
-        foreach ($request->approved_data as $item) {
-            PengajuanDetail::where('pengajuan_detail_id', $item['detail_id'])
-                ->update([
-                    'status' => 'Approved',
-                    'harga_jual' => $item['harga_jual']
-                ]);
-        }
-
-        // update status pengajuan utama
-        $pengajuan = Pengajuan::findOrFail($request->pengajuan_id);
-
-        $total = $pengajuan->detail()->count();
-        $approved = $pengajuan->detail()
-            ->where('status', 'Approved')
-            ->count();
-
-        if ($approved > 0) {
-            $pengajuan->status = 'Approved';
-            $pengajuan->save();
-        }
-
-        // 🔔 Notification: Pengajuan approved untuk penitip
-        if ($pengajuan->penitip && $pengajuan->penitip->user_id) {
-            Notification::create([
-                'user_id' => $pengajuan->penitip->user_id,
-                'type' => 'pengajuan_approved',
-                'title' => 'Pengajuan Disetujui',
-                'message' => '✅ Pengajuan Anda ke ' . ($pengajuan->penjual->nama_toko ?? 'Toko') . ' telah disetujui!',
-                'data' => [
-                    'pengajuan_id' => $pengajuan->pengajuan_id,
-                    'penjual_id' => $pengajuan->penjual_id,
-                    'approved_count' => $approved
-                ]
+        try {
+            $request->validate([
+                'pengajuan_id' => 'required',
+                'approved_data' => 'required|array',
+                'approved_data.*.detail_id' => 'required',
+                'approved_data.*.harga_jual' => 'required|numeric|min:0'
             ]);
-        }
 
-        return response()->json([
-            'message' => "Berhasil menyetujui {$approved} produk"
-        ]);
+            // approve produk yg dicentang dan update harga jual
+            foreach ($request->approved_data as $item) {
+                PengajuanDetail::where('pengajuan_detail_id', $item['detail_id'])
+                    ->update([
+                        'status' => 'Approved',
+                        'harga_jual' => $item['harga_jual']
+                    ]);
+            }
+
+            // update status pengajuan utama
+            $pengajuan = Pengajuan::findOrFail($request->pengajuan_id);
+
+            $total = $pengajuan->detail()->count();
+            $approved = $pengajuan->detail()
+                ->where('status', 'Approved')
+                ->count();
+
+            if ($approved > 0) {
+                $pengajuan->status = 'Approved';
+                $pengajuan->save();
+            }
+
+            // 🔔 Notification: Pengajuan approved untuk penitip
+            try {
+                if ($pengajuan->penitip && $pengajuan->penitip->user_id) {
+                    Notification::create([
+                        'user_id' => $pengajuan->penitip->user_id,
+                        'type' => 'pengajuan_approved',
+                        'title' => 'Pengajuan Disetujui',
+                        'message' => '✅ Pengajuan Anda ke ' . ($pengajuan->penjual->nama_toko ?? 'Toko') . ' telah disetujui!',
+                        'data' => [
+                            'pengajuan_id' => $pengajuan->pengajuan_id,
+                            'penjual_id' => $pengajuan->penjual_id,
+                            'approved_count' => $approved
+                        ]
+                    ]);
+                }
+            } catch (\Exception $e) {
+                \Log::error('Failed to create notification: ' . $e->getMessage());
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => "Berhasil menyetujui {$approved} produk"
+            ]);
+            
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Data tidak valid',
+                'errors' => $e->errors()
+            ], 422);
+        } catch (\Exception $e) {
+            \Log::error('Approve error: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan: ' . $e->getMessage()
+            ], 500);
+        }
     }
     public function reject(Request $request)
     {
-        $request->validate([
-            'pengajuan_id' => 'required',
-            'reason' => 'required|string'
-        ]);
-
-        $pengajuan = Pengajuan::findOrFail($request->pengajuan_id);
-
-        // reject semua detail
-        $pengajuan->detail()->update([
-            'status' => 'Rejected'
-        ]);
-
-        $pengajuan->status = 'Rejected';
-        $pengajuan->alasan = $request->reason;
-        $pengajuan->save();
-
-        // 🔔 Notification: Pengajuan rejected untuk penitip
-        if ($pengajuan->penitip && $pengajuan->penitip->user_id) {
-            Notification::create([
-                'user_id' => $pengajuan->penitip->user_id,
-                'type' => 'pengajuan_rejected',
-                'title' => 'Pengajuan Ditolak',
-                'message' => '❌ Pengajuan Anda ke ' . ($pengajuan->penjual->nama_toko ?? 'Toko') . ' ditolak',
-                'data' => [
-                    'pengajuan_id' => $pengajuan->pengajuan_id,
-                    'penjual_id' => $pengajuan->penjual_id,
-                    'alasan' => $request->reason
-                ]
+        try {
+            $request->validate([
+                'pengajuan_id' => 'required',
+                'reason' => 'required|string'
             ]);
-        }
 
-        return response()->json([
-            'message' => 'Pengajuan berhasil ditolak'
-        ]);
+            $pengajuan = Pengajuan::findOrFail($request->pengajuan_id);
+
+            // reject semua detail
+            $pengajuan->detail()->update([
+                'status' => 'Rejected'
+            ]);
+
+            $pengajuan->status = 'Rejected';
+            $pengajuan->alasan = $request->reason;
+            $pengajuan->save();
+
+            // 🔔 Notification: Pengajuan rejected untuk penitip
+            try {
+                if ($pengajuan->penitip && $pengajuan->penitip->user_id) {
+                    Notification::create([
+                        'user_id' => $pengajuan->penitip->user_id,
+                        'type' => 'pengajuan_rejected',
+                        'title' => 'Pengajuan Ditolak',
+                        'message' => '❌ Pengajuan Anda ke ' . ($pengajuan->penjual->nama_toko ?? 'Toko') . ' ditolak',
+                        'data' => [
+                            'pengajuan_id' => $pengajuan->pengajuan_id,
+                            'penjual_id' => $pengajuan->penjual_id,
+                            'alasan' => $request->reason
+                        ]
+                    ]);
+                }
+            } catch (\Exception $e) {
+                \Log::error('Failed to create notification: ' . $e->getMessage());
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Pengajuan berhasil ditolak'
+            ]);
+            
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Data tidak valid',
+                'errors' => $e->errors()
+            ], 422);
+        } catch (\Exception $e) {
+            \Log::error('Reject error: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan: ' . $e->getMessage()
+            ], 500);
+        }
     }
       public function show_penitip_approved(): View
     {

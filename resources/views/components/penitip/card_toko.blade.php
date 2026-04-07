@@ -55,16 +55,16 @@
                 $route = route('penitip.detail_toko', ['penjual_id' => $id]);
                 $text = 'Kunjungi Toko';
 
-                if($status === 'approved'){
+                if($status_clean === 'approved'){
                     $route = route('penitip.toko_saya', ['id' => $id]);
                     $text = 'Open';
                 }
 
-                if($status === 'pending'){
+                if($status_clean === 'pending'){
                     $text = 'Lihat Status';
                 }
 
-                if($status === 'rejected'){
+                if($status_clean === 'rejected'){
                     $text = 'Ajukan Ulang';
                 }
             @endphp
