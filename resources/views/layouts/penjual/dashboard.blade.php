@@ -105,18 +105,17 @@
                         </div>
                         <div class="col-5 small">
                             <p class="fw-semibold">Keterangan :</p>
-                            <div class="d-flex align-items-center mb-2">
-                                <span class="legend red"></span> Kue Basah ({{ $jenisKueCounts['kue basah'] ?? 0 }})
-                            </div>
-                            <div class="d-flex align-items-center mb-2">
-                                <span class="legend purple"></span> Kue Kering ({{ $jenisKueCounts['kue kering'] ?? 0 }})
-                            </div>
-                            <div class="d-flex align-items-center mb-2">
-                                <span class="legend pink"></span> Donat ({{ $jenisKueCounts['donat'] ?? 0 }})
-                            </div>
-                            <div class="d-flex align-items-center">
-                                <span class="legend yellow"></span> Lainnya ({{ $jenisKueCounts['lainnya'] ?? 0 }})
-                            </div>
+                            @php
+                                $colors = ['#ef4444', '#d8b4fe', '#ec4899', '#eab308', '#3b82f6', '#10b981'];
+                                $colorIndex = 0;
+                            @endphp
+                            @foreach($jenisKueCounts as $jenis => $count)
+                                <div class="d-flex align-items-center mb-2">
+                                    <span class="legend" style="background: {{ $colors[$colorIndex % count($colors)] }}; width:14px; height:14px; border-radius:3px; margin-right:8px;"></span>
+                                    {{ ucwords($jenis) }} ({{ $count }})
+                                </div>
+                                @php $colorIndex++; @endphp
+                            @endforeach
                         </div>
                     </div>
                     @else
@@ -289,13 +288,8 @@ new Chart(document.getElementById('donutChart'), {
     type: 'doughnut',
     data: {
         datasets: [{
-            data: [
-                {{ $jenisKueCounts['kue basah'] ?? 0 }},
-                {{ $jenisKueCounts['kue kering'] ?? 0 }},
-                {{ $jenisKueCounts['donat'] ?? 0 }},
-                {{ $jenisKueCounts['lainnya'] ?? 0 }}
-            ],
-            backgroundColor:['#ef4444','#d8b4fe','#ec4899','#eab308']
+            data: {!! json_encode(array_values($jenisKueCounts)) !!},
+            backgroundColor: ['#ef4444', '#d8b4fe', '#ec4899', '#eab308', '#3b82f6', '#10b981']
         }]
     },
     options:{
