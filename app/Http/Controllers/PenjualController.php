@@ -172,7 +172,7 @@ class PenjualController extends Controller
             'pengajuan_id' => $pengajuan->pengajuan_id,
             'status' => $pengajuan->status,
             'penitip' => $pengajuan->penitip,
-            'email' => $pengajuan->penitip->user?->email ?? '-',
+            'email' => $pengajuan->penitip?->user?->email ?? '-',
             'detail' => $pengajuan->detail
         ]);
     }

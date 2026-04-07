@@ -36,7 +36,7 @@
                                     {{ \Carbon\Carbon::parse($item->created_at)->format('d-m-Y') }}
                                 </td>
 
-                                <td>{{ $item->penitip->name }}</td>
+                                <td>{{ $item->penitip->name ?? '-' }}</td>
 
                                 <td>{{ $item->detail_count }}</td>
 
