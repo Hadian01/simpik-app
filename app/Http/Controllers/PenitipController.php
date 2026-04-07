@@ -280,9 +280,9 @@ class PenitipController extends Controller
             ->where('sh.penjual_id', $id)
             ->whereRaw("DATE_TRUNC('month', sh.date) = DATE_TRUNC('month', CURRENT_DATE)")
             ->selectRaw('
-                COALESCE(SUM(sh.stock::int),0) as total_dititip,
-                COALESCE(SUM(sh.stock::int - COALESCE(sh.sisa_stock::int, 0)),0) as total_terjual,
-                COALESCE(SUM((sh.stock::int - COALESCE(sh.sisa_stock::int, 0)) * (sh.harga_jual::int - sh.harga_modal::int)),0) as total_pendapatan
+                COALESCE(SUM(sh.stock_qty::int),0) as total_dititip,
+                COALESCE(SUM(COALESCE(sh.stock::int, 0) - COALESCE(sh.sisa_stock::int, 0)),0) as total_terjual,
+                COALESCE(SUM((COALESCE(sh.stock::int, 0) - COALESCE(sh.sisa_stock::int, 0)) * (sh.harga_jual::int - sh.harga_modal::int)),0) as total_pendapatan
             ')
             ->first();
 
@@ -339,11 +339,11 @@ class PenitipController extends Controller
                 sh.created_at,
                 p.produk_name,
                 pj.nama_toko,
-                sh.stock::int as stock,
+                sh.stock_qty::int as stock,
                 sh.harga_jual::int as harga_jual,
                 sh.harga_modal::int as cogs,
-                (sh.stock::int - COALESCE(sh.sisa_stock::int, 0)) as stock_terjual,
-                ((sh.stock::int - COALESCE(sh.sisa_stock::int, 0)) * (sh.harga_jual::int - sh.harga_modal::int)) as pendapatan
+                (COALESCE(sh.stock::int, 0) - COALESCE(sh.sisa_stock::int, 0)) as stock_terjual,
+                ((COALESCE(sh.stock::int, 0) - COALESCE(sh.sisa_stock::int, 0)) * (sh.harga_jual::int - sh.harga_modal::int)) as pendapatan
             ')
             ->orderBy('sh.created_at', 'desc')
             ->get();
@@ -383,8 +383,8 @@ class PenitipController extends Controller
                 p.produk_name,
                 sh.harga_jual::int as harga_jual,
                 sh.harga_modal::int as cogs,
-                sh.stock::int as sistem,
-                sh.validasi_stock::int as validasi_stock,
+                sh.stock_qty::int as sistem,
+                sh.stock::int as validasi_stock,
                 sh.sisa_stock::int as sisa_stock,
                 ((COALESCE(sh.stock::int, 0) - COALESCE(sh.sisa_stock::int, 0)) * (sh.harga_jual::int - sh.harga_modal::int)) as pendapatan,
                 sh.validasi_foto,
