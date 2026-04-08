@@ -167,12 +167,6 @@ class AuthController extends Controller
             return back()->withErrors(['email' => 'Email tidak ditemukan dalam sistem'])->withInput();
         }
 
-        // Check if mail is configured
-        if (empty(config('mail.mailers.smtp.username')) || empty(config('mail.mailers.smtp.password'))) {
-            \Log::error('Mail not configured - MAIL_USERNAME or MAIL_PASSWORD missing');
-            return back()->withErrors(['email' => 'Layanan email belum dikonfigurasi. Silakan hubungi administrator.'])->withInput();
-        }
-
         // Get user for name (case insensitive)
         $user = UserManual::whereRaw('LOWER(email) = ?', [$email])->first();
         $userName = null;
