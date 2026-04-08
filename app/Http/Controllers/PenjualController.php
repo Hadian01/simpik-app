@@ -364,6 +364,7 @@ class PenjualController extends Controller
 
         return view('layouts.penjual.list_penitip_approved', compact('penitip_approved', 'penjual'));
     }
+    
     public function show_detail_penitip_approved($penjual_id): View
     {
         $penjual = $this->getAuthPenjual();
@@ -379,6 +380,27 @@ class PenjualController extends Controller
 
         // ambil nama dari created_by
         $penitipName = $detail_penitip_approved->first()?->created_by;
+
+        return view(
+            'layouts.penjual.detail_penitip_approved',
+            compact('detail_penitip_approved', 'penitipName', 'penjual')
+        );
+    }
+    
+    public function show_detail_penitip_pengajuan($penitip_id): View
+    {
+        $penjual = $this->getAuthPenjual();
+        
+        // Filter: penjual yang login DAN penitip tertentu
+        $detail_penitip_approved = StockHarian::where('penjual_id', $penjual->penjual_id)
+            ->whereHas('produk', function($query) use ($penitip_id) {
+                $query->where('penitip_id', $penitip_id);
+            })
+            ->with('produk.penitip')
+            ->get();
+
+        // ambil nama penitip dari relasi
+        $penitipName = $detail_penitip_approved->first()?->produk?->penitip?->name ?? 'N/A';
 
         return view(
             'layouts.penjual.detail_penitip_approved',

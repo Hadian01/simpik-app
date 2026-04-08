@@ -258,7 +258,11 @@
                                             </td>
 
                                             <td class="text-right">
-                                                Rp {{ number_format($item['pendapatan'], 0, ',', '.') }}
+                                                @if(isset($item['sisa_stock']) && $item['sisa_stock'] !== null)
+                                                    Rp {{ number_format($item['pendapatan'], 0, ',', '.') }}
+                                                @else
+                                                    <span class="text-muted">-</span>
+                                                @endif
                                             </td>
 
                                         </tr>
