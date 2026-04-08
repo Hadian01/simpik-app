@@ -32,7 +32,7 @@
 
                         <td class="text-center">
                             <a href="{{ route('penjual.detail_pengajuan_penitip',
-                                ['penjual_id' => $penitip->penjual_id]) }}"
+                                ['penitip_id' => $penitip->penitip->penitip_id]) }}"
                                class="btn btn-sm btn-link p-0">
 
                                 <i class="bi bi-eye"
