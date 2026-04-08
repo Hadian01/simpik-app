@@ -8,7 +8,7 @@
     <div class="row min-vh-100">
 
         <div class="col-md-6 d-flex align-items-center justify-content-center bg-white">
-            LOGO
+            <img src="{{ asset('images/logo.jpg') }}" alt="SIMPIK Logo" style="width: 250px; height: 250px; object-fit: cover; border-radius: 50%;">
         </div>
 
         {{-- KANAN : FORM RESET PASSWORD --}}

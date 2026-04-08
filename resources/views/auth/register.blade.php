@@ -8,10 +8,7 @@
 
         {{-- KIRI : LOGO --}}
         <div class="col-md-6 d-flex align-items-center justify-content-center bg-white">
-            <div class="rounded-circle border d-flex align-items-center justify-content-center"
-                 style="width:220px;height:220px;">
-                <h3 class="m-0">LOGO</h3>
-            </div>
+            <img src="{{ asset('images/logo.jpg') }}" alt="SIMPIK Logo" style="width: 250px; height: 250px; object-fit: cover; border-radius: 50%;">
         </div>
 
         {{-- KANAN : FORM REGISTER --}}
