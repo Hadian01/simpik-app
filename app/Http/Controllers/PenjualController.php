@@ -258,24 +258,24 @@ class PenjualController extends Controller
                 $pengajuan->save();
             }
 
-            // 🔔 Notification: Pengajuan approved untuk penitip
-            try {
-                if ($pengajuan->penitip && $pengajuan->penitip->user_id) {
-                    Notification::create([
-                        'user_id' => $pengajuan->penitip->user_id,
-                        'type' => 'pengajuan_approved',
-                        'title' => 'Pengajuan Disetujui',
-                        'message' => '✅ Pengajuan Anda ke ' . ($pengajuan->penjual->nama_toko ?? 'Toko') . ' telah disetujui!',
-                        'data' => [
-                            'pengajuan_id' => $pengajuan->pengajuan_id,
-                            'penjual_id' => $pengajuan->penjual_id,
-                            'approved_count' => $approved
-                        ]
-                    ]);
-                }
-            } catch (\Exception $e) {
-                \Log::error('Failed to create notification: ' . $e->getMessage());
-            }
+            // 🔔 Notification: Pengajuan approved untuk penitip (disabled - model not yet created)
+            // try {
+            //     if ($pengajuan->penitip && $pengajuan->penitip->user_id) {
+            //         Notification::create([
+            //             'user_id' => $pengajuan->penitip->user_id,
+            //             'type' => 'pengajuan_approved',
+            //             'title' => 'Pengajuan Disetujui',
+            //             'message' => '✅ Pengajuan Anda ke ' . ($pengajuan->penjual->nama_toko ?? 'Toko') . ' telah disetujui!',
+            //             'data' => [
+            //                 'pengajuan_id' => $pengajuan->pengajuan_id,
+            //                 'penjual_id' => $pengajuan->penjual_id,
+            //                 'approved_count' => $approved
+            //             ]
+            //         ]);
+            //     }
+            // } catch (\Exception $e) {
+            //     \Log::error('Failed to create notification: ' . $e->getMessage());
+            // }
 
             return response()->json([
                 'success' => true,
@@ -315,24 +315,24 @@ class PenjualController extends Controller
             $pengajuan->alasan = $request->reason;
             $pengajuan->save();
 
-            // 🔔 Notification: Pengajuan rejected untuk penitip
-            try {
-                if ($pengajuan->penitip && $pengajuan->penitip->user_id) {
-                    Notification::create([
-                        'user_id' => $pengajuan->penitip->user_id,
-                        'type' => 'pengajuan_rejected',
-                        'title' => 'Pengajuan Ditolak',
-                        'message' => '❌ Pengajuan Anda ke ' . ($pengajuan->penjual->nama_toko ?? 'Toko') . ' ditolak',
-                        'data' => [
-                            'pengajuan_id' => $pengajuan->pengajuan_id,
-                            'penjual_id' => $pengajuan->penjual_id,
-                            'alasan' => $request->reason
-                        ]
-                    ]);
-                }
-            } catch (\Exception $e) {
-                \Log::error('Failed to create notification: ' . $e->getMessage());
-            }
+            // 🔔 Notification: Pengajuan rejected untuk penitip (disabled - model not yet created)
+            // try {
+            //     if ($pengajuan->penitip && $pengajuan->penitip->user_id) {
+            //         Notification::create([
+            //             'user_id' => $pengajuan->penitip->user_id,
+            //             'type' => 'pengajuan_rejected',
+            //             'title' => 'Pengajuan Ditolak',
+            //             'message' => '❌ Pengajuan Anda ke ' . ($pengajuan->penjual->nama_toko ?? 'Toko') . ' ditolak',
+            //             'data' => [
+            //                 'pengajuan_id' => $pengajuan->pengajuan_id,
+            //                 'penjual_id' => $pengajuan->penjual_id,
+            //                 'alasan' => $request->reason
+            //             ]
+            //         ]);
+            //     }
+            // } catch (\Exception $e) {
+            //     \Log::error('Failed to create notification: ' . $e->getMessage());
+            // }
 
             return response()->json([
                 'success' => true,

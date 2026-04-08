@@ -95,6 +95,10 @@ $status = $status_pengajuan;
 
             {{ $latest_pengajuan && $latest_pengajuan->alasan
                 ? $latest_pengajuan->alasan
+                : 'Tidak ada catatan' }}
+
+</div>
+
 @endif
 
 {{-- ================= ACTION ================= --}}
