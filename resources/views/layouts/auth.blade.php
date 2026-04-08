@@ -7,6 +7,7 @@
     <title>@yield('title', 'Login - SIMPIK')</title>
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
 </head>
 
@@ -14,5 +15,6 @@
 
     @yield('content')
 
+    @stack('scripts')
 </body>
 </html>

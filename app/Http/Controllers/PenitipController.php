@@ -260,6 +260,14 @@ class PenitipController extends Controller
         $penitip_id = $penitip->penitip_id;
 
         $toko = Penjual::findOrFail($id);
+        
+        // Debug banner path
+        \Log::info('Toko Banner Debug', [
+            'toko_id' => $toko->penjual_id,
+            'banner' => $toko->banner,
+            'banner_type' => gettype($toko->banner),
+            'all_attributes' => $toko->getAttributes()
+        ]);
 
         /*
         |--------------------------------

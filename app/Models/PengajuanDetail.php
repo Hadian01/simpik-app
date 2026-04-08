@@ -13,6 +13,16 @@ class PengajuanDetail extends Model
 
     protected $primaryKey = 'pengajuan_detail_id';
 
+    protected $fillable = [
+        'pengajuan_id',
+        'produk_id',
+        'harga_modal',
+        'harga_jual',
+        'status',
+        'created_by',
+        'update_by'
+    ];
+
      public function pengajuan()
     {
         return $this->belongsTo(Pengajuan::class, 'pengajuan_id');

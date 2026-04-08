@@ -54,24 +54,34 @@
 
                     <div class="form-group">
                         <label>Password Baru <span class="text-danger">*</span></label>
-                        <input type="password" 
-                               name="password" 
-                               class="form-control @error('password') is-invalid @enderror"
-                               id="password"
-                               required>
+                        <div class="position-relative">
+                            <input type="password" 
+                                   name="password" 
+                                   class="form-control @error('password') is-invalid @enderror"
+                                   id="password"
+                                   required>
+                            <span class="position-absolute" style="right: 12px; top: 50%; transform: translateY(-50%); cursor: pointer;" onclick="togglePassword('password', this)">
+                                <i class="bi bi-eye"></i>
+                            </span>
+                        </div>
                         <small class="text-muted">Minimal 4 karakter</small>
                         @error('password')
-                            <div class="invalid-feedback">{{ $message }}</div>
+                            <div class="invalid-feedback d-block">{{ $message }}</div>
                         @enderror
                     </div>
 
                     <div class="form-group">
                         <label>Konfirmasi Password <span class="text-danger">*</span></label>
-                        <input type="password" 
-                               name="password_confirmation" 
-                               class="form-control"
-                               id="password_confirmation"
-                               required>
+                        <div class="position-relative">
+                            <input type="password" 
+                                   name="password_confirmation" 
+                                   class="form-control"
+                                   id="password_confirmation"
+                                   required>
+                            <span class="position-absolute" style="right: 12px; top: 50%; transform: translateY(-50%); cursor: pointer;" onclick="togglePassword('password_confirmation', this)">
+                                <i class="bi bi-eye"></i>
+                            </span>
+                        </div>
                         <small id="confirmPasswordHelp" class="form-text text-muted d-none">
                             Password tidak cocok
                         </small>
@@ -97,6 +107,22 @@
 
 @push('scripts')
 <script>
+// Toggle password visibility
+function togglePassword(fieldId, iconElement) {
+    const passwordField = document.getElementById(fieldId);
+    const icon = iconElement.querySelector('i');
+    
+    if (passwordField.type === 'password') {
+        passwordField.type = 'text';
+        icon.classList.remove('bi-eye');
+        icon.classList.add('bi-eye-slash');
+    } else {
+        passwordField.type = 'password';
+        icon.classList.remove('bi-eye-slash');
+        icon.classList.add('bi-eye');
+    }
+}
+
 // Password confirmation validation
 document.getElementById('password_confirmation').addEventListener('input', function() {
     const password = document.getElementById('password').value;

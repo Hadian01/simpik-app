@@ -133,10 +133,29 @@ $(document).ready(function () {
                                 ? 'readonly'
                                 : '';
 
-                        // Checkbox hanya tampil jika Pending
-                        const checkboxHTML = response.status && response.status.toLowerCase() === 'pending'
-                            ? `<input type="checkbox" class="produk-check" value="${item.pengajuan_detail_id}" style="cursor:pointer; width:18px; height:18px;">`
-                            : '';
+                        // Debug individual item status
+                        console.log('Item:', namaProduk, '| Detail Status:', item.status, '| Pengajuan Status:', response.status);
+
+                        // Visual indicator based on status
+                        let checkboxHTML = '';
+                        
+                        if (response.status && response.status.toLowerCase() === 'pending') {
+                            // Pending: clickable custom checkbox with icon
+                            checkboxHTML = `
+                                <i class="bi bi-square custom-checkbox" 
+                                   data-id="${item.pengajuan_detail_id}" 
+                                   style="font-size:24px; cursor:pointer; color:#999;" 
+                                   title="Klik untuk memilih produk">
+                                </i>
+                            `;
+                        } else if (response.status && response.status.toLowerCase() !== 'pending') {
+                            // Final status: show visual indicator
+                            if (item.status === 'Approved') {
+                                checkboxHTML = `<i class="bi bi-check-circle-fill text-success" style="font-size:24px;" title="Approved"></i>`;
+                            } else {
+                                checkboxHTML = `<i class="bi bi-x-circle text-muted" style="font-size:24px;" title="Not Approved"></i>`;
+                            }
+                        }
 
                         html += `
                             <tr>
@@ -214,12 +233,30 @@ $(document).ready(function () {
 
 
     // =====================================================
+    // TOGGLE CUSTOM CHECKBOX (Icon-based)
+    // =====================================================
+    $(document).on('click', '.custom-checkbox', function() {
+        if ($(this).hasClass('checked')) {
+            // Uncheck
+            $(this).removeClass('checked bi-check-square-fill text-success');
+            $(this).addClass('bi-square');
+            $(this).css('color', '#999');
+        } else {
+            // Check
+            $(this).removeClass('bi-square');
+            $(this).addClass('checked bi-check-square-fill text-success');
+            $(this).css('color', '');
+        }
+    });
+
+
+    // =====================================================
     // APPROVE PRODUK
     // =====================================================
     $('#btnApproveSelected').click(function () {
 
         // Cek apakah ada checkbox yang dicentang
-        if ($('.produk-check:checked').length === 0) {
+        if ($('.custom-checkbox.checked').length === 0) {
             Swal.fire({
                 icon: 'warning',
                 title: 'Pilih Produk',
@@ -231,7 +268,7 @@ $(document).ready(function () {
 
         // Validasi harga jual untuk produk yang dicentang
         let hasEmptyPrice = false;
-        $('.produk-check:checked').each(function () {
+        $('.custom-checkbox.checked').each(function () {
             let row = $(this).closest('tr');
             let hargaJual = row.find('.harga-jual').val();
             
@@ -254,9 +291,9 @@ $(document).ready(function () {
         let pengajuanId = $('#selectedPengajuanId').val();
         let approvedData = [];
 
-        $('.produk-check:checked').each(function () {
+        $('.custom-checkbox.checked').each(function () {
             let row = $(this).closest('tr');
-            let detailId = $(this).val();
+            let detailId = $(this).data('id');
             let hargaJual = row.find('.harga-jual').val();
 
             approvedData.push({

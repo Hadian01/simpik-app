@@ -243,12 +243,24 @@ class PenjualController extends Controller
             ];
         }
 
+        // Map detail with explicit status
+        $detailWithStatus = $pengajuan->detail->map(function($detail) {
+            return [
+                'pengajuan_detail_id' => $detail->pengajuan_detail_id,
+                'produk_id' => $detail->produk_id,
+                'harga_modal' => $detail->harga_modal,
+                'harga_jual' => $detail->harga_jual,
+                'status' => $detail->status ?? 'Pending',
+                'produk' => $detail->produk
+            ];
+        });
+
         return response()->json([
             'pengajuan_id' => $pengajuan->pengajuan_id,
             'status' => $pengajuan->status,
             'penitip' => $pengajuan->penitip,
             'email' => $pengajuan->penitip?->user?->email ?? '-',
-            'detail' => $pengajuan->detail,
+            'detail' => $detailWithStatus,
             'history' => $history
         ]);
     }

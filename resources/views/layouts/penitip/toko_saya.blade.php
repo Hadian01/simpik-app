@@ -430,43 +430,60 @@
 
                         /*
                         ================================
-                        INIT DATATABLE
+                        LAZY INIT DATATABLES
+                        Initialize only when tab is shown
                         ================================
                         */
 
-                        let tableRiwayat = $('#tableRiwayat').DataTable({
-                            responsive: true,
-                            dom: "<'row mb-2'<'col-md-6'l><'col-md-6 d-flex justify-content-end align-items-center'fB>>" +
-                                "<'row'<'col-12'tr>>" +
-                                "<'row mt-2'<'col-md-5'i><'col-md-7'p>>",
-                            buttons: [{
-                                text: '<i class="bi bi-funnel"></i> Filter',
-                                className: 'btn btn-outline-secondary btn-sm ml-2',
-                                action: function() {
-                                    $('#modalFilter').modal('show');
-                                }
-                            }],
-                            language: {
-                                emptyTable: "Belum ada data riwayat",
-                                zeroRecords: "Tidak ada data yang cocok dengan pencarian"
-                            },
-                            columnDefs: [{
-                                targets: '_all',
-                                defaultContent: '-'
-                            }]
+                        let tableRiwayat = null;
+                        let tableRiwayatPengajuan = null;
+
+                        // Initialize Dashboard table when tab is shown
+                        $('a[href="#dashboard"]').on('shown.bs.tab', function (e) {
+                            if (tableRiwayat === null) {
+                                tableRiwayat = $('#tableRiwayat').DataTable({
+                                    responsive: true,
+                                    dom: "<'row mb-2'<'col-md-6'l><'col-md-6 d-flex justify-content-end align-items-center'fB>>" +
+                                        "<'row'<'col-12'tr>>" +
+                                        "<'row mt-2'<'col-md-5'i><'col-md-7'p>>",
+                                    buttons: [{
+                                        text: '<i class="bi bi-funnel"></i> Filter',
+                                        className: 'btn btn-outline-secondary btn-sm ml-2',
+                                        action: function() {
+                                            $('#modalFilter').modal('show');
+                                        }
+                                    }],
+                                    language: {
+                                        emptyTable: "Belum ada data riwayat",
+                                        zeroRecords: "Tidak ada data yang cocok dengan pencarian"
+                                    },
+                                    columnDefs: [{
+                                        targets: '_all',
+                                        defaultContent: '-'
+                                    }]
+                                });
+                            } else {
+                                tableRiwayat.columns.adjust().responsive.recalc();
+                            }
                         });
 
-
-                        let tableRiwayatPengajuan = $('#tableRiwayatPengajuan').DataTable({
-                            responsive: true,
-                            language: {
-                                emptyTable: "Belum ada data riwayat penjualan",
-                                zeroRecords: "Tidak ada data yang cocok dengan pencarian"
-                            },
-                            columnDefs: [{
-                                targets: '_all',
-                                defaultContent: '-'
-                            }]
+                        // Initialize Riwayat Penjualan table when tab is shown
+                        $('a[href="#riwayat"]').on('shown.bs.tab', function (e) {
+                            if (tableRiwayatPengajuan === null) {
+                                tableRiwayatPengajuan = $('#tableRiwayatPengajuan').DataTable({
+                                    responsive: true,
+                                    language: {
+                                        emptyTable: "Belum ada data riwayat penjualan",
+                                        zeroRecords: "Tidak ada data yang cocok dengan pencarian"
+                                    },
+                                    columnDefs: [{
+                                        targets: '_all',
+                                        defaultContent: '-'
+                                    }]
+                                });
+                            } else {
+                                tableRiwayatPengajuan.columns.adjust().responsive.recalc();
+                            }
                         });
 
 
@@ -599,7 +616,10 @@
 
                             };
 
-                            $('#' + tableId).DataTable().draw();
+                            // Only draw if table is initialized
+                            if ($.fn.DataTable.isDataTable('#' + tableId)) {
+                                $('#' + tableId).DataTable().draw();
+                            }
 
                             form.closest('.modal').modal('hide');
 
@@ -627,7 +647,10 @@
 
                             form[0].reset();
 
-                            $('#' + tableId).DataTable().draw();
+                            // Only draw if table is initialized
+                            if ($.fn.DataTable.isDataTable('#' + tableId)) {
+                                $('#' + tableId).DataTable().draw();
+                            }
 
                         }
 

@@ -56,12 +56,18 @@
 
                     <div class="form-group">
                         <label>Password <span class="text-danger">*</span></label>
-                        <input type="password" 
-                               name="password" 
-                               class="form-control @error('password') is-invalid @enderror"
-                               required>
+                        <div class="position-relative">
+                            <input type="password" 
+                                   id="loginPassword"
+                                   name="password" 
+                                   class="form-control @error('password') is-invalid @enderror"
+                                   required>
+                            <span class="position-absolute" style="right: 12px; top: 50%; transform: translateY(-50%); cursor: pointer;" onclick="togglePassword('loginPassword', this)">
+                                <i class="bi bi-eye" id="toggleIcon"></i>
+                            </span>
+                        </div>
                         @error('password')
-                            <div class="invalid-feedback">{{ $message }}</div>
+                            <div class="invalid-feedback d-block">{{ $message }}</div>
                         @enderror
                         <div class="text-right mt-2">
                             <small><a href="{{ route('password.request') }}" style="color:#9B8CFF;">Lupa Password?</a></small>
@@ -89,3 +95,22 @@
 
 </div>
 @endsection
+
+@push('scripts')
+<script>
+function togglePassword(fieldId, iconElement) {
+    const passwordField = document.getElementById(fieldId);
+    const icon = iconElement.querySelector('i');
+    
+    if (passwordField.type === 'password') {
+        passwordField.type = 'text';
+        icon.classList.remove('bi-eye');
+        icon.classList.add('bi-eye-slash');
+    } else {
+        passwordField.type = 'password';
+        icon.classList.remove('bi-eye-slash');
+        icon.classList.add('bi-eye');
+    }
+}
+</script>
+@endpush
