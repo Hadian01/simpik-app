@@ -161,6 +161,39 @@ $(document).ready(function () {
                 }
 
                 $('#produkContainer').html(html);
+
+                // ===============================
+                // HISTORY LIST
+                // ===============================
+                let historyHTML = '';
+
+                if (!response.history || response.history.length === 0) {
+                    historyHTML = `
+                        <tr>
+                            <td colspan="3" class="text-center text-muted">
+                                Belum ada riwayat
+                            </td>
+                        </tr>
+                    `;
+                } else {
+                    response.history.forEach(function (item) {
+                        const statusBadge = item.status === 'Approved'
+                            ? '<span class="badge badge-success">Approved</span>'
+                            : item.status === 'Rejected'
+                            ? '<span class="badge badge-danger">Rejected</span>'
+                            : '<span class="badge badge-warning">Waiting for Approval</span>';
+
+                        historyHTML += `
+                            <tr>
+                                <td>${item.tanggal}</td>
+                                <td>${statusBadge}</td>
+                                <td>${item.reason}</td>
+                            </tr>
+                        `;
+                    });
+                }
+
+                $('#historyContainer').html(historyHTML);
             },
 
             error: function (xhr) {

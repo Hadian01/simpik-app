@@ -220,6 +220,16 @@ MODALS EXISTING
                     action: function() {
                         $('#modalFilter').modal('show');
                     }
+                }],
+
+                language: {
+                    emptyTable: "Belum ada pengajuan penitip",
+                    zeroRecords: "Tidak ada pengajuan yang cocok dengan pencarian"
+                },
+
+                columnDefs: [{
+                    targets: '_all',
+                    defaultContent: '-'
                 }]
 
             });

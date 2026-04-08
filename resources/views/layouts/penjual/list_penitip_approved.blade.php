@@ -104,6 +104,14 @@ $(document).ready(function() {
             action: function() {
                 $('#modalFilter').modal('show');
             }
+        }],
+        language: {
+            emptyTable: "Belum ada penitip yang disetujui",
+            zeroRecords: "Tidak ada penitip yang cocok dengan pencarian"
+        },
+        columnDefs: [{
+            targets: '_all',
+            defaultContent: '-'
         }]
     });
 

@@ -263,10 +263,33 @@ class PenitipController extends Controller
 
         /*
         |--------------------------------
-        | PRODUK MILIK PENITIP
+        | PRODUK MILIK PENITIP YANG APPROVED DI TOKO INI (untuk modal add stock)
         |--------------------------------
         */
-        $produk_toko = Produk::where('penitip_id', $penitip_id)->get();
+        $produk_toko = Produk::where('penitip_id', $penitip_id)
+            ->whereHas('pengajuanDetails', function($query) use ($id) {
+                $query->where('status', 'Approved')
+                    ->whereHas('pengajuan', function($q) use ($id) {
+                        $q->where('penjual_id', $id);
+                    });
+            })
+            ->get();
+
+        /*
+        |--------------------------------
+        | SEMUA PRODUK APPROVED DI TOKO INI (untuk display detail toko)
+        | Dari semua penitip yang approved
+        |--------------------------------
+        */
+        $produk_display = Produk::whereHas('pengajuanDetails', function($query) use ($id) {
+                $query->where('status', 'Approved')
+                    ->whereHas('pengajuan', function($q) use ($id) {
+                        $q->where('penjual_id', $id)
+                          ->where('status', 'Approved');
+                    });
+            })
+            ->with('penitip')
+            ->get();
 
 
         /*
@@ -280,9 +303,9 @@ class PenitipController extends Controller
             ->where('sh.penjual_id', $id)
             ->whereRaw("DATE_TRUNC('month', sh.date) = DATE_TRUNC('month', CURRENT_DATE)")
             ->selectRaw('
-                COALESCE(SUM(sh.stock_qty::int),0) as total_dititip,
+                COALESCE(SUM(sh.stock::int),0) as total_dititip,
                 COALESCE(SUM(COALESCE(sh.stock::int, 0) - COALESCE(sh.sisa_stock::int, 0)),0) as total_terjual,
-                COALESCE(SUM((COALESCE(sh.stock::int, 0) - COALESCE(sh.sisa_stock::int, 0)) * (sh.harga_jual::int - sh.harga_modal::int)),0) as total_pendapatan
+                COALESCE(SUM((COALESCE(sh.stock::int, 0) - COALESCE(sh.sisa_stock::int, 0)) * sh.harga_modal::int),0) as total_pendapatan
             ')
             ->first();
 
@@ -311,7 +334,7 @@ class PenitipController extends Controller
 
             [
                 'title' => 'Total Dititip',
-                'value' => $dashboard_data->total_dititip ?: $produk_toko->count(),
+                'value' => $dashboard_data->total_dititip,
                 'bg_color' => '#CFC7FF'
             ],
 
@@ -343,7 +366,7 @@ class PenitipController extends Controller
                 sh.harga_jual::int as harga_jual,
                 sh.harga_modal::int as cogs,
                 (COALESCE(sh.stock::int, 0) - COALESCE(sh.sisa_stock::int, 0)) as stock_terjual,
-                ((COALESCE(sh.stock::int, 0) - COALESCE(sh.sisa_stock::int, 0)) * (sh.harga_jual::int - sh.harga_modal::int)) as pendapatan
+                ((COALESCE(sh.stock::int, 0) - COALESCE(sh.sisa_stock::int, 0)) * sh.harga_modal::int) as pendapatan
             ')
             ->orderBy('sh.created_at', 'desc')
             ->get();
@@ -386,7 +409,7 @@ class PenitipController extends Controller
                 sh.stock_qty::int as sistem,
                 sh.stock::int as validasi_stock,
                 sh.sisa_stock::int as sisa_stock,
-                ((COALESCE(sh.stock::int, 0) - COALESCE(sh.sisa_stock::int, 0)) * (sh.harga_jual::int - sh.harga_modal::int)) as pendapatan,
+                ((COALESCE(sh.stock::int, 0) - COALESCE(sh.sisa_stock::int, 0)) * sh.harga_modal::int) as pendapatan,
                 sh.validasi_foto,
                 sh.sisa_foto
             ')
@@ -428,6 +451,7 @@ class PenitipController extends Controller
             compact(
                 'toko',
                 'produk_toko',
+                'produk_display',
                 'dashboard',
                 'statistik',
                 'riwayat_list',

@@ -27,7 +27,8 @@
                             <th>FOTO VALIDASI</th>
                             <th>SISA STOCK</th>
                             <th>FOTO SISA</th>
-                            <th>PENDAPATAN</th>
+                            <th>PENDAPATAN PENITIP</th>
+                            <th>PENDAPATAN TOKO</th>
                         </tr>
                     </thead>
 
@@ -127,16 +128,31 @@
 
                                 </td>
 
-                                {{-- PENDAPATAN --}}
+                                {{-- PENDAPATAN PENITIP --}}
+                                <td>
+
+                                    @if ($item->stock && $item->sisa_stock !== null)
+                                        @php
+                                            $terjual = $item->stock - $item->sisa_stock;
+                                            $pendapatan_penitip = $terjual * $item->harga_modal;
+                                        @endphp
+                                        RP {{ number_format($pendapatan_penitip, 0, ',', '.') }}
+                                    @else
+                                        <span class="text-muted">-</span>
+                                    @endif
+
+                                </td>
+
+                                {{-- PENDAPATAN TOKO --}}
                                 <td>
 
                                     @if ($item->stock && $item->sisa_stock !== null)
                                         @php
                                             $terjual = $item->stock - $item->sisa_stock;
                                             $margin = $item->harga_jual - $item->harga_modal;
-                                            $pendapatan = $terjual * $margin;
+                                            $pendapatan_toko = $terjual * $margin;
                                         @endphp
-                                        RP {{ number_format($pendapatan, 0, ',', '.') }}
+                                        RP {{ number_format($pendapatan_toko, 0, ',', '.') }}
                                     @else
                                         <span class="text-muted">-</span>
                                     @endif
@@ -148,7 +164,7 @@
                         @empty
 
                             <tr>
-                                <td colspan="11" class="text-center text-muted py-4">
+                                <td colspan="12" class="text-center text-muted py-4">
                                     Tidak ada data pengajuan untuk penitip ini
                                 </td>
                             </tr>
@@ -285,7 +301,15 @@
 
 
             let tableDetail = $('#tableDetailPengajuan').DataTable({
-                responsive: true
+                responsive: true,
+                language: {
+                    emptyTable: "Tidak ada data pengajuan untuk penitip ini",
+                    zeroRecords: "Tidak ada data yang cocok dengan pencarian"
+                },
+                columnDefs: [{
+                    targets: '_all',
+                    defaultContent: '-'
+                }]
             });
 
 

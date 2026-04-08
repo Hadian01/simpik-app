@@ -218,12 +218,38 @@ class PenjualController extends Controller
             'detail.produk'
         ])->findOrFail($id);
 
+        // Build history data
+        $history = [];
+        
+        // Always add created date (Waiting status)
+        $history[] = [
+            'tanggal' => $pengajuan->created_at->format('d-m-Y H:i'),
+            'status' => 'Waiting for Approval',
+            'reason' => '-'
+        ];
+
+        // If approved or rejected, add update history
+        if ($pengajuan->status === 'Approved') {
+            $history[] = [
+                'tanggal' => $pengajuan->updated_at->format('d-m-Y H:i'),
+                'status' => 'Approved',
+                'reason' => '-'
+            ];
+        } elseif ($pengajuan->status === 'Rejected') {
+            $history[] = [
+                'tanggal' => $pengajuan->updated_at->format('d-m-Y H:i'),
+                'status' => 'Rejected',
+                'reason' => $pengajuan->alasan ?? 'No reason provided'
+            ];
+        }
+
         return response()->json([
             'pengajuan_id' => $pengajuan->pengajuan_id,
             'status' => $pengajuan->status,
             'penitip' => $pengajuan->penitip,
             'email' => $pengajuan->penitip?->user?->email ?? '-',
-            'detail' => $pengajuan->detail
+            'detail' => $pengajuan->detail,
+            'history' => $history
         ]);
     }
     public function approve(Request $request)

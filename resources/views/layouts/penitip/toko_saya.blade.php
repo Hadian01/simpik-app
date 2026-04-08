@@ -88,14 +88,18 @@
                                 <h5 class="mb-3">Produk {{ $toko['nama_toko'] }}</h5>
 
                                 <div class="row">
-                                    @foreach ($produk_toko as $produk)
+                                    @forelse ($produk_display as $produk)
                                         @include('components.penitip.list_produk', [
                                             'id' => $produk->produk_id,
                                             'nama' => $produk->produk_name,
                                             'gambar' => $produk->foto_produk,
                                             'harga' => $produk->harga_jual,
                                         ])
-                                    @endforeach
+                                    @empty
+                                        <div class="col-12 text-center text-muted py-4">
+                                            <p>Belum ada produk yang disetujui di toko ini</p>
+                                        </div>
+                                    @endforelse
 
                                 </div>
                             </div>
@@ -137,7 +141,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($riwayat_list as $item)
+                                    @forelse ($riwayat_list as $item)
                                         <tr>
                                             <td>{{ $item['no'] }}</td>
                                             <td>{{ $item['submission_date'] }}</td>
@@ -148,7 +152,13 @@
                                             <td>{{ $item['cogs'] }}</td>
                                             <td>{{ $item['pendapatan'] }}</td>
                                         </tr>
-                                    @endforeach
+                                    @empty
+                                        <tr>
+                                            <td colspan="8" class="text-center text-muted py-4">
+                                                Belum ada data riwayat
+                                            </td>
+                                        </tr>
+                                    @endforelse
                                 </tbody>
                             </table>
                         </div>
@@ -435,12 +445,28 @@
                                 action: function() {
                                     $('#modalFilter').modal('show');
                                 }
+                            }],
+                            language: {
+                                emptyTable: "Belum ada data riwayat",
+                                zeroRecords: "Tidak ada data yang cocok dengan pencarian"
+                            },
+                            columnDefs: [{
+                                targets: '_all',
+                                defaultContent: '-'
                             }]
                         });
 
 
                         let tableRiwayatPengajuan = $('#tableRiwayatPengajuan').DataTable({
-                            responsive: true
+                            responsive: true,
+                            language: {
+                                emptyTable: "Belum ada data riwayat penjualan",
+                                zeroRecords: "Tidak ada data yang cocok dengan pencarian"
+                            },
+                            columnDefs: [{
+                                targets: '_all',
+                                defaultContent: '-'
+                            }]
                         });
 
 
