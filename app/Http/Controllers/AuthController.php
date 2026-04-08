@@ -152,11 +152,19 @@ class AuthController extends Controller
      */
     public function sendResetLinkEmail(Request $request)
     {
+        // Normalize email to lowercase
+        $email = strtolower($request->email);
+        
         $request->validate([
-            'email' => 'required|email|exists:users,email'
-        ], [
-            'email.exists' => 'Email tidak ditemukan dalam sistem'
+            'email' => 'required|email'
         ]);
+        
+        // Check if email exists (case insensitive)
+        $userExists = UserManual::whereRaw('LOWER(email) = ?', [$email])->exists();
+        
+        if (!$userExists) {
+            return back()->withErrors(['email' => 'Email tidak ditemukan dalam sistem'])->withInput();
+        }
 
         // Check if mail is configured
         if (empty(config('mail.mailers.smtp.username')) || empty(config('mail.mailers.smtp.password'))) {
@@ -164,8 +172,8 @@ class AuthController extends Controller
             return back()->withErrors(['email' => 'Layanan email belum dikonfigurasi. Silakan hubungi administrator.'])->withInput();
         }
 
-        // Get user for name
-        $user = User::where('email', $request->email)->first();
+        // Get user for name (case insensitive)
+        $user = UserManual::whereRaw('LOWER(email) = ?', [$email])->first();
         $userName = null;
         
         if ($user) {
@@ -179,23 +187,23 @@ class AuthController extends Controller
         // Generate reset token
         $token = Str::random(60);
         
-        // Store in password_resets table
+        // Store in password_resets table (use lowercase email)
         DB::table('password_reset_tokens')->updateOrInsert(
-            ['email' => $request->email],
+            ['email' => $email],
             [
                 'token' => Hash::make($token),
                 'created_at' => now()
             ]
         );
 
-        // Generate reset URL
-        $resetUrl = route('password.reset', ['token' => $token, 'email' => $request->email]);
+        // Generate reset URL (use lowercase email)
+        $resetUrl = route('password.reset', ['token' => $token, 'email' => $email]);
         
-        // Send email
+        // Send email (use lowercase email)
         try {
-            Mail::to($request->email)->send(new ResetPasswordMail($resetUrl, $userName));
+            Mail::to($email)->send(new ResetPasswordMail($resetUrl, $userName));
             
-            \Log::info('Reset password email sent successfully to: ' . $request->email);
+            \Log::info('Reset password email sent successfully to: ' . $email);
             
             return back()->with('status', 'Link reset password telah dikirim ke email Anda. Silakan cek inbox atau folder spam.');
         } catch (\Exception $e) {
