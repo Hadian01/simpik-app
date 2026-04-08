@@ -153,7 +153,7 @@ class AuthController extends Controller
     public function sendResetLinkEmail(Request $request)
     {
         $request->validate([
-            'email' => 'required|email|exists:tbl_user_manual,email'
+            'email' => 'required|email|exists:users,email'
         ], [
             'email.exists' => 'Email tidak ditemukan dalam sistem'
         ]);
@@ -165,7 +165,7 @@ class AuthController extends Controller
         }
 
         // Get user for name
-        $user = UserManual::where('email', $request->email)->first();
+        $user = User::where('email', $request->email)->first();
         $userName = null;
         
         if ($user) {
