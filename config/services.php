@@ -31,4 +31,9 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'mailtrap' => [
+        'api_token' => env('MAILTRAP_API_TOKEN'),
+        'inbox_id' => env('MAILTRAP_INBOX_ID', '2260282'),
+    ],
+
 ];

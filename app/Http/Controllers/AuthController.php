@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Http;
 use Carbon\Carbon;
 use App\Models\UserManual;
 use App\Models\Penitip;
@@ -199,11 +200,44 @@ class AuthController extends Controller
         // Generate reset URL (use lowercase email)
         $resetUrl = route('password.reset', ['token' => $token, 'email' => $email]);
         
-        // Send email (use lowercase email)
+        // Send email via Mailtrap API or SMTP
         try {
-            Mail::to($email)->send(new ResetPasswordMail($resetUrl, $userName));
+            // Check if Mailtrap API is configured (for Railway/production)
+            $mailtrapToken = config('services.mailtrap.api_token');
             
-            \Log::info('Reset password email sent successfully to: ' . $email);
+            if ($mailtrapToken) {
+                // Use Mailtrap API (works on Railway)
+                $inboxId = config('services.mailtrap.inbox_id', '2260282');
+                
+                $response = Http::withHeaders([
+                    'Authorization' => 'Bearer ' . $mailtrapToken,
+                    'Content-Type' => 'application/json',
+                ])->post("https://sandbox.api.mailtrap.io/api/send/{$inboxId}", [
+                    'from' => [
+                        'email' => config('mail.from.address', 'noreply@simpik.app'),
+                        'name' => config('mail.from.name', 'SIMPIK App'),
+                    ],
+                    'to' => [
+                        ['email' => $email]
+                    ],
+                    'subject' => 'Reset Password - SIMPIK',
+                    'html' => view('emails.reset-password', [
+                        'resetUrl' => $resetUrl,
+                        'userName' => $userName
+                    ])->render(),
+                    'category' => 'Password Reset',
+                ]);
+                
+                if ($response->successful()) {
+                    \Log::info('Reset password email sent via Mailtrap API to: ' . $email);
+                } else {
+                    throw new \Exception('Mailtrap API error: ' . $response->body());
+                }
+            } else {
+                // Fallback to SMTP (for local development)
+                Mail::to($email)->send(new ResetPasswordMail($resetUrl, $userName));
+                \Log::info('Reset password email sent via SMTP to: ' . $email);
+            }
             
             return back()->with('status', 'Link reset password telah dikirim ke email Anda. Silakan cek inbox atau folder spam.');
         } catch (\Exception $e) {
