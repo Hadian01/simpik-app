@@ -68,7 +68,7 @@ Route::prefix('penjual')->name('penjual.')->middleware(['auth:usermanual', 'role
     Route::get('/penitip-approved', [PenjualController::class, 'show_penitip_approved'])->name('penitip_approved');
     Route::get('/detail-penitip-approved/{penjual_id}', [PenjualController::class, 'show_detail_penitip_approved'])->name('detail_penitip_approved');
 
-    Route::get('/penitip/{penitip_id}/pengajuan', [PenjualController::class, 'show_detail_penitip_pengajuan'])->name('detail_pengajuan_penitip');
+    Route::get('/penitip/{penjual_id}/pengajuan', [PenjualController::class, 'show_detail_penitip_approved'])->name('detail_pengajuan_penitip');
 
     Route::post('/pengajuan/approve',
         [PenjualController::class, 'approve']

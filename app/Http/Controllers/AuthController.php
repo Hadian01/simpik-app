@@ -235,7 +235,7 @@ class AuthController extends Controller
     {
         $request->validate([
             'token' => 'required',
-            'email' => 'required|email|exists:tbl_user_manual,email',
+            'email' => 'required|email|exists:tbl_user,email',
             'password' => 'required|min:4|confirmed'
         ], [
             'email.exists' => 'Email tidak ditemukan',
