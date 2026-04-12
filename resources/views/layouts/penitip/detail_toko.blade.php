@@ -45,7 +45,7 @@ Lihat Alasan Penolakan
 
 {{-- ================= BANNER ================= --}}
 @include('components.penitip.banner_toko',[
-'banner'=>null,
+'banner'=>$toko->banner ?? null,
 'nama_toko'=>$toko->nama_toko
 ])
 
