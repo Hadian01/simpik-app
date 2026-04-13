@@ -15,7 +15,7 @@ return [
 
     'defaults' => [
         'guard' => 'usermanual',
-        'passwords' => 'users',
+        'passwords' => 'usermanuals',
     ],
 
     /*
@@ -38,7 +38,7 @@ return [
     'guards' => [
         'web' => [
             'driver' => 'session',
-            'provider' => 'users',
+            'provider' => 'usermanuals',
         ],
         
         'usermanual' => [
@@ -65,11 +65,6 @@ return [
     */
 
     'providers' => [
-        'users' => [
-            'driver' => 'eloquent',
-            'model' => App\Models\User::class,
-        ],
-        
         'usermanuals' => [
             'driver' => 'eloquent',
             'model' => App\Models\UserManual::class,
@@ -101,8 +96,8 @@ return [
     */
 
     'passwords' => [
-        'users' => [
-            'provider' => 'users',
+        'usermanuals' => [
+            'provider' => 'usermanuals',
             'table' => 'password_reset_tokens',
             'expire' => 60,
             'throttle' => 60,
