@@ -13,7 +13,7 @@ class Produk extends Model
 
     protected $primaryKey = 'produk_id';
 
-    public $incrementing = true;
+    // public $incrementing = true;
 
      protected $fillable = [
         'produk_id',
@@ -28,15 +28,17 @@ class Produk extends Model
         'foto_produk'
     ];
 
+
+    // Ini buat memastikan untuk  mengubah format tanggal dan waktu serta type data untuk is_active saat diambil dari database atau saat disimpan ke database
     protected $casts = [
         'created_at' => 'datetime',
         'is_active' => 'boolean',
     ];
 
-    public function approval()
-    {
-        return $this->hasMany(ProdukPenjual::class, 'produk_id');
-    }
+    // public function approval()
+    // {
+    //     return $this->hasMany(ProdukPenjual::class, 'produk_id');
+    // }
 
     public function pengajuanDetails()
     {
@@ -49,8 +51,8 @@ class Produk extends Model
     }
 
     // Accessor untuk compatibility dengan nama_produk
-    public function getNamaProdukAttribute()
-    {
-        return $this->produk_name;
-    }
+    // public function getNamaProdukAttribute()
+    // {
+    //     return $this->produk_name;
+    // }
 }

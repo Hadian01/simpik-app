@@ -22,6 +22,7 @@ MODAL PRODUK
                 <form id="formProduk">
 
                     <!-- hidden id -->
+
                     <input type="hidden" id="produkId" name="produk_id">
 
                     <!-- TIPE -->
@@ -149,8 +150,10 @@ $(document).ready(function(){
     // =============================
     // SUBMIT FORM
     // =============================
+
     $('#formProduk').submit(function(e){
 
+        // Kode untuk mencegah reload halaman saat submit
         e.preventDefault();
 
         // ambil value
@@ -162,6 +165,7 @@ $(document).ready(function(){
         let hargaJual  = $('#hargaJual').val();
         let penitipId  = 1;
 
+        //ini gunakan untuk debug,
         console.log("MODE:", mode);
 
         console.log({
@@ -173,10 +177,12 @@ $(document).ready(function(){
             hargaJual
         });
 
+        // untuk menentukan URL yang akan di tampilkan, apakah untuk add atau edit
         let url = (mode === 'add')
             ? '/penitip/add_produk'
             : '/penitip/edit_produk';
 
+        // untuk mengirim data form beserta file foto
         let formData = new FormData();
 
         formData.append('produk_id', produkId);
@@ -186,8 +192,8 @@ $(document).ready(function(){
         formData.append('harga_modal', hargaModal);
         formData.append('harga_jual', hargaJual);
         formData.append('penitip_id', penitipId);
-        
-        // Status produk (checkbox)
+
+        // Status produk (checkbox), jika dicentang maka is_active = 1, jika tidak maka is_active = 0
         let isActive = $('#statusProduk').is(':checked') ? 1 : 0;
         if (isActive) {
             formData.append('is_active', '1');
@@ -212,6 +218,7 @@ $(document).ready(function(){
             contentType: false,
             processData: false,
 
+            // setelah klik button simpan, ubah text button menjadi processing..."
             beforeSend: function(){
                 $('#btnSubmitProduk').text('Processing...');
             },
@@ -226,34 +233,38 @@ $(document).ready(function(){
                     timer: 2000
                 });
 
+                //tutup modal, reset form dan preview foto
                 $('#modalTambahProduk').modal('hide');
                 $('#formProduk')[0].reset();
                 $('#uploadFoto').val('');
 
                 $('#btnSubmitProduk').text('Simpan');
 
+                // reload halaman setelah 1,5 detik untuk melihat perubahan
                 setTimeout(function(){
                     location.reload();
                 }, 1500);
             },
 
             error: function(err){
+                // untuk debug error response
                 console.log(err.responseText);
-                
+
+                //jika response error memiliki message atau errors, tampilkan di swal, jika tidak tampilkan pesan error default
                 let errorMsg = 'Terjadi error!';
                 if (err.responseJSON && err.responseJSON.message) {
                     errorMsg = err.responseJSON.message;
                 } else if (err.responseJSON && err.responseJSON.errors) {
                     errorMsg = Object.values(err.responseJSON.errors).flat().join('<br>');
                 }
-                
+                // tampilkan error message di swal
                 Swal.fire({
                     icon: 'error',
                     title: 'Gagal!',
                     html: errorMsg,
                     confirmButtonColor: '#9B8CFF'
                 });
-                
+
                 $('#btnSubmitProduk').text('Simpan');
             }
 
@@ -263,20 +274,22 @@ $(document).ready(function(){
 
     // =============================
     // PREVIEW FOTO SAAT PILIH FILE
-    // =============================
+    // ============================
+
+    // saat input file foto, maka pada form akan muncul preview foto yang dipilih
     $('#uploadFoto').change(function(e){
-        
+
         let file = e.target.files[0];
-        
+
         if(file){
             let reader = new FileReader();
-            
+
             reader.onload = function(e){
                 $('#previewFotoProduk')
                     .attr('src', e.target.result)
                     .show();
             };
-            
+
             reader.readAsDataURL(file);
         } else {
             $('#previewFotoProduk').hide();
@@ -289,6 +302,8 @@ $(document).ready(function(){
 // =============================
 // OPEN TAMBAH PRODUK
 // =============================
+
+// ini akan dipanggil saat klik button "Tambah Produk" untuk membuka modal tambah produk, sekaligus mereset form dan mengatur mode menjadi "add"
 function openTambahProduk(){
 
     mode = 'add';
@@ -309,6 +324,8 @@ function openTambahProduk(){
 // =============================
 // OPEN EDIT PRODUK
 // =============================
+
+// ini akan dipanggil saat klik button "Edit produk" untuk membuka modal edit produk, sekaligus mereset form dan mengatur mode menjadi "edit"
 function openEditProduk(data){
 
     mode = 'edit';
@@ -328,6 +345,8 @@ function openEditProduk(data){
     // ========================
     // PREVIEW FOTO
     // ========================
+
+    // Jika data.foto_produk sudah ada (ini buat di detail produk), tampilkan preview foto, jika tidak sembunyikan preview foto
     if(data.foto_produk){
 
         $('#previewFotoProduk')

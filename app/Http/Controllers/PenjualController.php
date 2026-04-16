@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use App\Models\Pengajuan;
 use App\Models\PengajuanDetail;
 use App\Models\StockHarian;
@@ -11,6 +12,8 @@ use App\Models\Penjual;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Hash;
 
 class PenjualController extends Controller
 {
@@ -20,79 +23,79 @@ class PenjualController extends Controller
     protected function getAuthPenjual()
     {
         $user = Auth::guard('usermanual')->user();
-        
+
         if (!$user || $user->user_type !== 'penjual') {
             abort(403, 'Unauthorized');
         }
-        
+
         $penjual = $user->penjual;
-        
+
         if (!$penjual) {
             abort(404, 'Data penjual tidak ditemukan');
         }
-        
+
         return $penjual;
     }
-    
+
     /**
      * Dashboard Penjual
      */
     public function dashboard(Request $request)
     {
         $penjual = $this->getAuthPenjual();
-        
+
         // Filter dari request
         $bulan = $request->bulan ?? now()->month;
         $tahun = $request->tahun ?? now()->year;
-        
+
         // Total Produk yang sudah di-approve
         $totalProduk = PengajuanDetail::whereHas('pengajuan', function($query) use ($penjual) {
             $query->where('penjual_id', $penjual->penjual_id);
         })->where('status', 'Approved')->count();
-        
+
         // Data dari Stock Harian dengan filter (hanya yang sudah divalidasi)
         $stockQuery = StockHarian::where('penjual_id', $penjual->penjual_id)
             ->whereNotNull('sisa_stock'); // Hanya yang sudah validasi stock
-        
+
         // Jika ada filter bulan
         if ($request->filled('bulan')) {
             $stockQuery->whereMonth('date', $bulan);
         }
-        
+
         // Jika ada filter tahun
         if ($request->filled('tahun')) {
             $stockQuery->whereYear('date', $tahun);
         }
-        
+
         $stockData = $stockQuery->get();
-        
+
         // Total Terjual (stock - sisa_stock)
         $totalTerjual = 0;
         $totalPendapatan = 0;
         $totalOmset = 0;
-        
+
         foreach ($stockData as $stock) {
             $stockQty = is_numeric($stock->stock) ? (int)$stock->stock : 0;
             $sisaStock = is_numeric($stock->sisa_stock) ? (int)$stock->sisa_stock : 0;
             $terjual = $stockQty - $sisaStock;
-            
+
             $totalTerjual += $terjual;
-            
+
             // Pendapatan (untuk penjual) - HITUNG ULANG DARI MARGIN
             $hargaJual = is_numeric($stock->harga_jual) ? (float)$stock->harga_jual : 0;
             $hargaModal = is_numeric($stock->harga_modal) ? (float)$stock->harga_modal : 0;
             $margin = $hargaJual - $hargaModal;
             $totalPendapatan += ($terjual * $margin);
-            
+
             // Omset (total penjualan)
             $totalOmset += ($terjual * $hargaJual);
         }
-        
+
         // Data Penitip - Monthly (untuk bar chart) - Jumlah Produk Terjual
         $monthlyQuery = StockHarian::join('tbl_produk', 'tbl_stock_harian.produk_id', '=', 'tbl_produk.produk_id')
             ->join('tbl_penitip', 'tbl_produk.penitip_id', '=', 'tbl_penitip.penitip_id')
-            ->select('tbl_penitip.name as penitip_name', 
-                \DB::raw('SUM(CAST(tbl_stock_harian.stock AS INTEGER) - COALESCE(CAST(tbl_stock_harian.sisa_stock AS INTEGER), 0)) as total_terjual'))
+            ->select('tbl_penitip.name as penitip_name',
+                DB::raw('SUM(CAST(tbl_stock_harian.stock AS INTEGER) - COALESCE(CAST(tbl_stock_harian.sisa_stock AS INTEGER), 0)) as total_terjual'))
             ->where('tbl_stock_harian.penjual_id', $penjual->penjual_id)
             ->whereNotNull('tbl_stock_harian.sisa_stock')
             ->whereMonth('tbl_stock_harian.date', $bulan)
@@ -100,9 +103,9 @@ class PenjualController extends Controller
             ->groupBy('tbl_penitip.name')
             ->orderBy('total_terjual', 'desc')
             ->limit(6);
-        
+
         $monthlyData = $monthlyQuery->get();
-        
+
         // Data Produk Terjual - Yearly (per bulan dalam tahun ini)
         $yearlyData = collect();
         for ($month = 1; $month <= 12; $month++) {
@@ -110,37 +113,37 @@ class PenjualController extends Controller
                 ->whereNotNull('sisa_stock')
                 ->whereMonth('date', $month)
                 ->whereYear('date', $tahun)
-                ->sum(\DB::raw('CAST(stock AS INTEGER) - COALESCE(CAST(sisa_stock AS INTEGER), 0)'));
-            
+                ->sum(DB::raw('CAST(stock AS INTEGER) - COALESCE(CAST(sisa_stock AS INTEGER), 0)'));
+
             $yearlyData->push([
                 'month' => date('M', mktime(0, 0, 0, $month, 1)),
                 'terjual' => $terjual ?? 0
             ]);
         }
-        
+
         // Top 3 Produk dengan Margin/Pendapatan Tertinggi
         $topProductsQuery = StockHarian::with('produk.penitip')
-            ->select('produk_id', 'created_by', 
-                \DB::raw('SUM(CAST(stock AS INTEGER) - COALESCE(CAST(sisa_stock AS INTEGER), 0)) as total_terjual'),
-                \DB::raw('SUM(CAST(pendapatan AS DECIMAL)) as total_pendapatan'),
-                \DB::raw('SUM((CAST(stock AS INTEGER) - COALESCE(CAST(sisa_stock AS INTEGER), 0)) * CAST(harga_jual AS DECIMAL)) as total_omset')
+            ->select('produk_id', 'created_by',
+                DB::raw('SUM(CAST(stock AS INTEGER) - COALESCE(CAST(sisa_stock AS INTEGER), 0)) as total_terjual'),
+                DB::raw('SUM(CAST(pendapatan AS DECIMAL)) as total_pendapatan'),
+                DB::raw('SUM((CAST(stock AS INTEGER) - COALESCE(CAST(sisa_stock AS INTEGER), 0)) * CAST(harga_jual AS DECIMAL)) as total_omset')
             )
             ->where('penjual_id', $penjual->penjual_id)
             ->whereNotNull('sisa_stock');
-        
+
         if ($request->filled('bulan')) {
             $topProductsQuery->whereMonth('date', $bulan);
         }
-        
+
         if ($request->filled('tahun')) {
             $topProductsQuery->whereYear('date', $tahun);
         }
-        
+
         $topProducts = $topProductsQuery->groupBy('produk_id', 'created_by')
             ->orderBy('total_pendapatan', 'desc')
             ->limit(3)
             ->get();
-        
+
         // Data Jenis Kue (from produk types) - filtered by date
         $jenisKueQuery = PengajuanDetail::whereHas('pengajuan', function($query) use ($penjual) {
                 $query->where('penjual_id', $penjual->penjual_id);
@@ -151,29 +154,29 @@ class PenjualController extends Controller
                 $join->on('tbl_stock_harian.produk_id', '=', 'tbl_produk.produk_id')
                      ->whereNotNull('tbl_stock_harian.sisa_stock');
             });
-        
+
         // Apply date filters to jenis kue
         if ($request->filled('bulan')) {
             $jenisKueQuery->whereMonth('tbl_stock_harian.date', $bulan);
         }
-        
+
         if ($request->filled('tahun')) {
             $jenisKueQuery->whereYear('tbl_stock_harian.date', $tahun);
         }
-        
-        $jenisKueData = $jenisKueQuery->select('tbl_produk.produk_type', \DB::raw('COUNT(DISTINCT tbl_produk.produk_id) as count'))
+
+        $jenisKueData = $jenisKueQuery->select('tbl_produk.produk_type', DB::raw('COUNT(DISTINCT tbl_produk.produk_id) as count'))
             ->groupBy('tbl_produk.produk_type')
             ->get();
-        
+
         // Get all produk types from enum
         $produkTypes = DB::select("SELECT unnest(enum_range(NULL::produk_type)) AS type");
-        
+
         // Initialize counts for all types (convert to lowercase for consistency)
         $jenisKueCounts = [];
         foreach ($produkTypes as $type) {
             $jenisKueCounts[strtolower($type->type)] = 0;
         }
-        
+
         // Map actual data to counts
         foreach ($jenisKueData as $item) {
             $type = strtolower($item->produk_type);
@@ -181,10 +184,10 @@ class PenjualController extends Controller
                 $jenisKueCounts[$type] = $item->count;
             }
         }
-        
+
         return view('layouts.penjual.dashboard', compact(
             'totalProduk',
-            'totalTerjual', 
+            'totalTerjual',
             'totalPendapatan',
             'totalOmset',
             'monthlyData',
@@ -193,11 +196,11 @@ class PenjualController extends Controller
             'jenisKueCounts'
         ));
     }
-    
+
     public function show(): View
     {
         $penjual = $this->getAuthPenjual();
-        
+
         $pengajuan = Pengajuan::with('penitip')
             ->where('penjual_id', $penjual->penjual_id)
             ->withCount('detail')
@@ -220,7 +223,7 @@ class PenjualController extends Controller
 
         // Build history data
         $history = [];
-        
+
         // Always add created date (Waiting status)
         $history[] = [
             'tanggal' => $pengajuan->created_at->format('d-m-Y H:i'),
@@ -319,7 +322,7 @@ class PenjualController extends Controller
                 'success' => true,
                 'message' => "Berhasil menyetujui {$approved} produk"
             ]);
-            
+
         } catch (\Illuminate\Validation\ValidationException $e) {
             return response()->json([
                 'success' => false,
@@ -327,7 +330,7 @@ class PenjualController extends Controller
                 'errors' => $e->errors()
             ], 422);
         } catch (\Exception $e) {
-            \Log::error('Approve error: ' . $e->getMessage());
+            Log::error('Approve error: ' . $e->getMessage());
             return response()->json([
                 'success' => false,
                 'message' => 'Terjadi kesalahan: ' . $e->getMessage()
@@ -376,7 +379,7 @@ class PenjualController extends Controller
                 'success' => true,
                 'message' => 'Pengajuan berhasil ditolak'
             ]);
-            
+
         } catch (\Illuminate\Validation\ValidationException $e) {
             return response()->json([
                 'success' => false,
@@ -384,7 +387,7 @@ class PenjualController extends Controller
                 'errors' => $e->errors()
             ], 422);
         } catch (\Exception $e) {
-            \Log::error('Reject error: ' . $e->getMessage());
+            Log::error('Reject error: ' . $e->getMessage());
             return response()->json([
                 'success' => false,
                 'message' => 'Terjadi kesalahan: ' . $e->getMessage()
@@ -394,7 +397,7 @@ class PenjualController extends Controller
       public function show_penitip_approved(): View
     {
         $penjual = $this->getAuthPenjual();
-        
+
         $penitip_approved = Pengajuan::where('status', 'Approved')
             ->where('penjual_id', $penjual->penjual_id)
             ->with('penitip.user')
@@ -402,16 +405,16 @@ class PenjualController extends Controller
 
         return view('layouts.penjual.list_penitip_approved', compact('penitip_approved', 'penjual'));
     }
-    
+
     public function show_detail_penitip_approved($penjual_id): View
     {
         $penjual = $this->getAuthPenjual();
-        
+
         // Pastikan hanya data penjual yang login
         if ($penjual->penjual_id != $penjual_id) {
             abort(403, 'Unauthorized');
         }
-        
+
         $detail_penitip_approved = StockHarian::where('penjual_id', $penjual_id)
             ->with('produk')
             ->get();
@@ -424,11 +427,11 @@ class PenjualController extends Controller
             compact('detail_penitip_approved', 'penitipName', 'penjual')
         );
     }
-    
+
     public function show_detail_penitip_pengajuan($penitip_id): View
     {
         $penjual = $this->getAuthPenjual();
-        
+
         // Filter: penjual yang login DAN penitip tertentu
         $detail_penitip_approved = StockHarian::where('penjual_id', $penjual->penjual_id)
             ->whereHas('produk', function($query) use ($penitip_id) {
@@ -525,11 +528,11 @@ class PenjualController extends Controller
     public function registerToko()
     {
         $user = Auth::guard('usermanual')->user();
-        
+
         if (!$user || $user->user_type !== 'penjual') {
             abort(403, 'Unauthorized');
         }
-        
+
         $penjual = $user->penjual;
         return view('layouts.penjual.register_toko', compact('penjual'));
     }
@@ -540,13 +543,13 @@ class PenjualController extends Controller
     public function storeToko(Request $request)
     {
         $user = Auth::guard('usermanual')->user();
-        
+
         if (!$user || $user->user_type !== 'penjual') {
             abort(403, 'Unauthorized');
         }
-        
+
         $penjual = $user->penjual;
-        
+
         if (!$penjual) {
             abort(404, 'Data penjual tidak ditemukan');
         }
@@ -621,9 +624,9 @@ class PenjualController extends Controller
         if ($request->hasFile('banner')) {
             // Delete old banner if exists
             if ($penjual->banner && $penjual->banner !== 'default-banner.jpg') {
-                \Storage::disk('public')->delete('banners/' . $penjual->banner);
+                Storage::disk('public')->delete('banners/' . $penjual->banner);
             }
-            
+
             // Store new banner
             $path = $request->file('banner')->store('banners', 'public');
             $penjual->banner = basename($path);
@@ -675,7 +678,7 @@ class PenjualController extends Controller
         $currentPasswordValid = false;
         if ($user->password === $request->current_password) {
             $currentPasswordValid = true;
-        } elseif (\Hash::check($request->current_password, $user->password)) {
+        } elseif (Hash::check($request->current_password, $user->password)) {
             $currentPasswordValid = true;
         }
 
@@ -684,7 +687,7 @@ class PenjualController extends Controller
         }
 
         // Update password with hash
-        $user->password = \Hash::make($request->new_password);
+        $user->password = Hash::make($request->new_password);
         $user->save();
 
         return redirect()->route('penjual.edit_password')->with('success', 'Password berhasil diubah');

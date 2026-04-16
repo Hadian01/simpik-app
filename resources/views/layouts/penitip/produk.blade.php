@@ -7,14 +7,14 @@
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h4 class="mb-0">Daftar Produk</h4>
     <div>
-        <button class="btn btn-sm" 
-                style="background:transparent;color:#9B8CFF;border:1px solid #9B8CFF;" 
-                data-toggle="modal" 
+        <button class="btn btn-sm"
+                style="background:transparent;color:#9B8CFF;border:1px solid #9B8CFF;"
+                data-toggle="modal"
                 data-target="#modalFilterProduk">
             <i class="bi bi-funnel"></i> Filter
         </button>
-        <button class="btn btn-sm ml-2" 
-                style="background:#9B8CFF;color:white;" 
+        <button class="btn btn-sm ml-2"
+                style="background:#9B8CFF;color:white;"
                 onclick="openTambahProduk()">
             <i class="bi bi-plus-circle"></i> Tambah Produk
         </button>
@@ -89,30 +89,30 @@ $(document).ready(function() {
     // Filter functionality
     $('#formFilterProduk').on('submit', function(e) {
         e.preventDefault();
-        
+
         const produkType = $('[name="produk_type"]').val();
         const isActive = $('[name="is_active"]').val();
-        
+
         $('.col-md-4').each(function() {
             const card = $(this);
             let show = true;
-            
+
             // Filter by type
             if (produkType && card.data('type') !== produkType) {
                 show = false;
             }
-            
+
             // Filter by status
             if (isActive !== '' && card.data('active') != isActive) {
                 show = false;
             }
-            
+
             card.toggle(show);
         });
-        
+
         $('#modalFilterProduk').modal('hide');
     });
-    
+
     // Reset filter
     $('#resetFilterProduk').on('click', function() {
         $('#formFilterProduk')[0].reset();

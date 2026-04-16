@@ -15,6 +15,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class PenitipController extends Controller
 {
@@ -24,20 +25,21 @@ class PenitipController extends Controller
     protected function getAuthPenitip()
     {
         $user = Auth::guard('usermanual')->user();
-        
+
         if (!$user || $user->user_type !== 'penitip') {
             abort(403, 'Unauthorized');
         }
-        
+
         $penitip = $user->penitip;
-        
+
         if (!$penitip) {
             abort(404, 'Data penitip tidak ditemukan');
         }
-        
+
         return $penitip;
     }
 
+    //Ini function untuk nampilin daftar produk yang dimiliki penitip dan list produk type
     public function show(): View
     {
         $penitip = $this->getAuthPenitip();
@@ -50,6 +52,7 @@ class PenitipController extends Controller
         return view('layouts.penitip.produk', compact('produk','produk_types'));
     }
 
+    //ini function untuk nampilin detail produk berdasarkan produk_id, sekaligus nampilin list data poduktype untuk dropdown pas edit produk
     public function detail_produk(string $produk_id): View
     {
         $produk_types = DB::select("
@@ -138,7 +141,7 @@ class PenitipController extends Controller
             ->where('status', 'Approved')
             ->pluck('produk_id')
             ->unique();
-        
+
         $produk = Produk::whereIn('produk_id', $approvedProdukIds)
             ->where('is_active', true)
             ->get();
@@ -179,7 +182,7 @@ class PenitipController extends Controller
     public function join_penitip(Request $request)
     {
         $penitip = $this->getAuthPenitip();
-        
+
         $request->validate([
             'penjual_id' => 'required',
             'produk' => 'required|array'
@@ -260,14 +263,14 @@ class PenitipController extends Controller
         $penitip_id = $penitip->penitip_id;
 
         $toko = Penjual::findOrFail($id);
-        
-        // Debug banner path
-        \Log::info('Toko Banner Debug', [
-            'toko_id' => $toko->penjual_id,
-            'banner' => $toko->banner,
-            'banner_type' => gettype($toko->banner),
-            'all_attributes' => $toko->getAttributes()
-        ]);
+
+        // // Debug banner path
+        // \Log::info('Toko Banner Debug', [
+        //     'toko_id' => $toko->penjual_id,
+        //     'banner' => $toko->banner,
+        //     'banner_type' => gettype($toko->banner),
+        //     'all_attributes' => $toko->getAttributes()
+        // ]);
 
         /*
         |--------------------------------
@@ -481,7 +484,7 @@ class PenitipController extends Controller
     public function add_produk(Request $request)
     {
         $penitip = $this->getAuthPenitip();
-        
+
         $request->validate([
             'produk_type'   => 'required',
             'produk_name'   => 'required',
@@ -510,7 +513,7 @@ class PenitipController extends Controller
             ->where('status', 'Approved')
             ->with('penjual')
             ->get();
-        
+
         foreach ($approved_penjuals as $pengajuan) {
             if ($pengajuan->penjual && $pengajuan->penjual->user_id) {
                 Notification::create([
@@ -744,7 +747,7 @@ class PenitipController extends Controller
         $currentPasswordValid = false;
         if ($user->password === $request->current_password) {
             $currentPasswordValid = true;
-        } elseif (\Hash::check($request->current_password, $user->password)) {
+        } elseif (Hash::check($request->current_password, $user->password)) {
             $currentPasswordValid = true;
         }
 
@@ -753,7 +756,7 @@ class PenitipController extends Controller
         }
 
         // Update password with hash
-        $user->password = \Hash::make($request->new_password);
+        $user->password = Hash::make($request->new_password);
         $user->save();
 
         return redirect()->route('penitip.edit_password')->with('success', 'Password berhasil diubah');
