@@ -26,12 +26,6 @@
                         Riwayat Penjualan
                     </a>
                 </li>
-                {{-- <li class="nav-item">
-                    <a class="nav-link" id="produk-tab" data-toggle="tab" href="#produk" role="tab"
-                        style="color: #333; font-weight: 500;">
-                        Produk
-                    </a>
-                </li> --}}
             </ul>
 
             {{-- ALERT SUCCESS --}}

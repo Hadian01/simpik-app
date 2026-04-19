@@ -13,6 +13,7 @@
             <div class="col-md-4">
                 <div style="width:100%; height:300px; border:1px solid #ddd; border-radius:8px; overflow:hidden;">
 
+                    {{-- Cek apakah produk memiliki foto, jika tidak tampilkan placeholder --}}
                     @if(!empty($detail_produk->foto_produk))
                         <img src="{{ asset('storage/'.$detail_produk->foto_produk) }}"
                             style="width:100%; height:100%; object-fit:cover;">
@@ -36,7 +37,8 @@
                     </tr>
                     <tr>
                         <td><strong>Tipe Produk</strong></td>
-                        <td>{{ \Illuminate\Support\Str::title($detail_produk->produk_type) }}</td>                    </tr>
+                        <td>{{ \Illuminate\Support\Str::title($detail_produk->produk_type) }}</td>
+                    </tr>
                     <tr>
                         <td><strong>Harga Modal</strong></td>
                         <td>Rp {{ $detail_produk->harga_modal }}</td>
@@ -81,7 +83,7 @@
                         onclick="hapusProduk({{ $detail_produk->produk_id }})">
                         <i class="bi bi-trash"></i> Hapus
                     </button>
-                    
+
                     {{-- KEMBALI --}}
                     <a href="{{ route('penitip.produk') }}" class="btn btn-sm px-4" style="background:transparent;color:#9B8CFF;border:1px solid #9B8CFF;">
                         <i class="bi bi-arrow-left"></i> Kembali
