@@ -28,7 +28,7 @@
                 </li>
             </ul>
 
-            {{-- ALERT SUCCESS --}}
+            {{-- ALERT SUCCESS PADA SAAT MENAMBAHKAN PRODUK HARIAN --}}
             @if (session('success'))
                 <div id="successAlert" class="alert alert-success alert-dismissible fade show" role="alert">
 
@@ -79,6 +79,7 @@
                         {{-- KANAN: Produk Toko --}}
                         <div class="col-md-6">
                             <div class="card" style="border: 1px solid #ddd; border-radius: 8px; padding: 20px;">
+                                {{-- Ini untuk judul Pada card list produk --}}
                                 <h5 class="mb-3">Produk {{ $toko['nama_toko'] }}</h5>
 
                                 <div class="row">
@@ -87,14 +88,12 @@
                                             'id' => $produk->produk_id,
                                             'nama' => $produk->produk_name,
                                             'gambar' => $produk->foto_produk,
-                                            'harga' => $produk->harga_jual,
                                         ])
                                     @empty
                                         <div class="col-12 text-center text-muted py-4">
                                             <p>Belum ada produk yang disetujui di toko ini</p>
                                         </div>
                                     @endforelse
-
                                 </div>
                             </div>
                         </div>
@@ -288,6 +287,8 @@
                     </div>
 
                 </div>
+
+                {{-- Ini harusnya bisa di hapus --}}
                 {{-- TAB PRODUK --}}
                 <div class="tab-pane fade" id="produk">
 
