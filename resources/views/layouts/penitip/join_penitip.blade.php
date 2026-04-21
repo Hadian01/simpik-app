@@ -40,10 +40,7 @@
                                     <th>Pilih</th>
 
                                 </tr>
-
                             </thead>
-
-
                             <tbody>
 
                                 @foreach ($produk_penitip as $i => $item)

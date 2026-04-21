@@ -42,9 +42,10 @@ class PenjualController extends Controller
      */
     public function dashboard(Request $request)
     {
+        // Ambil data penjual yang sedang login
         $penjual = $this->getAuthPenjual();
 
-        // Filter dari request
+        // Filter dari request (untuk grafik monthly dan yearly)
         $bulan = $request->bulan ?? now()->month;
         $tahun = $request->tahun ?? now()->year;
 

@@ -42,8 +42,8 @@
 
                 @if($penitip->foto_profile && $penitip->foto_profile !== 'default.jpg')
                     <div class="mb-3">
-                        <img src="{{ asset('storage/' . $penitip->foto_profile) }}" 
-                             alt="Profile Photo" 
+                        <img src="{{ asset('storage/' . $penitip->foto_profile) }}"
+                             alt="Profile Photo"
                              class="rounded-circle border"
                              style="width: 100px; height: 100px; object-fit: cover;">
                         <p class="text-muted mt-2 mb-0"><small>Foto profil saat ini</small></p>

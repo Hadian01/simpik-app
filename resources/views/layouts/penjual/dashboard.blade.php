@@ -13,7 +13,7 @@
         </button>
     </div>
 
-    {{-- STAT CARDS --}}
+    {{-- STAT CARDS (Ini kode untuk card informasi pada dashboard di halaman penjual)--}}
     <div class="row mb-4">
         <div class="col-md-3 mb-3">
             <div class="card stat-card h-100">
@@ -93,11 +93,11 @@
             <div class="card h-100">
                 <div class="card-body p-4">
                     <h6 class="mb-4">Jenis Kue</h6>
-                    
+
                     @php
                         $totalJenisKue = array_sum($jenisKueCounts);
                     @endphp
-                    
+
                     @if($totalJenisKue > 0)
                     <div class="row align-items-center">
                         <div class="col-7 text-center">

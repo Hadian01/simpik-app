@@ -146,9 +146,9 @@ class PenitipController extends Controller
             ->where('is_active', true)
             ->get();
 
-        /* =========================
-        PRODUK MILIK PENITIP
-        ========================= */
+        /* ===============================================================================================================
+        PRODUK MILIK PENITIP (Semua produk aktif tanpa filter status pengajuan, karna ini untuk modal join sebagai penitip)
+        ================================================================================================================= */
         $produk_penitip = Produk::where('penitip_id', $penitip_id)
             ->where('is_active', true)
             ->get();
@@ -356,8 +356,6 @@ class PenitipController extends Controller
             ],
 
         ];
-
-
         /*
         |--------------------------------
         | RIWAYAT DASHBOARD (TAB 2)
