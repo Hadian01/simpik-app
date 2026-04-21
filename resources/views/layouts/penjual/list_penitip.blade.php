@@ -206,10 +206,12 @@ MODALS EXISTING
 
                 responsive: true,
 
+            // ini order by date (submission date), satu karna submission date ada di coulumn ke 2(index 1)
                 order: [
                     [1, 'desc']
                 ],
 
+            // ini untuk custom posisi tombol search dan filter
                 dom: "<'row mb-3'<'col-md-6'l><'col-md-6 d-flex justify-content-end align-items-center'fB>>" +
                     "<'row'<'col-12'tr>>" +
                     "<'row mt-2'<'col-md-5'i><'col-md-7'p>>",
@@ -263,11 +265,14 @@ MODALS EXISTING
 
                 if (!str) return null;
 
+                // memecah tanggal berdasarkan string tanggal yang dipisahkan oleh '-'
                 let parts = str.split('-');
-
+                // memastikan bahwa hasil pemecahan menghasilkan 3 bagian (hari,bulan,tahun)
                 if (parts.length === 3) {
 
+                    //parts[0] = hari, parts[1] = bulan, parts[2] = tahun
                     let day = parseInt(parts[0]);
+                    //bulan di javascript dimulai dari 0 (0 = Januari) jadi maka kita harus kurangi satu
                     let month = parseInt(parts[1]) - 1;
                     let year = parseInt(parts[2]);
 
@@ -287,24 +292,30 @@ MODALS EXISTING
             =========================================
             */
 
+            // fungsi ini akan di jalan setiap filter di jalankan, fungsi ini akan memastikan setiap baris di tabel memenuhu kriteria untuk di filter atau tidak
             $.fn.dataTable.ext.search.push(function(settings, data) {
 
-                if (settings.nTable.id !== 'tablePenitip')
-                    return true;
+                // if (settings.nTable.id !== 'tablePenitip')
+                //     return true;
 
+                //jika filter tidak aktif maka semua baris data akan di tampilkan
                 if (!filterState.active)
                     return true;
 
+                // data[1] itu adalah data pada submission date
                 let rowDate = parseTanggal(data[1]);
-
+                // data[5] itu adalah data pada status
                 let rowStatus = data[5];
 
+                // jika start date lebih kecil dari start date di filter maka data nya jangan di tampilkan
                 if (filterState.start && rowDate < filterState.start)
                     return false;
 
+                // jika end date lebih besar dari end date di filter maka data nya jangan di tampilkan
                 if (filterState.end && rowDate > filterState.end)
                     return false;
 
+                // ini untuk filter status
                 if (filterState.status &&
                     rowStatus.toLowerCase().indexOf(filterState.status.toLowerCase()) === -1)
                     return false;
@@ -314,13 +325,13 @@ MODALS EXISTING
             });
 
 
-
             /*
             =========================================
             APPLY FILTER
             =========================================
             */
 
+            // ketika form filter di submit maka jalankan fungsi ini
             $('#formFilterPengajuan').submit(function(e) {
 
                 e.preventDefault();
@@ -356,6 +367,7 @@ MODALS EXISTING
 
             $('#resetFilterPengajuan').click(function() {
 
+                // reset isi filter ke dafaultnya
                 filterState = {
 
                     active: false,
