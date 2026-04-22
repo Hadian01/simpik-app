@@ -56,14 +56,13 @@
                         </tr>
                     </thead>
 
-                    <!--ini boleh di hapus ga -->
-                    <!-- <tbody id="produkContainer">
+                    <tbody id="produkContainer">
                         <tr>
                             <td colspan="4" class="text-center text-muted">
                                 Pilih pengajuan untuk melihat detail
                             </td>
                         </tr>
-                    </tbody> -->
+                    </tbody>
                 </table>
 
                 {{-- HISTORY --}}
