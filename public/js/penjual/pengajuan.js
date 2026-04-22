@@ -3,13 +3,15 @@ $(document).ready(function () {
     // =====================================================
     // OPEN DETAIL MODAL
     // =====================================================
+
+    //jika  fungsi .btn-detail di klik maka jalan kan function ini
     $(document).on('click', '.btn-detail', function () {
 
         let id = $(this).data('id');
 
         $('#modalDetailPengajuan').modal('show');
 
-        // loading state
+        // loading state (dan ini harusnya ga pakai ga sih)
         $('#produkContainer').html(`
             <tr>
                 <td colspan="4" class="text-center">
@@ -18,10 +20,11 @@ $(document).ready(function () {
             </tr>
         `);
 
-        // reset badge & buttons dulu
+        // reset status dan button ketika detail itu di buka. sumpaya ga nimpa sama detail sebelumnya
         $('#statusContainer').html('');
         $('#actionButtons').show();
 
+        //ini untuk logic js minta data ke backend tanpa reload halaman dan akan di kembalikan ke js lagi
         $.ajax({
             url: '/penjual/pengajuan/' + id + '/detail',
             type: 'GET',
@@ -76,15 +79,21 @@ $(document).ready(function () {
                 // ===============================
                 // HIDE BUTTON JIKA SUDAH FINAL
                 // ===============================
+
+                //jika status ada dan bukan pending button tampilin
                 if (response.status && response.status.toLowerCase() !== 'pending') {
                     console.log('Hiding actionButtons');
                     $('#actionButtons').attr('style', 'display: none !important');
                     console.log('After hide, display:', $('#actionButtons').attr('style'));
-                } else if (!response.status) {
+                } 
+                //jika status kosong tampilkan tombol
+                else if (!response.status) {
                     // Jika status null/undefined, treat sebagai Pending
                     console.log('Status null/undefined, showing actionButtons');
                     $('#actionButtons').attr('style', 'display: flex');
-                } else {
+                } 
+                //jika status pending tampilkan tombol
+                else {
                     console.log('Status is Pending, showing actionButtons');
                     $('#actionButtons').attr('style', 'display: flex');
                 }
@@ -102,6 +111,7 @@ $(document).ready(function () {
                 // ===============================
                 let html = '';
 
+                //jika produk kosong tampilkan info ini
                 if (!response.detail.length) {
 
                     html = `
@@ -114,6 +124,7 @@ $(document).ready(function () {
 
                 } else {
 
+                    //jika ada produk maka looping pe produk untuk ditampil
                     response.detail.forEach(function (item) {
 
                         const namaProduk =
@@ -123,6 +134,7 @@ $(document).ready(function () {
                             Number(item.harga_modal || 0)
                                 .toLocaleString('id-ID');
 
+                        // ini nanti hapus yang disabel dann read nlye dan harga jual buat kaya harga modal
                         const disabled =
                             response.status && response.status.toLowerCase() !== 'pending'
                                 ? 'disabled'
@@ -166,7 +178,7 @@ $(document).ready(function () {
                                 <td class="align-middle">${namaProduk}</td>
 
                                 <td class="align-middle">Rp ${hargaModal}</td>
-
+                                
                                 <td class="align-middle">
                                     <input type="number"
                                         class="form-control form-control-sm harga-jual"
