@@ -85,13 +85,13 @@ $(document).ready(function () {
                     console.log('Hiding actionButtons');
                     $('#actionButtons').attr('style', 'display: none !important');
                     console.log('After hide, display:', $('#actionButtons').attr('style'));
-                } 
+                }
                 //jika status kosong tampilkan tombol
                 else if (!response.status) {
                     // Jika status null/undefined, treat sebagai Pending
                     console.log('Status null/undefined, showing actionButtons');
                     $('#actionButtons').attr('style', 'display: flex');
-                } 
+                }
                 //jika status pending tampilkan tombol
                 else {
                     console.log('Status is Pending, showing actionButtons');
@@ -134,29 +134,23 @@ $(document).ready(function () {
                             Number(item.harga_modal || 0)
                                 .toLocaleString('id-ID');
 
-                        // ini nanti hapus yang disabel dann read nlye dan harga jual buat kaya harga modal
-                        const disabled =
-                            response.status && response.status.toLowerCase() !== 'pending'
-                                ? 'disabled'
-                                : '';
-
-                        const readonly =
-                            response.status && response.status.toLowerCase() !== 'pending'
-                                ? 'readonly'
-                                : '';
+                        const hargaJual =
+                            Number(item.harga_jual || 0)
+                                .toLocaleString('id-ID');
 
                         // Debug individual item status
                         console.log('Item:', namaProduk, '| Detail Status:', item.status, '| Pengajuan Status:', response.status);
 
                         // Visual indicator based on status
                         let checkboxHTML = '';
-                        
+
                         if (response.status && response.status.toLowerCase() === 'pending') {
                             // Pending: clickable custom checkbox with icon
                             checkboxHTML = `
-                                <i class="bi bi-square custom-checkbox" 
-                                   data-id="${item.pengajuan_detail_id}" 
-                                   style="font-size:24px; cursor:pointer; color:#999;" 
+                                <i class="bi bi-square custom-checkbox"
+                                   data-id="${item.pengajuan_detail_id}"
+                                   data-harga-jual="${item.harga_jual || 0}"
+                                   style="font-size:24px; cursor:pointer; color:#999;"
                                    title="Klik untuk memilih produk">
                                 </i>
                             `;
@@ -178,14 +172,8 @@ $(document).ready(function () {
                                 <td class="align-middle">${namaProduk}</td>
 
                                 <td class="align-middle">Rp ${hargaModal}</td>
-                                
-                                <td class="align-middle">
-                                    <input type="number"
-                                        class="form-control form-control-sm harga-jual"
-                                        value="${item.harga_jual ?? ''}"
-                                        ${readonly}
-                                        style="width:110px;">
-                                </td>
+
+                                <td class="align-middle">Rp ${hargaJual}</td>
                             </tr>
                         `;
                     });
@@ -267,7 +255,7 @@ $(document).ready(function () {
     // =====================================================
     $('#btnApproveSelected').click(function () {
 
-        // Cek apakah ada checkbox yang dicentang
+        // Cek apakah ada checkbox yang dicentang, jika ga ad yang di centang ini validasinya
         if ($('.custom-checkbox.checked').length === 0) {
             Swal.fire({
                 icon: 'warning',
@@ -278,36 +266,16 @@ $(document).ready(function () {
             return;
         }
 
-        // Validasi harga jual untuk produk yang dicentang
-        let hasEmptyPrice = false;
-        $('.custom-checkbox.checked').each(function () {
-            let row = $(this).closest('tr');
-            let hargaJual = row.find('.harga-jual').val();
-            
-            if (!hargaJual || hargaJual <= 0) {
-                hasEmptyPrice = true;
-                return false;
-            }
-        });
-
-        if (hasEmptyPrice) {
-            Swal.fire({
-                icon: 'warning',
-                title: 'Harga Jual Belum Diisi',
-                text: 'Silakan isi harga jual untuk semua produk yang dipilih',
-                confirmButtonColor: '#9B8CFF'
-            });
-            return;
-        }
-
+        // kumpulkan data produk yang disetujui yang sudah di declare di ajx di atas
         let pengajuanId = $('#selectedPengajuanId').val();
         let approvedData = [];
 
+        // loop setiap checkbox yang dicentang untuk ambil id dan harga jual, produk ini lah yang akan di proses untuk di approve
         $('.custom-checkbox.checked').each(function () {
-            let row = $(this).closest('tr');
             let detailId = $(this).data('id');
-            let hargaJual = row.find('.harga-jual').val();
+            let hargaJual = $(this).data('harga-jual');
 
+            // push data produk yang disetujui ke array approveData
             approvedData.push({
                 detail_id: detailId,
                 harga_jual: hargaJual
@@ -363,7 +331,7 @@ $(document).ready(function () {
                 error: function (xhr) {
                     console.error('Approve error:', xhr);
                     let errorMessage = 'Gagal approve pengajuan';
-                    
+
                     if (xhr.responseJSON?.message) {
                         errorMessage = xhr.responseJSON.message;
                     } else if (xhr.responseJSON?.errors) {
@@ -467,7 +435,7 @@ $(document).ready(function () {
                 error: function (xhr) {
                     console.error('Error response:', xhr);
                     let errorMessage = 'Gagal menolak pengajuan';
-                    
+
                     if (xhr.responseJSON?.message) {
                         errorMessage = xhr.responseJSON.message;
                     } else if (xhr.responseJSON?.errors) {
