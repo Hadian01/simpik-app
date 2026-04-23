@@ -418,6 +418,7 @@ class PenjualController extends Controller
 
         $detail_penitip_approved = StockHarian::where('penjual_id', $penjual_id)
             ->with('produk')
+            ->orderBy('created_at', 'desc')
             ->get();
 
         // ambil nama dari created_by
@@ -439,6 +440,7 @@ class PenjualController extends Controller
                 $query->where('penitip_id', $penitip_id);
             })
             ->with('produk.penitip')
+            ->orderBy('created_at', 'desc')
             ->get();
 
         // ambil nama penitip dari relasi

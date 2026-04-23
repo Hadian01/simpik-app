@@ -167,15 +167,15 @@
 
                         <h4>Riwayat Pengajuan {{ $toko->nama_toko }}</h4>
 
-                        <div class="d-flex gap-2">
+                        <div class="d-flex" style="gap: 0.5rem;">
 
-                            <button class="btn btn-sm" style="background:transparent;color:#9B8CFF;border:1px solid #9B8CFF;" data-toggle="modal" data-target="#modalFilterRiwayat">
+                            <button class="btn btn-sm" style="background:transparent;color:#9B8CFF;border:1px solid #9B8CFF;padding: 8px 16px;" data-toggle="modal" data-target="#modalFilterRiwayat">
 
                                 <i class="bi bi-funnel"></i> Filter
 
                             </button>
 
-                            <button class="btn btn-sm" style="background:#9B8CFF;color:white;" data-toggle="modal"
+                            <button class="btn btn-sm" style="background:#9B8CFF;color:white;padding: 8px 16px;" data-toggle="modal"
                                 data-target="#modalAddJumlahProduk">
 
                                 <i class="bi bi-plus-lg"></i> Add
@@ -206,6 +206,7 @@
                                         <th>VALIDASI STOCK</th>
                                         <th>VALIDASI FOTO</th>
                                         <th>SISA STOCK</th>
+                                        <th>STOCK TERJUAL</th>
                                         <th>SISA FOTO</th>
                                         <th>PENDAPATAN</th>
                                     </tr>
@@ -244,6 +245,13 @@
                                             </td>
 
                                             <td class="text-center">{{ $item['sisa_stock'] ?? '-' }}</td>
+                                            <td class="text-center">
+                                                @if(isset($item['stock_terjual']) && $item['stock_terjual'] !== null)
+                                                    {{ $item['stock_terjual'] }}
+                                                @else
+                                                    <span class="text-muted">-</span>
+                                                @endif
+                                            </td>
                                             <td>
 
                                                 @if ($item['sisa_foto'])
@@ -273,7 +281,7 @@
                                     @empty
 
                                         <tr>
-                                            <td colspan="11" class="text-center text-muted py-4">
+                                            <td colspan="12" class="text-center text-muted py-4">
                                                 Belum ada data riwayat
                                             </td>
                                         </tr>
@@ -302,6 +310,23 @@
                     'produk_toko' => $produk_toko,
                 ])
 
+                {{-- MODAL VIEW FOTO --}}
+                <div class="modal fade" id="modalViewFoto" tabindex="-1">
+                    <div class="modal-dialog modal-dialog-centered modal-lg">
+                        <div class="modal-content" style="border-radius:12px;">
+                            <div class="modal-header">
+                                <h5 id="modalFotoTitle">Foto</h5>
+                                <button type="button" class="close" data-dismiss="modal">
+                                    <span>&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body text-center">
+                                <img id="modalFotoImage" src="" class="img-fluid rounded"
+                                    style="max-height:500px;border:1px solid #ddd;">
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
                 {{-- CSS TAB ACTIVE --}}
                 <style>
@@ -311,6 +336,80 @@
 
                     table.dataTable thead th {
                         white-space: nowrap;
+                    }
+
+                    /* Styling untuk tabel Riwayat Penjualan agar tidak ada scroll horizontal */
+                    #tableRiwayatPengajuan {
+                        font-size: 13px;
+                    }
+
+                    #tableRiwayatPengajuan thead th,
+                    #tableRiwayatPengajuan tbody td {
+                        padding: 8px 4px !important;
+                        vertical-align: middle;
+                    }
+
+                    #tableRiwayatPengajuan thead th {
+                        font-size: 12px;
+                        font-weight: 600;
+                        text-align: center;
+                    }
+
+                    #tableRiwayatPengajuan tbody td {
+                        font-size: 13px;
+                    }
+
+                    /* Atur width kolom-kolom */
+                    #tableRiwayatPengajuan th:nth-child(1),
+                    #tableRiwayatPengajuan td:nth-child(1) {
+                        width: 40px;
+                        text-align: center;
+                    }
+
+                    #tableRiwayatPengajuan th:nth-child(2),
+                    #tableRiwayatPengajuan td:nth-child(2) {
+                        width: 90px;
+                    }
+
+                    #tableRiwayatPengajuan th:nth-child(3),
+                    #tableRiwayatPengajuan td:nth-child(3) {
+                        width: 100px;
+                    }
+
+                    #tableRiwayatPengajuan th:nth-child(4),
+                    #tableRiwayatPengajuan td:nth-child(4),
+                    #tableRiwayatPengajuan th:nth-child(5),
+                    #tableRiwayatPengajuan td:nth-child(5),
+                    #tableRiwayatPengajuan th:nth-child(12),
+                    #tableRiwayatPengajuan td:nth-child(12) {
+                        width: 80px;
+                        text-align: right;
+                    }
+
+                    #tableRiwayatPengajuan th:nth-child(6),
+                    #tableRiwayatPengajuan td:nth-child(6),
+                    #tableRiwayatPengajuan th:nth-child(7),
+                    #tableRiwayatPengajuan td:nth-child(7),
+                    #tableRiwayatPengajuan th:nth-child(9),
+                    #tableRiwayatPengajuan td:nth-child(9),
+                    #tableRiwayatPengajuan th:nth-child(10),
+                    #tableRiwayatPengajuan td:nth-child(10) {
+                        width: 60px;
+                        text-align: center;
+                    }
+
+                    #tableRiwayatPengajuan th:nth-child(8),
+                    #tableRiwayatPengajuan td:nth-child(8),
+                    #tableRiwayatPengajuan th:nth-child(11),
+                    #tableRiwayatPengajuan td:nth-child(11) {
+                        width: 70px;
+                        text-align: center;
+                    }
+
+                    /* Untuk link foto, buat text lebih kecil */
+                    #tableRiwayatPengajuan .btn-view-foto {
+                        font-size: 12px;
+                        padding: 2px 6px;
                     }
 
                     .dataTables_wrapper .dataTables_filter {

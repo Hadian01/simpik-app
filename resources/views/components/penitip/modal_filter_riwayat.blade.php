@@ -37,7 +37,7 @@
                     </div> --}}
 
                     {{-- Tombol --}}
-                    <div class="d-flex justify-content-end gap-2">
+                    <div class="d-flex justify-content-end gap-4" style="gap: 0.5rem;">
                         <button type="button" id="resetFilterRiwayat" class="btn btn-light">
                             Reset
                         </button>

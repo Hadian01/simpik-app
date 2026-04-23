@@ -315,8 +315,8 @@ class PenitipController extends Controller
             ->whereRaw("DATE_TRUNC('month', sh.date) = DATE_TRUNC('month', CURRENT_DATE)")
             ->selectRaw('
                 COALESCE(SUM(sh.stock::int),0) as total_dititip,
-                COALESCE(SUM(COALESCE(sh.stock::int, 0) - COALESCE(sh.sisa_stock::int, 0)),0) as total_terjual,
-                COALESCE(SUM((COALESCE(sh.stock::int, 0) - COALESCE(sh.sisa_stock::int, 0)) * sh.harga_modal::int),0) as total_pendapatan
+                COALESCE(SUM(CASE WHEN sh.sisa_stock IS NOT NULL THEN (sh.stock::int - sh.sisa_stock::int) ELSE 0 END),0) as total_terjual,
+                COALESCE(SUM(CASE WHEN sh.sisa_stock IS NOT NULL THEN ((sh.stock::int - sh.sisa_stock::int) * sh.harga_modal::int) ELSE 0 END),0) as total_pendapatan
             ')
             ->first();
 
@@ -371,11 +371,11 @@ class PenitipController extends Controller
                 sh.created_at,
                 p.produk_name,
                 pj.nama_toko,
-                sh.stock_qty::int as stock,
+                sh.stock::int as stock,
                 sh.harga_jual::int as harga_jual,
                 sh.harga_modal::int as cogs,
-                (COALESCE(sh.stock::int, 0) - COALESCE(sh.sisa_stock::int, 0)) as stock_terjual,
-                ((COALESCE(sh.stock::int, 0) - COALESCE(sh.sisa_stock::int, 0)) * sh.harga_modal::int) as pendapatan
+                CASE WHEN sh.sisa_stock IS NOT NULL THEN (COALESCE(sh.stock::int, 0) - COALESCE(sh.sisa_stock::int, 0)) ELSE 0 END as stock_terjual,
+                CASE WHEN sh.sisa_stock IS NOT NULL THEN ((COALESCE(sh.stock::int, 0) - COALESCE(sh.sisa_stock::int, 0)) * sh.harga_modal::int) ELSE 0 END as pendapatan
             ')
             ->orderBy('sh.created_at', 'desc')
             ->get();
@@ -418,7 +418,8 @@ class PenitipController extends Controller
                 sh.stock_qty::int as sistem,
                 sh.stock::int as validasi_stock,
                 sh.sisa_stock::int as sisa_stock,
-                ((COALESCE(sh.stock::int, 0) - COALESCE(sh.sisa_stock::int, 0)) * sh.harga_modal::int) as pendapatan,
+                CASE WHEN sh.sisa_stock IS NOT NULL THEN (sh.stock::int - sh.sisa_stock::int) ELSE NULL END as stock_terjual,
+                CASE WHEN sh.sisa_stock IS NOT NULL THEN ((sh.stock::int - sh.sisa_stock::int) * sh.harga_modal::int) ELSE 0 END as pendapatan,
                 sh.validasi_foto,
                 sh.sisa_foto
             ')
@@ -441,6 +442,7 @@ class PenitipController extends Controller
                 'sistem' => $r->sistem,
                 'validasi_stock' => $r->validasi_stock,
                 'sisa_stock' => $r->sisa_stock,
+                'stock_terjual' => $r->stock_terjual,
                 'pendapatan' => $r->pendapatan,
                 'validasi_foto' => $r->validasi_foto,
                 'sisa_foto' => $r->sisa_foto
