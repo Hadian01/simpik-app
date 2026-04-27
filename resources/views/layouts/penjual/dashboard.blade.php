@@ -149,7 +149,7 @@
                             <div class="margin-detail">
                                 <div class="detail-row">
                                     <span class="label">Nama Produk</span>
-                                    <span class="value">{{ $product->produk->nama_produk ?? 'N/A' }}</span>
+                                    <span class="value">{{ $product->produk->produk_name ?? 'N/A' }}</span>
                                 </div>
                                 <div class="detail-row">
                                     <span class="label">Total Terjual</span>

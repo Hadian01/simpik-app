@@ -21,7 +21,7 @@
                             <th>SUBMISSION DATE</th>
                             <th>NAME PRODUK</th>
                             <th>HARGA JUAL</th>
-                            <th>COGS</th>
+                            <th>HARGA MODAL</th>
                             <th>STOCK</th>
                             <th>VALIDASI STOCK</th>
                             <th>FOTO VALIDASI</th>
@@ -103,7 +103,8 @@
                                                 style="background:white;border:1px solid #ddd;padding:5px 15px;border-radius:5px;"
                                                 data-type="sisa" data-stock-id="{{ $item->stock_id }}"
                                                 data-row="{{ $index + 1 }}"
-                                                data-produk="{{ $item->produk?->produk_name }}">
+                                                data-produk="{{ $item->produk?->produk_name }}"
+                                                data-stock="{{ $item->stock }}">
                                                 <i class="bi bi-pencil"></i> Input
                                             </button>
                                         @endif
@@ -208,6 +209,7 @@
                         <input type="hidden" id="stockId">
                         <input type="hidden" id="rowId">
                         <input type="hidden" id="productName">
+                        <input type="hidden" id="originalStock">
 
 
                         <div class="form-group mb-4">
@@ -337,6 +339,7 @@
                 $('#stockId').val(stockId);
                 $('#rowId').val(rowId);
                 $('#productName').val(productName);
+                $('#originalStock').val(originalStock);
 
                 $('#jumlahStock').attr('placeholder', 'Stock saat ini: ' + originalStock);
 
@@ -410,6 +413,7 @@
                 const type = $('#stockType').val();
                 const stockId = $('#stockId').val();
                 const jumlahStock = $('#jumlahStock').val();
+                const originalStock = $('#originalStock').val();
                 const foto = $('#uploadFoto')[0].files[0];
 
                 if (!stockId) {
@@ -427,6 +431,17 @@
                         icon: 'warning',
                         title: 'Data Belum Lengkap',
                         text: 'Silakan input jumlah stock',
+                        confirmButtonColor: '#9B8CFF'
+                    });
+                    return;
+                }
+
+                // Validasi sisa stock tidak boleh lebih dari validasi stock
+                if (type === 'sisa' && parseInt(jumlahStock) > parseInt(originalStock)) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Input Tidak Valid',
+                        text: 'Sisa stock tidak boleh lebih dari validasi stock (' + originalStock + ')',
                         confirmButtonColor: '#9B8CFF'
                     });
                     return;

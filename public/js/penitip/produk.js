@@ -4,6 +4,7 @@ $(document).ready(function () {
 
         const id = $(this).data('id');
         const status = $(this).is(':checked') ? 1 : 0;
+        const card = $(this).closest('.col-md-4'); // Get parent card
 
         $.ajax({
             url: '/penitip/update_status_produk',
@@ -14,6 +15,9 @@ $(document).ready(function () {
                 _token: $('meta[name="csrf-token"]').attr('content')
             },
             success: function(response){
+                // Update data-active attribute di card
+                card.attr('data-active', status);
+
                 console.log(response.message);
                 Swal.fire({
                     icon: 'success',

@@ -98,13 +98,20 @@ $(document).ready(function() {
             let show = true;
 
             // Filter by type
-            if (produkType && card.data('type') !== produkType) {
-                show = false;
+            if (produkType) {
+                if (card.data('type') !== produkType) {
+                    show = false;
+                }
             }
 
             // Filter by status
-            if (isActive !== '' && card.data('active') != isActive) {
-                show = false;
+            if (isActive !== '') {
+                const cardActive = String(card.data('active')); // Convert to string untuk comparison
+                const filterActive = String(isActive); // Pastikan string
+
+                if (cardActive !== filterActive) {
+                    show = false;
+                }
             }
 
             card.toggle(show);

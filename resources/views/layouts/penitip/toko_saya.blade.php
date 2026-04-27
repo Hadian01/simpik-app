@@ -129,7 +129,7 @@
                                         <th>NAMA TOKO</th>
                                         <th>STOCK</th>
                                         <th>STOCK TERJUAL</th>
-                                        <th>COGS</th>
+                                        <th>HARGA MODAL</th>
                                         <th>PENDAPATAN</th>
                                     </tr>
                                 </thead>
@@ -142,7 +142,7 @@
                                             <td>{{ $item['nama_toko'] }}</td>
                                             <td>{{ $item['stock'] }}</td>
                                             <td>{{ $item['stock_terjual'] }}</td>
-                                            <td>{{ $item['cogs'] }}</td>
+                                            <td>{{ $item['harga_modal'] }}</td>
                                             <td>{{ $item['pendapatan'] }}</td>
                                         </tr>
                                     @empty
@@ -201,7 +201,7 @@
                                         <th>SUBMISSION DATE</th>
                                         <th>NAME PRODUK</th>
                                         <th>HARGA JUAL</th>
-                                        <th>COGS</th>
+                                        <th>HARGA MODAL</th>
                                         <th>STOCK</th>
                                         <th>VALIDASI STOCK</th>
                                         <th>VALIDASI FOTO</th>
@@ -227,7 +227,7 @@
                                             </td>
 
                                             <td class="text-right">
-                                                Rp {{ number_format($item['cogs'], 0, ',', '.') }}
+                                                Rp {{ number_format($item['harga_modal'], 0, ',', '.') }}
                                             </td>
 
                                             <td class="text-center">{{ $item['sistem'] }}</td>
@@ -435,6 +435,22 @@
             @push('scripts')
                 <script>
                     $(document).ready(function() {
+
+                        /*
+                        ================================
+                        AUTO SWITCH TAB FROM URL
+                        Check query parameter and switch tab
+                        ================================
+                        */
+                        const urlParams = new URLSearchParams(window.location.search);
+                        const tabParam = urlParams.get('tab');
+
+                        if (tabParam) {
+                            const tabElement = document.getElementById(tabParam + '-tab');
+                            if (tabElement) {
+                                $(tabElement).tab('show');
+                            }
+                        }
 
                         /*
                         ================================

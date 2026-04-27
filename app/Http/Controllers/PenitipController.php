@@ -10,6 +10,7 @@ use App\Models\Pengajuan;
 use App\Models\PengajuanDetail;
 use App\Models\Penitip;
 use App\Models\Notification;
+use App\Models\UserManual;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Storage;
@@ -159,7 +160,7 @@ class PenitipController extends Controller
         $pengajuan_history = DB::table('tbl_pengajuan')
             ->where('penitip_id', $penitip_id)
             ->where('penjual_id', $penjual_id)
-            ->orderByDesc('created_at')
+            ->orderByAsc('created_at')
             ->get();
 
         /* =========================
@@ -373,7 +374,7 @@ class PenitipController extends Controller
                 pj.nama_toko,
                 sh.stock::int as stock,
                 sh.harga_jual::int as harga_jual,
-                sh.harga_modal::int as cogs,
+                sh.harga_modal::int as harga_modal,
                 CASE WHEN sh.sisa_stock IS NOT NULL THEN (COALESCE(sh.stock::int, 0) - COALESCE(sh.sisa_stock::int, 0)) ELSE 0 END as stock_terjual,
                 CASE WHEN sh.sisa_stock IS NOT NULL THEN ((COALESCE(sh.stock::int, 0) - COALESCE(sh.sisa_stock::int, 0)) * sh.harga_modal::int) ELSE 0 END as pendapatan
             ')
@@ -394,7 +395,7 @@ class PenitipController extends Controller
                 'nama_toko' => $r->nama_toko,
                 'stock' => $r->stock,
                 'stock_terjual' => $r->stock_terjual,
-                'cogs' => 'Rp ' . number_format($r->cogs),
+                'harga_modal' => 'Rp ' . number_format($r->harga_modal),
                 'pendapatan' => 'Rp ' . number_format($r->pendapatan)
 
             ];
@@ -414,7 +415,7 @@ class PenitipController extends Controller
                 sh.created_at,
                 p.produk_name,
                 sh.harga_jual::int as harga_jual,
-                sh.harga_modal::int as cogs,
+                sh.harga_modal::int as harga_modal,
                 sh.stock_qty::int as sistem,
                 sh.stock::int as validasi_stock,
                 sh.sisa_stock::int as sisa_stock,
@@ -438,7 +439,7 @@ class PenitipController extends Controller
                 'submission_date' => date('d-m-Y', strtotime($r->created_at)),
                 'name_produk' => $r->produk_name,
                 'harga_jual' => $r->harga_jual,
-                'cogs' => $r->cogs,
+                'harga_modal' => $r->harga_modal,
                 'sistem' => $r->sistem,
                 'validasi_stock' => $r->validasi_stock,
                 'sisa_stock' => $r->sisa_stock,
@@ -489,8 +490,8 @@ class PenitipController extends Controller
             'produk_type'   => 'required',
             'produk_name'   => 'required',
             'produk_description' => 'required',
-            'harga_modal'  => 'required|numeric',
-            'harga_jual'   => 'required|numeric',
+            'harga_modal'  => 'required|numeric|min:1',
+            'harga_jual'   => 'required|numeric|min:1',
             'upload_foto' => 'nullable|image|max:2048'
         ]);
 
@@ -549,8 +550,8 @@ class PenitipController extends Controller
             'produk_type'   => 'required',
             'produk_name'   => 'required',
             'produk_description' => 'required',
-            'harga_modal'  => 'required|numeric',
-            'harga_jual'   => 'required|numeric',
+            'harga_modal'  => 'required|numeric|min:1',
+            'harga_jual'   => 'required|numeric|min:1',
             'upload_foto' => 'nullable|image|max:2048'
         ]);
 
@@ -731,6 +732,7 @@ class PenitipController extends Controller
      */
     public function updatePassword(Request $request)
     {
+        /** @var UserManual $user */
         $user = Auth::guard('usermanual')->user();
 
         $request->validate([

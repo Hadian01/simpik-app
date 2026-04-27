@@ -5,7 +5,6 @@
 <div class="container-fluid">
 
     <h2 class="mb-4">Detail Produk</h2>
-
     <div class="card" style="border: 1px solid #ddd; border-radius: 8px; padding: 30px;">
         <div class="row">
 

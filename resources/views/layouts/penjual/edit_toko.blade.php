@@ -20,8 +20,8 @@
 
                 @if($penjual->banner)
                     <div class="mb-3">
-                        <img src="{{ asset('storage/banners/' . $penjual->banner) }}" 
-                             alt="Current Banner" 
+                        <img src="{{ asset('storage/banners/' . $penjual->banner) }}"
+                             alt="Current Banner"
                              class="img-fluid rounded"
                              style="max-height: 200px;">
                         <p class="text-muted mt-2 mb-0"><small>Banner saat ini</small></p>
@@ -106,7 +106,12 @@
 
                         <div class="form-group">
                             <label>Tanggal Berdiri <span class="text-danger">*</span></label>
-                            <input type="date" class="form-control" name="tgl_berdiri" value="{{ old('tgl_berdiri', $penjual->tanggal_join ? $penjual->tanggal_join->format('Y-m-d') : '') }}" required>
+                            <input type="date"
+                                class="form-control"
+                                name="tgl_berdiri"
+                                value="{{ old('tgl_berdiri', $penjual->tanggal_join ? $penjual->tanggal_join->format('Y-m-d') : '') }}"
+                                max="{{ now()->format('Y-m-d') }}"
+                                required>
                         </div>
                     </div>
                 </div>

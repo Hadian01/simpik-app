@@ -10,17 +10,17 @@ $(document).ready(function() {
     // Load notifications immediately
     loadNotifications();
     updateNotificationBadge();
-    
+
     // Setup auto-refresh (every 30 seconds)
     notificationRefreshInterval = setInterval(function() {
         updateNotificationBadge();
     }, 30000); // 30 seconds
-    
+
     // When dropdown opens, load full notification list
     $('#notificationBtn').on('click', function() {
         loadNotifications();
     });
-    
+
     // Mark all as read button
     $('#markAllReadBtn').on('click', function(e) {
         e.preventDefault();
@@ -38,7 +38,7 @@ function updateNotificationBadge() {
         success: function(response) {
             const count = response.count || 0;
             const badge = $('#notifBadge');
-            
+
             if (count > 0) {
                 badge.text(count > 99 ? '99+' : count);
                 badge.show();
@@ -74,7 +74,7 @@ function loadNotifications() {
  */
 function renderNotifications(notifications) {
     const container = $('#notificationList');
-    
+
     if (notifications.length === 0) {
         container.html(`
             <div class="text-center py-4 text-muted">
@@ -84,18 +84,18 @@ function renderNotifications(notifications) {
         `);
         return;
     }
-    
+
     let html = '';
-    
+
     notifications.forEach(notif => {
         const isUnread = !notif.is_read;
         const bgClass = isUnread ? 'bg-light' : '';
         const icon = getNotificationIcon(notif.type);
         const timeAgo = formatTimeAgo(notif.created_at);
-        
+
         html += `
-            <div class="dropdown-item ${bgClass} py-2 px-3 notification-item" 
-                 data-id="${notif.id}" 
+            <div class="dropdown-item ${bgClass} py-2 px-3 notification-item"
+                 data-id="${notif.id}"
                  data-read="${notif.is_read}"
                  data-type="${notif.type}"
                  data-notification='${JSON.stringify(notif)}'
@@ -120,21 +120,21 @@ function renderNotifications(notifications) {
             </div>
         `;
     });
-    
+
     container.html(html);
-    
+
     // Add click handlers with redirect
     $('.notification-item').on('click', function() {
         const id = $(this).data('id');
         const isRead = $(this).data('read');
         const type = $(this).data('type');
         const notifData = JSON.parse($(this).attr('data-notification'));
-        
+
         // Mark as read first
         if (!isRead) {
             markAsRead(id);
         }
-        
+
         // Redirect based on type
         redirectToNotification(type, notifData);
     });
@@ -149,7 +149,8 @@ function getNotificationIcon(type) {
         'pengajuan_approved': '✅',
         'pengajuan_rejected': '❌',
         'produk_baru': '✨',
-        'stock_validated': '📦'
+        'stock_validated': '📦',
+        'stock_sisa_updated': '💰'
     };
     return icons[type] || '📬';
 }
@@ -163,7 +164,8 @@ function getNotificationColor(type) {
         'pengajuan_approved': 'success',
         'pengajuan_rejected': 'danger',
         'produk_baru': 'primary',
-        'stock_validated': 'warning'
+        'stock_validated': 'warning',
+        'stock_sisa_updated': 'success'
     };
     return colors[type] || 'secondary';
 }
@@ -175,7 +177,7 @@ function formatTimeAgo(dateString) {
     const date = new Date(dateString);
     const now = new Date();
     const seconds = Math.floor((now - date) / 1000);
-    
+
     const intervals = {
         tahun: 31536000,
         bulan: 2592000,
@@ -184,14 +186,14 @@ function formatTimeAgo(dateString) {
         jam: 3600,
         menit: 60
     };
-    
+
     for (const [unit, secondsInUnit] of Object.entries(intervals)) {
         const interval = Math.floor(seconds / secondsInUnit);
         if (interval >= 1) {
             return `${interval} ${unit} lalu`;
         }
     }
-    
+
     return 'Baru saja';
 }
 
@@ -242,20 +244,20 @@ function markAllAsRead() {
  */
 function redirectToNotification(type, notification) {
     const data = notification.data || {};
-    
+
     // Redirect logic based on type
     switch(type) {
         case 'pengajuan_baru':
             // Redirect to penitip list for penjual
             window.location.href = '/penjual/penitip';
             break;
-            
+
         case 'pengajuan_approved':
         case 'pengajuan_rejected':
             // Redirect to daftar toko for penitip
             window.location.href = '/penitip/daftar_toko';
             break;
-            
+
         case 'produk_baru':
             // Redirect to penitip approved list for penjual
             if (data.penitip_id) {
@@ -264,16 +266,17 @@ function redirectToNotification(type, notification) {
                 window.location.href = '/penjual/penitip';
             }
             break;
-            
+
         case 'stock_validated':
-            // Redirect to toko saya for penitip
+        case 'stock_sisa_updated':
+            // Redirect to toko saya riwayat tab for penitip
             if (data.penjual_id) {
-                window.location.href = `/penitip/toko_saya/${data.penjual_id}`;
+                window.location.href = `/penitip/toko_saya/${data.penjual_id}?tab=riwayat`;
             } else {
                 window.location.href = '/penitip/daftar_toko';
             }
             break;
-            
+
         default:
             console.log('No redirect defined for notification type:', type);
     }

@@ -9,6 +9,8 @@ use App\Models\Pengajuan;
 use App\Models\PengajuanDetail;
 use App\Models\StockHarian;
 use App\Models\Penjual;
+use App\Models\Notification;
+use App\Models\UserManual;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -275,7 +277,7 @@ class PenjualController extends Controller
                 'pengajuan_id' => 'required',
                 'approved_data' => 'required|array',
                 'approved_data.*.detail_id' => 'required',
-                'approved_data.*.harga_jual' => 'required|numeric|min:0'
+                'approved_data.*.harga_jual' => 'required|numeric|min:0.01'
             ]);
 
             // approve produk yg dicentang dan update harga jual
@@ -475,6 +477,23 @@ class PenjualController extends Controller
 
             $stock->save();
 
+            // 🔔 Notification: Validasi stock ke penitip
+            $produk = $stock->produk;
+            if ($produk && $produk->penitip && $produk->penitip->user_id) {
+                Notification::create([
+                    'user_id' => $produk->penitip->user_id,
+                    'type' => 'stock_validated',
+                    'title' => 'Stock Tervalidasi',
+                    'message' => '📦 ' . $stock->penjual->nama_toko . ' telah validasi stock untuk produk ' . $produk->produk_name,
+                    'data' => [
+                        'penjual_id' => $stock->penjual_id,
+                        'produk_id' => $produk->produk_id,
+                        'produk_name' => $produk->produk_name,
+                        'jumlah_stock' => $request->validated_stock
+                    ]
+                ]);
+            }
+
             return response()->json([
                 'message' => 'Validasi stock berhasil disimpan'
             ]);
@@ -513,6 +532,25 @@ class PenjualController extends Controller
             }
 
             $stock->save();
+
+            // 🔔 Notification: Sisa stock update ke penitip
+            $produk = $stock->produk;
+            if ($produk && $produk->penitip && $produk->penitip->user_id) {
+                Notification::create([
+                    'user_id' => $produk->penitip->user_id,
+                    'type' => 'stock_sisa_updated',
+                    'title' => 'Stock Terjual Update',
+                    'message' => '💰 ' . $stock->penjual->nama_toko . ' update sisa stock produk ' . $produk->produk_name . ' - Terjual: ' . $jumlah_terjual . ' unit',
+                    'data' => [
+                        'penjual_id' => $stock->penjual_id,
+                        'produk_id' => $produk->produk_id,
+                        'produk_name' => $produk->produk_name,
+                        'jumlah_terjual' => $jumlah_terjual,
+                        'sisa_stock' => $request->sisa_stock,
+                        'pendapatan' => $stock->pendapatan
+                    ]
+                ]);
+            }
 
             return response()->json([
                 'message' => 'Sisa stock berhasil disimpan',
@@ -665,6 +703,7 @@ class PenjualController extends Controller
      */
     public function updatePassword(Request $request)
     {
+        /** @var UserManual $user */
         $user = Auth::guard('usermanual')->user();
 
         $request->validate([

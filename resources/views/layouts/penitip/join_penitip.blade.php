@@ -36,7 +36,7 @@
                                     <th>No</th>
                                     <th>Nama Produk</th>
                                     <th>Harga Jual</th>
-                                    <th>COGS</th>
+                                    <th>harga_modal</th>
                                     <th>Pilih</th>
 
                                 </tr>
