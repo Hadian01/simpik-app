@@ -64,7 +64,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label>No. HP <span class="text-danger">*</span></label>
+                            <label>No. HP</label>
                             <input type="text" class="form-control" name="no_hp" value="{{ old('no_hp', $penjual->no_hp) }}" required>
                         </div>
                     </div>
@@ -78,7 +78,7 @@
                         <h5 class="mb-3">Operasional & Alamat</h5>
 
                         <div class="form-group">
-                            <label>Alamat <span class="text-danger">*</span></label>
+                            <label>Alamat</label>
                             <input type="text" class="form-control" name="alamat" value="{{ old('alamat', $penjual->alamat_toko) }}" required>
                         </div>
 
@@ -88,7 +88,7 @@
                         @endphp
 
                         <div class="form-group">
-                            <label>Start Jam Operasional <span class="text-danger">*</span></label>
+                            <label>Start Jam Operasional</label>
                             <input type="time"
                                    class="form-control"
                                    name="jam_operasional_buka"
@@ -96,7 +96,7 @@
                                    required>
                         </div>
                         <div class="form-group">
-                            <label>End Jam Operasional <span class="text-danger">*</span></label>
+                            <label>End Jam Operasional</label>
                             <input type="time"
                                    class="form-control"
                                    name="jam_operasional_tutup"

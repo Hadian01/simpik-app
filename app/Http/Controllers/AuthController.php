@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -39,21 +40,21 @@ class AuthController extends Controller
 
         if ($user) {
             $isAuthenticated = false;
-            
+
             // Check plain text password (untuk data existing)
             if ($user->password === $request->password) {
                 $isAuthenticated = true;
             }
-            
+
             // Check hashed password (untuk user baru dari register)
             if (!$isAuthenticated && Hash::check($request->password, $user->password)) {
                 $isAuthenticated = true;
             }
-            
+
             if ($isAuthenticated) {
                 Auth::guard('usermanual')->login($user);
                 $request->session()->regenerate();
-                
+
                 // Redirect berdasarkan user_type
                 if ($user->user_type === 'penjual') {
                     // Langsung ke dashboard, tidak cek kelengkapan data
@@ -61,7 +62,7 @@ class AuthController extends Controller
                 } else if ($user->user_type === 'penitip') {
                     return redirect()->route('penitip.daftar_toko')->with('success', 'Login berhasil!');
                 }
-                
+
                 return redirect('/')->with('success', 'Login berhasil!');
             }
         }
@@ -110,15 +111,25 @@ class AuthController extends Controller
                 'created_at' => now(),
             ]);
         } else if ($request->user_type === 'penjual') {
+            // Generate unique store name
+            $baseName = 'Toko ' . $request->name;
+            $namaToko = $baseName;
+            $counter = 1;
+
+            while (Penjual::where('nama_toko', $namaToko)->exists()) {
+                $namaToko = $baseName . ' ' . $counter;
+                $counter++;
+            }
+
             Penjual::create([
                 'user_id' => $user->user_id,
-                'nama_toko' => 'Toko ' . $request->name,
+                'nama_toko' => $namaToko,
                 'nama_pemilik' => $request->name,
                 'no_hp' => '-',
                 'tanggal_join' => now()->toDateString(),
                 'deskripsi_toko' => '-',
-                'jam_buka' => now()->startOfDay(),
-                'jam_tutup' => now()->endOfDay(),
+                'jam_buka' => now()->setHour(6)->setMinute(0)->setSecond(0),
+                'jam_tutup' => now()->setHour(12)->setMinute(0)->setSecond(0),
                 'alamat_toko' => '-',
                 'created_at' => now(),
             ]);
@@ -133,7 +144,7 @@ class AuthController extends Controller
     public function logout(Request $request)
     {
         Auth::guard('usermanual')->logout();
-        
+
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
@@ -155,14 +166,14 @@ class AuthController extends Controller
     {
         // Normalize email to lowercase
         $email = strtolower($request->email);
-        
+
         $request->validate([
             'email' => 'required|email'
         ]);
-        
+
         // Check if email exists (case insensitive)
         $userExists = UserManual::whereRaw('LOWER(email) = ?', [$email])->exists();
-        
+
         if (!$userExists) {
             return back()->withErrors(['email' => 'Email tidak ditemukan dalam sistem'])->withInput();
         }
@@ -170,7 +181,7 @@ class AuthController extends Controller
         // Get user for name (case insensitive)
         $user = UserManual::whereRaw('LOWER(email) = ?', [$email])->first();
         $userName = null;
-        
+
         if ($user) {
             if ($user->user_type === 'penitip' && $user->penitip) {
                 $userName = $user->penitip->name;
@@ -181,7 +192,7 @@ class AuthController extends Controller
 
         // Generate reset token
         $token = Str::random(60);
-        
+
         // Store in password_resets table (use lowercase email)
         DB::table('password_reset_tokens')->updateOrInsert(
             ['email' => $email],
@@ -193,16 +204,16 @@ class AuthController extends Controller
 
         // Generate reset URL (use lowercase email)
         $resetUrl = route('password.reset', ['token' => $token, 'email' => $email]);
-        
+
         // Send email via Mailtrap API or SMTP
         try {
             // Check if Mailtrap API is configured (for Railway/production)
             $mailtrapToken = config('services.mailtrap.api_token');
-            
+
             if ($mailtrapToken) {
                 // Use Mailtrap API (works on Railway)
                 $inboxId = config('services.mailtrap.inbox_id', '2260282');
-                
+
                 $response = Http::withHeaders([
                     'Authorization' => 'Bearer ' . $mailtrapToken,
                     'Content-Type' => 'application/json',
@@ -221,23 +232,23 @@ class AuthController extends Controller
                     ])->render(),
                     'category' => 'Password Reset',
                 ]);
-                
+
                 if ($response->successful()) {
-                    \Log::info('Reset password email sent via Mailtrap API to: ' . $email);
+                    // \Log::info('Reset password email sent via Mailtrap API to: ' . $email);
                 } else {
                     throw new \Exception('Mailtrap API error: ' . $response->body());
                 }
             } else {
                 // Fallback to SMTP (for local development)
                 Mail::to($email)->send(new ResetPasswordMail($resetUrl, $userName));
-                \Log::info('Reset password email sent via SMTP to: ' . $email);
+                // \Log::info('Reset password email sent via SMTP to: ' . $email);
             }
-            
+
             return back()->with('status', 'Link reset password telah dikirim ke email Anda. Silakan cek inbox atau folder spam.');
         } catch (\Exception $e) {
-            \Log::error('Failed to send reset password email: ' . $e->getMessage());
-            \Log::error('Stack trace: ' . $e->getTraceAsString());
-            
+            // \Log::error('Failed to send reset password email: ' . $e->getMessage());
+            // \Log::error('Stack trace: ' . $e->getTraceAsString());
+
             // Return with error message but still show link for testing
             return back()
                 ->withErrors(['email' => 'Gagal mengirim email. Silakan hubungi administrator.'])

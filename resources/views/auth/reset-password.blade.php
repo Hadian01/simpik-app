@@ -8,7 +8,7 @@
     <div class="row min-vh-100">
 
         <div class="col-md-6 d-flex align-items-center justify-content-center bg-white">
-            <img src="{{ asset('images/logo.jpg') }}" alt="SIMPIK Logo" style="width: 250px; height: 250px; object-fit: cover; border-radius: 50%;">
+            <img src="{{ asset('images/logo simpik.png') }}" alt="SIMPIK Logo" style="width: 250px; height: 250px; object-fit: cover; border-radius: 50%;">
         </div>
 
         {{-- KANAN : FORM RESET PASSWORD --}}
@@ -36,14 +36,14 @@
 
                 <form action="{{ route('password.update') }}" method="POST">
                     @csrf
-                    
+
                     <input type="hidden" name="token" value="{{ $token }}">
-                    
+
                     <div class="form-group">
                         <label>Email <span class="text-danger">*</span></label>
-                        <input type="email" 
-                               name="email" 
-                               class="form-control @error('email') is-invalid @enderror" 
+                        <input type="email"
+                               name="email"
+                               class="form-control @error('email') is-invalid @enderror"
                                value="{{ $email ?? old('email') }}"
                                required
                                readonly>
@@ -55,8 +55,8 @@
                     <div class="form-group">
                         <label>Password Baru <span class="text-danger">*</span></label>
                         <div class="position-relative">
-                            <input type="password" 
-                                   name="password" 
+                            <input type="password"
+                                   name="password"
                                    class="form-control @error('password') is-invalid @enderror"
                                    id="password"
                                    required>
@@ -73,8 +73,8 @@
                     <div class="form-group">
                         <label>Konfirmasi Password <span class="text-danger">*</span></label>
                         <div class="position-relative">
-                            <input type="password" 
-                                   name="password_confirmation" 
+                            <input type="password"
+                                   name="password_confirmation"
                                    class="form-control"
                                    id="password_confirmation"
                                    required>
@@ -111,7 +111,7 @@
 function togglePassword(fieldId, iconElement) {
     const passwordField = document.getElementById(fieldId);
     const icon = iconElement.querySelector('i');
-    
+
     if (passwordField.type === 'password') {
         passwordField.type = 'text';
         icon.classList.remove('bi-eye');
@@ -128,7 +128,7 @@ document.getElementById('password_confirmation').addEventListener('input', funct
     const password = document.getElementById('password').value;
     const confirmation = this.value;
     const helpBlock = document.getElementById('confirmPasswordHelp');
-    
+
     if (confirmation && password !== confirmation) {
         this.classList.add('is-invalid');
         helpBlock.classList.remove('d-none');

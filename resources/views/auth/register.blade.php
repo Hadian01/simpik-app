@@ -8,7 +8,7 @@
 
         {{-- KIRI : LOGO --}}
         <div class="col-md-6 d-flex align-items-center justify-content-center bg-white">
-            <img src="{{ asset('images/logo.jpg') }}" alt="SIMPIK Logo" style="width: 250px; height: 250px; object-fit: cover; border-radius: 50%;">
+            <img src="{{ asset('images/logo simpik.png') }}" alt="SIMPIK Logo" style="width: 250px; height: 250px; object-fit: cover; border-radius: 50%;">
         </div>
 
         {{-- KANAN : FORM REGISTER --}}
@@ -127,7 +127,7 @@ document.getElementById('password_confirmation').addEventListener('input', funct
     const password = document.getElementById('password').value;
     const confirmation = this.value;
     const helpBlock = document.getElementById('confirmPasswordHelpBlock');
-    
+
     if (confirmation && password !== confirmation) {
         this.classList.add('is-invalid');
         helpBlock.classList.remove('d-none');

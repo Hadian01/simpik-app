@@ -3,7 +3,7 @@
     $role = $user->user_type ?? 'guest';
     $profileName = '';
     $profilePhoto = 'https://ui-avatars.com/api/?name=User&background=9B8CFF&color=fff&size=128';
-    
+
     if ($user) {
         if ($role === 'penjual') {
             $penjual = $user->penjual;
@@ -21,7 +21,7 @@
             // Generate avatar dengan nama
             $avatarName = urlencode($profileName);
             $profilePhoto = "https://ui-avatars.com/api/?name={$avatarName}&background=9B8CFF&color=fff&size=128";
-            
+
             // Jika ada foto profile custom, gunakan itu
             if ($penitip && $penitip->foto_profile && $penitip->foto_profile !== 'default.jpg' && file_exists(public_path('storage/' . $penitip->foto_profile))) {
                 $profilePhoto = asset('storage/' . $penitip->foto_profile);
@@ -42,13 +42,13 @@
     </div>
 
     {{-- KANAN --}}
-<div class="d-flex align-items-center gap-3">
+<div class="d-flex align-items-center gap-4">
 
     {{-- Notifikasi --}}
-    <div class="dropdown position-relative">
+    <div class="dropdown position-relative" style="margin-right: 10px;">
         <button type="button" id="notificationBtn" class="btn btn-link p-0 text-dark position-relative" data-toggle="dropdown">
             <i class="bi bi-bell" style="font-size:18px;"></i>
-            <span id="notifBadge" class="badge badge-danger position-absolute" 
+            <span id="notifBadge" class="badge badge-danger position-absolute"
                   style="display:none; top:-8px; right:-8px; font-size:10px; padding:2px 5px; border-radius:10px;">
                 0
             </span>
@@ -90,11 +90,11 @@
         </button>
 
         <div class="dropdown-menu dropdown-menu-right">
-            
+
             <div class="dropdown-item-text">
                 <small class="text-muted">{{ $user->email }}</small>
             </div>
-            
+
             <div class="dropdown-divider"></div>
 
             @if($role === 'penjual')

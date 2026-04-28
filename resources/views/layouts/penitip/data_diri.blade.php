@@ -71,7 +71,6 @@
                             <label>Nama Lengkap <span class="text-danger">*</span></label>
                             <input type="text" class="form-control" name="name" value="{{ old('name', $penitip->name) }}" required>
                         </div>
-
                         <div class="form-group">
                             <label>Email</label>
                             <input type="email" class="form-control" value="{{ Auth::guard('usermanual')->user()->email }}" disabled>

@@ -57,9 +57,6 @@
                             min="1"
                             required
                         >
-                        <small class="text-muted">
-                            Minimal pengajuan 1 unit
-                        </small>
                     </div>
 
                     {{-- Keterangan --}}
@@ -78,7 +75,7 @@
                     {{-- Info ringan --}}
                     <div class="bg-light rounded p-3 mb-4 small text-muted">
                         <i class="bi bi-info-circle mr-1"></i>
-                        Pengajuan akan direview oleh admin sebelum diproses.
+                        Pengajuan akan divalidasi oleh admin setelah pengajuan dilakukan
                     </div>
 
                     {{-- Action --}}

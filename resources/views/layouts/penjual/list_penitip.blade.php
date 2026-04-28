@@ -212,9 +212,15 @@ MODALS EXISTING
                 ],
 
             // ini untuk custom posisi tombol search dan filter
-                dom: "<'row mb-3'<'col-md-6'l><'col-md-6 d-flex justify-content-end align-items-center'fB>>" +
+                dom:
+                    "<'row mb-3'<'col-md-6'l><'col-md-6 d-flex justify-content-end align-items-center'fB>>" +
                     "<'row'<'col-12'tr>>" +
                     "<'row mt-2'<'col-md-5'i><'col-md-7'p>>",
+                    lengthMenu: [
+                        [5, 8, 10, 15, 25, 50],
+                        ['5 ', '8', '10', '15', '25', '50']
+                    ],
+                    pageLength: 10,
 
                 buttons: [{
                     text: '<i class="bi bi-funnel"></i>',

@@ -160,7 +160,7 @@ class PenitipController extends Controller
         $pengajuan_history = DB::table('tbl_pengajuan')
             ->where('penitip_id', $penitip_id)
             ->where('penjual_id', $penjual_id)
-            ->orderByAsc('created_at')
+            ->orderBy('created_at', 'asc')
             ->get();
 
         /* =========================

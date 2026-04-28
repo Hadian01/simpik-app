@@ -14,7 +14,7 @@
     </div>
 
     {{-- STAT CARDS (Ini kode untuk card informasi pada dashboard di halaman penjual)--}}
-    <div class="row mb-4">
+    <div class="row mb-2">
         <div class="col-md-3 mb-3">
             <div class="card stat-card h-100">
                 <div class="card-body text-center">

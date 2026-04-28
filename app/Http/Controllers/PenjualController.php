@@ -436,6 +436,10 @@ class PenjualController extends Controller
     {
         $penjual = $this->getAuthPenjual();
 
+        // Get penitip name directly from Penitip model
+        $penitip = \App\Models\Penitip::find($penitip_id);
+        $penitipName = $penitip?->name ?? 'Penitip Tidak Ditemukan';
+
         // Filter: penjual yang login DAN penitip tertentu
         $detail_penitip_approved = StockHarian::where('penjual_id', $penjual->penjual_id)
             ->whereHas('produk', function($query) use ($penitip_id) {
@@ -444,9 +448,6 @@ class PenjualController extends Controller
             ->with('produk.penitip')
             ->orderBy('created_at', 'desc')
             ->get();
-
-        // ambil nama penitip dari relasi
-        $penitipName = $detail_penitip_approved->first()?->produk?->penitip?->name ?? 'N/A';
 
         return view(
             'layouts.penjual.detail_penitip_approved',
@@ -596,7 +597,7 @@ class PenjualController extends Controller
         }
 
         $request->validate([
-            'nama_toko' => 'required|string|max:255',
+            'nama_toko' => 'required|string|max:255|unique:tbl_penjual,nama_toko,' . $penjual->penjual_id . ',penjual_id',
             'pemilik' => 'required|string|max:255',
             'email' => 'required|email|max:255',
             'no_hp' => 'required|string|max:20',
@@ -649,7 +650,7 @@ class PenjualController extends Controller
         $penjual = $this->getAuthPenjual();
 
         $request->validate([
-            'nama_toko' => 'required|string|max:255',
+            'nama_toko' => 'required|string|max:255|unique:tbl_penjual,nama_toko,' . $penjual->penjual_id . ',penjual_id',
             'pemilik' => 'required|string|max:255',
             'email' => 'required|email|max:255',
             'no_hp' => 'required|string|max:20',
