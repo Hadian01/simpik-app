@@ -60,18 +60,33 @@
                                 {{-- VALIDASI STOCK --}}
                                 <td>
 
-                                    @if ($item->stock)
+                                    @if ($item->sisa_stock !== null)
+                                        {{-- Jika sisa stock sudah ada, validasi stock readonly --}}
                                         <input type="text" class="form-control form-control-sm"
                                             value="{{ $item->stock }}" style="width:80px;" readonly>
                                     @else
-                                        <button class="btn btn-sm btn-edit-stock"
-                                            style="background:white;border:1px solid #ddd;padding:5px 15px;border-radius:5px;"
-                                            data-type="validasi" data-stock-id="{{ $item->stock_id }}"
-                                            data-row="{{ $index + 1 }}"
-                                            data-produk="{{ $item->produk?->produk_name ?? '-' }}"
-                                            data-stock="{{ $item->stock_qty }}">
-                                            <i class="bi bi-pencil"></i> Validasi
-                                        </button>
+                                        {{-- Jika sisa stock belum ada, bisa diedit --}}
+                                        @if ($item->stock)
+                                            <input type="text" class="form-control form-control-sm"
+                                                value="{{ $item->stock }}" style="width:80px;" readonly>
+                                            <button class="btn btn-sm btn-edit-stock"
+                                                style="background:white;border:1px solid #ddd;padding:5px 15px;border-radius:5px;margin-top:5px;"
+                                                data-type="validasi" data-stock-id="{{ $item->stock_id }}"
+                                                data-row="{{ $index + 1 }}"
+                                                data-produk="{{ $item->produk?->produk_name ?? '-' }}"
+                                                data-stock="{{ $item->stock_qty }}">
+                                                <i class="bi bi-pencil"></i> Edit
+                                            </button>
+                                        @else
+                                            <button class="btn btn-sm btn-edit-stock"
+                                                style="background:white;border:1px solid #ddd;padding:5px 15px;border-radius:5px;"
+                                                data-type="validasi" data-stock-id="{{ $item->stock_id }}"
+                                                data-row="{{ $index + 1 }}"
+                                                data-produk="{{ $item->produk?->produk_name ?? '-' }}"
+                                                data-stock="{{ $item->stock_qty }}">
+                                                <i class="bi bi-pencil"></i> Validasi
+                                            </button>
+                                        @endif
                                     @endif
 
                                 </td>
@@ -99,15 +114,16 @@
                                             <input type="text" class="form-control form-control-sm"
                                                 value="{{ $item->sisa_stock }}" style="width:80px;" readonly>
                                         @else
-                                            <button class="btn btn-sm btn-edit-stock"
-                                                style="background:white;border:1px solid #ddd;padding:5px 15px;border-radius:5px;"
-                                                data-type="sisa" data-stock-id="{{ $item->stock_id }}"
-                                                data-row="{{ $index + 1 }}"
-                                                data-produk="{{ $item->produk?->produk_name }}"
-                                                data-stock="{{ $item->stock }}">
-                                                <i class="bi bi-pencil"></i> Input
-                                            </button>
+                                            <span class="text-muted">-</span>
                                         @endif
+                                        <button class="btn btn-sm btn-edit-stock"
+                                            style="background:white;border:1px solid #ddd;padding:5px 15px;border-radius:5px;margin-top:5px;"
+                                            data-type="sisa" data-stock-id="{{ $item->stock_id }}"
+                                            data-row="{{ $index + 1 }}"
+                                            data-produk="{{ $item->produk?->produk_name }}"
+                                            data-stock="{{ $item->stock }}">
+                                            <i class="bi bi-pencil"></i> {{ $item->sisa_stock !== null ? 'Edit' : 'Input' }}
+                                        </button>
                                     @else
                                         <span class="text-muted">-</span>
                                     @endif
