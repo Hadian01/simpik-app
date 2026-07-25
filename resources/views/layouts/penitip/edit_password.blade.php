@@ -41,10 +41,10 @@
 
                         <div class="form-group">
                             <label for="current_password">Password Saat Ini <span class="text-danger">*</span></label>
-                            <input type="password" 
-                                   class="form-control @error('current_password') is-invalid @enderror" 
-                                   id="current_password" 
-                                   name="current_password" 
+                            <input type="password"
+                                   class="form-control @error('current_password') is-invalid @enderror"
+                                   id="current_password"
+                                   name="current_password"
                                    required>
                             @error('current_password')
                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -53,12 +53,11 @@
 
                         <div class="form-group">
                             <label for="new_password">Password Baru <span class="text-danger">*</span></label>
-                            <input type="password" 
-                                   class="form-control @error('new_password') is-invalid @enderror" 
-                                   id="new_password" 
-                                   name="new_password" 
+                            <input type="password"
+                                   class="form-control @error('new_password') is-invalid @enderror"
+                                   id="new_password"
+                                   name="new_password"
                                    required>
-                            <small class="text-muted">Minimal 4 karakter</small>
                             @error('new_password')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -66,10 +65,10 @@
 
                         <div class="form-group">
                             <label for="new_password_confirmation">Konfirmasi Password Baru <span class="text-danger">*</span></label>
-                            <input type="password" 
-                                   class="form-control" 
-                                   id="new_password_confirmation" 
-                                   name="new_password_confirmation" 
+                            <input type="password"
+                                   class="form-control"
+                                   id="new_password_confirmation"
+                                   name="new_password_confirmation"
                                    required>
                             <small id="confirmPasswordHelpBlock" class="form-text text-muted d-none">
                                 Password tidak cocok
@@ -98,7 +97,7 @@ document.getElementById('new_password_confirmation').addEventListener('input', f
     const password = document.getElementById('new_password').value;
     const confirmation = this.value;
     const helpBlock = document.getElementById('confirmPasswordHelpBlock');
-    
+
     if (confirmation && password !== confirmation) {
         this.classList.add('is-invalid');
         helpBlock.classList.remove('d-none');

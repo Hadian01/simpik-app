@@ -42,9 +42,9 @@
                             Reset
                         </button>
 
-                        <button type="button" class="btn btn-sm" style="background:transparent;color:#9B8CFF;border:1px solid #9B8CFF;" data-dismiss="modal">
+                        {{-- <button type="button" class="btn btn-sm" style="background:transparent;color:#9B8CFF;border:1px solid #9B8CFF;" data-dismiss="modal">
                             Batal
-                        </button>
+                        </button> --}}
 
                         <button type="submit" class="btn btn-sm" style="background:#9B8CFF;color:white;">
                             Terapkan Filter

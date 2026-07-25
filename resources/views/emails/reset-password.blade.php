@@ -85,46 +85,46 @@
 </head>
 <body>
     <div class="email-container">
-        
+
         <!-- Header -->
         <div class="email-header">
             <h1>🔐 Reset Password</h1>
         </div>
-        
+
         <!-- Body -->
         <div class="email-body">
             <p>Halo{{ $userName ? ' ' . $userName : '' }},</p>
-            
+
             <p>Kami menerima permintaan untuk reset password akun SIMPIK Anda.</p>
-            
-            <p>Klik tombol di bawah ini untuk membuat password baru:</p>
-            
+
+            <p>Klik tombol di bawah ini untuk membuat password baru::</p>
+
             <div class="button-container">
                 <a href="{{ $resetUrl }}" class="reset-button">Reset Password</a>
             </div>
-            
+
             <div class="info-box">
                 <p><strong>⏰ Link ini berlaku selama 24 jam</strong></p>
                 <p>Setelah 24 jam, link akan expired dan Anda perlu request reset password lagi.</p>
             </div>
-            
+
             <p>Jika tombol tidak berfungsi, copy dan paste link berikut ke browser Anda:</p>
             <div class="link-text">
                 {{ $resetUrl }}
             </div>
-            
+
             <p>Jika Anda tidak melakukan permintaan reset password, abaikan email ini. Password Anda tidak akan berubah.</p>
-            
+
             <p>Terima kasih,<br>
             <strong>Tim SIMPIK</strong></p>
         </div>
-        
+
         <!-- Footer -->
         <div class="email-footer">
             <p>Email ini dikirim secara otomatis, mohon tidak membalas email ini.</p>
             <p>&copy; {{ date('Y') }} SIMPIK. All rights reserved.</p>
         </div>
-        
+
     </div>
 </body>
 </html>

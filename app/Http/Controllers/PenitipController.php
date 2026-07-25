@@ -491,8 +491,10 @@ class PenitipController extends Controller
             'produk_name'   => 'required',
             'produk_description' => 'required',
             'harga_modal'  => 'required|numeric|min:1',
-            'harga_jual'   => 'required|numeric|min:1',
+            'harga_jual'   => 'required|numeric|min:1|gte:harga_modal',
             'upload_foto' => 'nullable|image|max:2048'
+        ], [
+            'harga_jual.gte' => 'Harga jual tidak boleh lebih kecil dari harga modal'
         ]);
 
         $produk = Produk::create([
@@ -551,8 +553,10 @@ class PenitipController extends Controller
             'produk_name'   => 'required',
             'produk_description' => 'required',
             'harga_modal'  => 'required|numeric|min:1',
-            'harga_jual'   => 'required|numeric|min:1',
+            'harga_jual'   => 'required|numeric|min:1|gte:harga_modal',
             'upload_foto' => 'nullable|image|max:2048'
+        ], [
+            'harga_jual.gte' => 'Harga jual tidak boleh lebih kecil dari harga modal'
         ]);
 
         $produk = Produk::findOrFail($request->produk_id);
@@ -670,7 +674,7 @@ class PenitipController extends Controller
         ]);
 
         return redirect()
-            ->back()
+            ->to(route('penitip.toko_saya', $id) . '?tab=riwayat')
             ->with('success', 'Stok produk berhasil ditambahkan');
     }
 

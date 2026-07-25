@@ -64,7 +64,7 @@
                                 <i class="bi bi-eye"></i>
                             </span>
                         </div>
-                        <small class="text-muted">Minimal 4 karakter</small>
+                        <small class="text-muted">Minimal 8 karakter</small>
                         @error('password')
                             <div class="invalid-feedback d-block">{{ $message }}</div>
                         @enderror

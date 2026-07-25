@@ -75,7 +75,7 @@
                     {{-- Info ringan --}}
                     <div class="bg-light rounded p-3 mb-4 small text-muted">
                         <i class="bi bi-info-circle mr-1"></i>
-                        Pengajuan akan divalidasi oleh admin setelah pengajuan dilakukan
+                        Pengajuan akan divalidasi oleh penjual setelah pengajuan dilakukan
                     </div>
 
                     {{-- Action --}}

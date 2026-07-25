@@ -99,8 +99,8 @@ $(document).ready(function() {
             "<'row'<'col-12'tr>>" +
             "<'row mt-2'<'col-md-5'i><'col-md-7'p>>",
         lengthMenu: [
-            [5, 8, 10, 15, 25, 50],
-            ['5 ', '8', '10', '15', '25', '50']
+            [3, 8, 10, 15, 25, 50],
+            ['3', '8', '10', '15', '25', '50']
         ],
         pageLength: 10,
         buttons: [{
@@ -111,7 +111,7 @@ $(document).ready(function() {
             }
         }],
         language: {
-            emptyTable: "Belum ada penitip yang disetujui",
+            emptyTable: "Belum ada penitip yang disetujui ya",
             zeroRecords: "Tidak ada penitip yang cocok dengan pencarian"
         },
         columnDefs: [{

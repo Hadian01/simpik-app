@@ -13,7 +13,7 @@
         </button>
     </div>
 
-    {{-- STAT CARDS (Ini kode untuk card informasi pada dashboard di halaman penjual)--}}
+    {{-- STAT CARDS--}}
     <div class="row mb-2">
         <div class="col-md-3 mb-3">
             <div class="card stat-card h-100">
@@ -191,7 +191,7 @@
                         <div class="form-group">
                             <label>Bulan</label>
                             <select class="form-control" name="bulan">
-                                <option value="">Semua Bulan</option>
+                                <option value="">Bulan</option>
                                 <option value="1" {{ request('bulan') == '1' ? 'selected' : '' }}>Januari</option>
                                 <option value="2" {{ request('bulan') == '2' ? 'selected' : '' }}>Februari</option>
                                 <option value="3" {{ request('bulan') == '3' ? 'selected' : '' }}>Maret</option>
@@ -209,10 +209,12 @@
                         <div class="form-group">
                             <label>Tahun</label>
                             <select class="form-control" name="tahun">
-                                <option value="">Tahun Ini</option>
+                                <option value="">Tahun</option>
                                 <option value="2026" {{ request('tahun') == '2026' ? 'selected' : '' }}>2026</option>
                                 <option value="2025" {{ request('tahun') == '2025' ? 'selected' : '' }}>2025</option>
                                 <option value="2024" {{ request('tahun') == '2024' ? 'selected' : '' }}>2024</option>
+                                <option value="2024" {{ request('tahun') == '2024' ? 'selected' : '' }}>2023</option>
+                                <option value="2024" {{ request('tahun') == '2024' ? 'selected' : '' }}>2022</option>
                             </select>
                         </div>
                     </div>

@@ -275,10 +275,10 @@ class AuthController extends Controller
         $request->validate([
             'token' => 'required',
             'email' => 'required|email|exists:tbl_user,email',
-            'password' => 'required|min:4|confirmed'
+            'password' => 'required|min:8|confirmed'
         ], [
             'email.exists' => 'Email tidak ditemukan',
-            'password.min' => 'Password minimal 4 karakter',
+            'password.min' => 'Password minimal 8 karakter',
             'password.confirmed' => 'Konfirmasi password tidak cocok'
         ]);
 

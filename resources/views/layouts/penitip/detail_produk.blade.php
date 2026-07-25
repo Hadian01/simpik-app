@@ -84,9 +84,9 @@
                     </button>
 
                     {{-- KEMBALI --}}
-                    <a href="{{ route('penitip.produk') }}" class="btn btn-sm px-4" style="background:transparent;color:#9B8CFF;border:1px solid #9B8CFF;">
+                    {{-- <a href="{{ route('penitip.produk') }}" class="btn btn-sm px-4" style="background:transparent;color:#9B8CFF;border:1px solid #9B8CFF;">
                         <i class="bi bi-arrow-left"></i> Kembali
-                    </a>
+                    </a> --}}
                 </div>
             </div>
 

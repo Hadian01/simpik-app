@@ -78,7 +78,7 @@
                                id="password"
                                name="password"
                                class="form-control @error('password') is-invalid @enderror"
-                               placeholder="Minimal 4 karakter"
+                               placeholder="Minimal 8 karakter"
                                required>
                         @error('password')
                             <div class="invalid-feedback">{{ $message }}</div>

@@ -52,7 +52,7 @@
 
                 <input type="file" class="form-control" name="foto_profile" accept="image/*">
                 <small class="text-muted">
-                    Format JPG / PNG, maksimal 2MB. Kosongkan jika tidak ingin mengubah.
+                    maksimal 2MB. Kosongkan jika tidak ingin mengubah.
                 </small>
             </div>
         </div>
