@@ -107,7 +107,7 @@ MODAL PRODUK
 
                     <!-- FOTO -->
                     <div class="form-group mb-3">
-                        <label>Upload Foto Produk</label>
+                        <label>Upload Foto Produk ya</label>
 
                         <div class="mb-2">
                             <img id="previewFotoProduk"

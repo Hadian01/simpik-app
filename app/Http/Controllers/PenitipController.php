@@ -494,7 +494,7 @@ class PenitipController extends Controller
             'harga_jual'   => 'required|numeric|min:1|gte:harga_modal',
             'upload_foto' => 'nullable|image|max:2048'
         ], [
-            'harga_jual.gte' => 'Harga jual tidak boleh lebih kecil dari harga modal'
+            'harga_jual.gte' => 'Harga jual tidak boleh lebih kecil dari harga modal dian ya'
         ]);
 
         $produk = Produk::create([
